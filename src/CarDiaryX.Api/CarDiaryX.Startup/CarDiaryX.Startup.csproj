@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CarDiaryX.Application\CarDiaryX.Application.csproj" />
+    <ProjectReference Include="..\CarDiaryX.Domain\CarDiaryX.Domain.csproj" />
+    <ProjectReference Include="..\CarDiaryX.Infrastructure\CarDiaryX.Infrastructure.csproj" />
+    <ProjectReference Include="..\CarDiaryX.Web\CarDiaryX.Web.csproj" />
+  </ItemGroup>
+
+
+</Project>
