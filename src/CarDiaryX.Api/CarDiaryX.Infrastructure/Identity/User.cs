@@ -1,6 +1,4 @@
-﻿using CarDiaryX.Domain.Vehicles.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace CarDiaryX.Infrastructure.Identity
 {
@@ -17,6 +15,6 @@ namespace CarDiaryX.Infrastructure.Identity
 
         public string LastName { get; set; }
 
-        public HashSet<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
+        // public HashSet<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
     }
 }
