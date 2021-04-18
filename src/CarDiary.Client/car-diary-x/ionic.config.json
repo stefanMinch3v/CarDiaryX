@@ -1,0 +1,7 @@
+{
+  "name": "car-diary-x",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
