@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { LanguageComponent } from 'src/app/components/language/language.component';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePage implements OnInit {
 
-  constructor() { }
+  constructor(private modalCntrl: ModalController) { }
 
   ngOnInit() {
   }
 
+  async openModal(): Promise<void> {
+    const modal = await this.modalCntrl.create({
+      component: LanguageComponent,
+      id: 'lang'
+    });
+
+    return await modal.present();
+  }
 }

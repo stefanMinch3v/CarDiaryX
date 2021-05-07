@@ -1,9 +1,87 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>auth</ion-title>
+    <ion-title>Log In</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-list>
+      
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="mail-outline"></ion-icon>
+                  <span class="input-text">Email</span>
+                </div>
+              </ion-label>
+              <ion-input 
+                ngModel 
+                type="email" 
+                name="email" 
+                email
+                required
+                #emailCntrl="ngModel"
+              ></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!emailCntrl.valid && emailCntrl.touched" lines="none">
+              <ion-label>Should be a valid email!</ion-label>
+            </ion-item>
 
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="lock-closed-outline"></ion-icon>
+                  <span class="input-text">Password</span>
+                </div>
+              </ion-label>
+              <ion-input
+                ngModel 
+                type="password"
+                name="password"
+                required
+                minlength="6"
+                #passwordCntrl="ngModel"
+              ></ion-input>
+            </ion-item>
+        
+            <ion-item *ngIf="!passwordCntrl.valid && passwordCntrl.touched" lines="none">
+              <ion-label>Password must be at least 6 chars!</ion-label>
+            </ion-item>
+
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+
+          <ion-button 
+            type="button"
+            color="primary"
+            fill="clear"
+            expand="block"
+            (click)="presentModal()"
+          >
+            Create New Account
+          </ion-button>
+
+          <ion-button 
+            type="submit"
+            color="primary" 
+            expand="block"
+            (click)="onLogin()"
+            [disabled]="!loginForm.valid"
+          >
+            Login
+          </ion-button>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

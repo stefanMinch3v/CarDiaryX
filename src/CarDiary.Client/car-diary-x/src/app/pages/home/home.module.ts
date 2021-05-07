@@ -7,14 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
+import { LanguageComponent } from 'src/app/components/language/language.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
-  ],
-  declarations: [HomePage]
+    HomePageRoutingModule],
+  exports: [LanguageComponent],
+  declarations: [HomePage, LanguageComponent]
 })
 export class HomePageModule {}
