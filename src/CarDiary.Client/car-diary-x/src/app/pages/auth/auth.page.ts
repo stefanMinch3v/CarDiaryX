@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { RegisterComponent } from 'src/app/components/register/register.component';
 import { AuthService } from '../../core/services/auth.service';
@@ -17,6 +18,7 @@ export class AuthPage implements OnInit {
     private identityService: IdentityService, 
     private authService: AuthService,
     private loadingCntrl: LoadingController,
+    private router: Router,
     private modalCntrl: ModalController) { }
 
   ngOnInit() {
@@ -56,6 +58,7 @@ export class AuthPage implements OnInit {
           const expiration = response.expiration;
 
           this.authService.authenticateUser(token, expiration);
+          this.router.navigate(['tabs']);
           await loading.dismiss();
         });
     } else {

@@ -1,4 +1,4 @@
 export interface LoginResponseModel {
   token: string;
-  expiration: Date;
+  expiration: string;
 } 
