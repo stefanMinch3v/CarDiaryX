@@ -1,15 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { SettingsComponent } from '../../components/settings/settings.component';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
+  private langSub: Subscription;
 
-  constructor(private modalCntrl: ModalController) { }
+  constructor(
+    private i18nService: I18nService, 
+    private translateService: TranslateService,
+    private modalCntrl: ModalController) { }
+  
+  ngOnInit(): void {
+    this.langSub = this.i18nService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+  }
 
-  ngOnInit() {
+  ngOnDestroy(): void {
+    if (this.langSub) {
+      this.langSub.unsubscribe();
+    }
+  }
+
+  async presentSettingsModal(): Promise<void> {
+    const modal = await this.modalCntrl.create({
+      component: SettingsComponent
+    });
+
+    return await modal.present();
   }
 }

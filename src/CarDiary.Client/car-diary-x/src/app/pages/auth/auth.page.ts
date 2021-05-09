@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
-import { RegisterComponent } from 'src/app/components/register/register.component';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { RegisterComponent } from '../../components/register/register.component';
+import { I18nService } from '../../core/services/i18n.service';
 import { AuthService } from '../../core/services/auth.service';
 import { IdentityService } from '../../core/services/identity.service';
 
@@ -11,7 +14,9 @@ import { IdentityService } from '../../core/services/identity.service';
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss'],
 })
-export class AuthPage implements OnInit {
+export class AuthPage implements OnInit, OnDestroy {
+  private langSub: Subscription;
+  
   isLoginMode = true;
 
   constructor(
@@ -19,16 +24,18 @@ export class AuthPage implements OnInit {
     private authService: AuthService,
     private loadingCntrl: LoadingController,
     private router: Router,
-    private modalCntrl: ModalController) { }
-
-  ngOnInit() {
+    private modalCntrl: ModalController,
+    private i18nService: I18nService,
+    private translateService: TranslateService) { }
+  
+  ngOnInit(): void {
+    this.langSub = this.i18nService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
-  onLogin(): void { 
-  }
-
-  onSwitchAuthMode(): void {
-    this.isLoginMode = !this.isLoginMode;
+  ngOnDestroy(): void {
+    if (this.langSub) {
+      this.langSub.unsubscribe();
+    }
   }
 
   async presentModal(): Promise<void> {

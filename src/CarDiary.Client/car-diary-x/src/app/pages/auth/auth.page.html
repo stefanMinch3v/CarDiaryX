@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Log In</ion-title>
+    <ion-title>{{ "Log In" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,7 +15,7 @@
               <ion-label position="floating">
                 <div class="input-content">
                   <ion-icon name="mail-outline"></ion-icon>
-                  <span class="input-text">Email</span>
+                  <span class="input-text">{{ "Email" | translate }}</span>
                 </div>
               </ion-label>
               <ion-input 
@@ -36,7 +36,7 @@
               <ion-label position="floating">
                 <div class="input-content">
                   <ion-icon name="lock-closed-outline"></ion-icon>
-                  <span class="input-text">Password</span>
+                  <span class="input-text">{{ "Password" | translate }}</span>
                 </div>
               </ion-label>
               <ion-input
@@ -67,17 +67,16 @@
             expand="block"
             (click)="presentModal()"
           >
-            Create New Account
+            {{ "Create New Account" | translate }}
           </ion-button>
 
           <ion-button 
             type="submit"
             color="primary" 
             expand="block"
-            (click)="onLogin()"
             [disabled]="!loginForm.valid"
           >
-            Login
+            {{ "Login" | translate }}
           </ion-button>
 
         </ion-col>

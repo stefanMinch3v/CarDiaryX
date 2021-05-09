@@ -5,18 +5,18 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
 
-    <ion-title>Taxes</ion-title>
+    <ion-title>{{ "Documents" | translate }}</ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button (click)="presentSettingsModal()">
+        <ion-icon name="settings-outline" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Taxes</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <p>taxes</p>
 </ion-content>

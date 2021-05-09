@@ -5,10 +5,10 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
 
-    <ion-title>Home</ion-title>
+    <ion-title>{{ "Dashboard" | translate }}</ion-title>
 
     <ion-buttons slot="primary">
-      <ion-button routerLink="">
+      <ion-button (click)="presentSettingsModal()">
         <ion-icon name="settings-outline" slot="icon-only">
         </ion-icon>
       </ion-button>
@@ -19,9 +19,4 @@
 
 <ion-content [fullscreen]="true">
   
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Home</ion-title>
-    </ion-toolbar>
-  </ion-header>
 </ion-content>
