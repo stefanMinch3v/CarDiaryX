@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { RegisterComponent } from '../../components/register/register.component';
+import { RegisterComponent } from './register/register.component';
 import { I18nService } from '../../core/services/i18n.service';
 import { AuthService } from '../../core/services/auth.service';
 import { IdentityService } from '../../core/services/identity.service';
@@ -16,8 +16,6 @@ import { IdentityService } from '../../core/services/identity.service';
 })
 export class AuthPage implements OnInit, OnDestroy {
   private langSub: Subscription;
-  
-  isLoginMode = true;
 
   constructor(
     private identityService: IdentityService, 
@@ -54,23 +52,18 @@ export class AuthPage implements OnInit, OnDestroy {
     const email = form.value.email;
     const password = form.value.password;
 
-    if (this.isLoginMode) {
-      const loading = await this.loadingCntrl.create({ keyboardClose: true });
-      await loading.present();
+    const loading = await this.loadingCntrl.create({ keyboardClose: true });
+    await loading.present();
 
-      this.identityService
-        .login({ email, password })
-        .subscribe(async response => {
-          const token = response.token;
-          const expiration = response.expiration;
+    this.identityService
+      .login({ email, password })
+      .subscribe(async response => {
+        const token = response.token;
+        const expiration = response.expiration;
 
-          this.authService.authenticateUser(token, expiration);
-          this.router.navigate(['tabs']);
-          await loading.dismiss();
-        });
-    } else {
-      // TODO
-      // send register
-    }
+        this.authService.authenticateUser(token, expiration);
+        this.router.navigate(['tabs']);
+        await loading.dismiss();
+      });
   }
 }

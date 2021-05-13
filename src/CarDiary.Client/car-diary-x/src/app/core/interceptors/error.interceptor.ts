@@ -6,15 +6,28 @@ import { catchError, retry } from 'rxjs/operators';
 
 @Injectable()
 export class ErrorInterceptor  implements HttpInterceptor {
-  private readonly UNKNOWN_ERROR = 'Something went wrong';
+  private readonly UNKNOWN_ERROR = 'Server is not responding...';
 
-  constructor(private loadingCntrl: LoadingController, private alertCntrl: AlertController){}
+  constructor(
+    private loadingCntrl: LoadingController, 
+    private alertCntrl: AlertController) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       retry(0),
       catchError(err => {
-        const errorDescription = err.error.description ? err.error.description : err.error;
+        let errorDescription = '';
+
+        if (err.error.description) {
+          errorDescription = err.error.description;
+        } else if (err.error.errors) {
+          for (const [key, value] of Object.entries(err.error.errors)) {
+            errorDescription += `${value}\n`;
+          }
+        } else {
+          errorDescription = err.error;
+        }
+
         let message = '';
 
         if (err.status === 400) {
@@ -28,8 +41,8 @@ export class ErrorInterceptor  implements HttpInterceptor {
         }
 
         // reset all overlays
-        this.loadingCntrl.dismiss().then();
-
+        this.loadingCntrl.getTop().then(overlay => overlay ? overlay.dismiss() : null);
+        
         this.alertCntrl.create({
           header: 'Error', 
           message: message,

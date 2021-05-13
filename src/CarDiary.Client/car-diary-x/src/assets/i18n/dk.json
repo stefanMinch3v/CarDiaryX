@@ -14,5 +14,17 @@
   "Save": "Gemme",
   "Cancel": "Fortryde",
   "Settings": "Indstillinger",
-  "Select a language": "Vælg et sprog"
+  "Select a language": "Vælg et sprog",
+  "First Name": "Fornavn",
+  "Name is required!": "Navn kræves!",
+  "Last Name": "Efternavn",
+  "Age": "Alder",
+  "Invalid email!": "Ugyldig e-mail!",
+  "Password should be at least 6 symbols long!": "Adgangskoden skal være mindst 6 symboler lang!",
+  "Passwords do not match!": "Adgangskoder stemmer ikke overens!",
+  "Confirm Password": "Bekræft Adgangskode",
+  "Number between 16 and 120!": "Nummer mellem 16 og 120!",
+  "Back To Login": "Tilbage til log på",
+  "Sign Up": "Tilmeld dig",
+  "Name should be at least 2 symbols long!": "Navnet skal være mindst 2 symboler langt!"
 }

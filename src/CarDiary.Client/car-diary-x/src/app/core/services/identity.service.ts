@@ -18,7 +18,7 @@ export class IdentityService {
     return this.http.post<LoginResponseModel>(url, login);
   }
 
-  public register(register: RegisterModel) {
+  public register(register: RegisterModel): Observable<any> {
     const url = environment.host.baseUrl + '/v1/identity/register';
     return this.http.post(url, register);
   }

@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "Sign Up" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="registerForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-list>
+      
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span class="input-text">{{ "First Name" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="firstName" type="text"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.firstName.valid && f.firstName.touched" lines="none">
+              <ion-label *ngIf="f.firstName.errors.required" class="invalid-feedback">{{ "Name is required!" | translate }}</ion-label>
+              <ion-label *ngIf="f.firstName.errors.minlength" class="invalid-feedback">{{ "Name should be at least 2 symbols long!" | translate }}</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span class="input-text">{{ "Last Name" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="lastName" type="text"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.lastName.valid && f.lastName.touched" lines="none">
+              <ion-label *ngIf="f.lastName.errors.required" class="invalid-feedback">{{ "Name is required!" | translate }}</ion-label>
+              <ion-label *ngIf="f.lastName.errors.minlength" class="invalid-feedback">{{ "Name should be at least 2 symbols long!" | translate }}</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="accessibility-outline"></ion-icon>
+                  <span class="input-text">{{ "Age" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="age" type="number"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.age.valid && f.age.touched" lines="none">
+              <ion-label class="invalid-feedback">{{ "Number between 16 and 120!" | translate }}</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="mail-outline"></ion-icon>
+                  <span class="input-text">{{ "Email" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="email" type="email"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.email.valid && f.email.touched" lines="none">
+              <ion-label class="invalid-feedback">{{ "Invalid email!" | translate }}</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="lock-closed-outline"></ion-icon>
+                  <span class="input-text">{{ "Password" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="password" type="password"></ion-input>
+            </ion-item>
+        
+            <ion-item *ngIf="!f.password.valid && f.password.touched" lines="none">
+              <ion-label class="invalid-feedback">{{ "Password should be at least 6 symbols long!" | translate }}</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="lock-closed-outline"></ion-icon>
+                  <span class="input-text">{{ "Confirm Password" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="confirmPassword" type="password"></ion-input>
+            </ion-item>
+        
+            <ion-item *ngIf="!f.confirmPassword.valid && f.confirmPassword.touched" lines="none">
+              <ion-label class="invalid-feedback">{{ "Passwords do not match!" | translate }}</ion-label>
+            </ion-item>
+
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+
+          <ion-button
+            type="button"
+            color="primary"
+            fill="clear"
+            expand="block" 
+            (click)="onDismissModal()"
+          >
+            {{ "Back To Login" | translate }}
+          </ion-button>
+
+          <ion-button 
+            type="submit"
+            color="primary" 
+            expand="block"
+            (click)="onSubmit()"
+            [disabled]="!registerForm.valid"
+          >
+          {{ "Sign Up" | translate }}
+          </ion-button>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

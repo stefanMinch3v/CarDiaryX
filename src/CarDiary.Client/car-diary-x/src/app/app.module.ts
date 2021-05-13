@@ -6,12 +6,11 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
-import { RegisterComponent } from './components/register/register.component';
 import { CoreModule } from './core/modules/core.module';
 import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
-  declarations: [AppComponent, RegisterComponent, SettingsComponent],
+  declarations: [AppComponent, SettingsComponent],
   entryComponents: [],
   imports: [
     BrowserModule, 

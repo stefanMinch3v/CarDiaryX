@@ -14,5 +14,17 @@
   "Save": "Save",
   "Cancel": "Cancel",
   "Settings": "Settings",
-  "Select a language": "Select a language"
+  "Select a language": "Select a language",
+  "First Name": "First Name",
+  "Name is required!": "Name is required!",
+  "Last Name": "Last Name",
+  "Age": "Age",
+  "Invalid email!": "Invalid email!",
+  "Password should be at least 6 symbols long!": "Password should be at least 6 symbols long!",
+  "Passwords do not match!": "Passwords do not match!",
+  "Confirm Password": "Confirm Password",
+  "Number between 16 and 120": "Number between 16 and 120!",
+  "Back To Login": "Back To Login",
+  "Sign Up": "Sign Up",
+  "Name should be at least 2 symbols long!": "Name should be at least 2 symbols long!"
 }
