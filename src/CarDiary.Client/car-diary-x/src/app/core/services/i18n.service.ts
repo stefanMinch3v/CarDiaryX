@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class I18nService {
-  private static readonly DEFAULT_LANGUAGE = 'en';
+  private static readonly DEFAULT_LANGUAGE = 'dk';
   private static readonly ALLOWED_LANGUAGES = ['en', 'dk'];
   private static readonly LANGUAGE_KEY = 'language';
   private _langSub = new BehaviorSubject<string>(null);
@@ -21,6 +21,10 @@ export class I18nService {
         if (!storedLang || !storedLang.value || !I18nService.ALLOWED_LANGUAGES.includes(storedLang.value)) {
           return;
         }
+
+        // possible browser switch
+        // const browserLang = translate.getBrowserLang();
+        // translate.use(browserLang.match(/en|fr/) ? browserLang : 'en');
 
         this.translate.setDefaultLang(storedLang.value);
         this._langSub.next(storedLang.value);

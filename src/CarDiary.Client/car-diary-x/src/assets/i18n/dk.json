@@ -26,5 +26,9 @@
   "Number between 16 and 120!": "Nummer mellem 16 og 120!",
   "Back To Login": "Tilbage til log på",
   "Sign Up": "Tilmeld dig",
-  "Name should be at least 2 symbols long!": "Navnet skal være mindst 2 symboler langt!"
+  "Name should be at least 2 symbols long!": "Navnet skal være mindst 2 symboler langt!",
+  "Error": "Fejl",
+  "Ok": "Okay",
+  "Server is not responding...": "Serveren svarer ikke...",
+  "Username is already taken": "Brugernavn '{{value}}' er allerede taget."
 }

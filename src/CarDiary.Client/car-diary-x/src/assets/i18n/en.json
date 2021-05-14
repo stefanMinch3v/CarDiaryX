@@ -26,5 +26,9 @@
   "Number between 16 and 120": "Number between 16 and 120!",
   "Back To Login": "Back To Login",
   "Sign Up": "Sign Up",
-  "Name should be at least 2 symbols long!": "Name should be at least 2 symbols long!"
+  "Name should be at least 2 symbols long!": "Name should be at least 2 symbols long!",
+  "Error": "Error",
+  "Ok": "Ok",
+  "Server is not responding...": "Server is not responding...",
+  "Username is already taken": "Username '{{value}}' is already taken."
 }

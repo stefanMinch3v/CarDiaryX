@@ -14,4 +14,12 @@ ion-icon {
 
 .invalid-feedback {
   color: var(--ion-color-danger);
+  font-size: 14px;
+}
+
+@media only screen and (device-width: 320px){
+  .invalid-feedback {
+    color: var(--ion-color-danger);
+    font-size: 12px;
+  }
 }

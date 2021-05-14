@@ -4,21 +4,31 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
-import { CoreModule } from './core/modules/core.module';
 import { SettingsComponent } from './components/settings/settings.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [AppComponent, SettingsComponent],
   entryComponents: [],
   imports: [
     BrowserModule, 
+    FormsModule,
+    HttpClientModule,
     IonicModule.forRoot({
       backButtonText: ''
     }), 
     AppRoutingModule,
-    CoreModule],
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpTranslateLoader,
+        deps: [HttpClient]
+      }
+    })],
   providers: [
     { 
       provide: RouteReuseStrategy, 
@@ -32,3 +42,8 @@ import { SettingsComponent } from './components/settings/settings.component';
   bootstrap: [AppComponent],
 })
 export class AppModule { }
+
+// AOT compilation support
+export function httpTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
