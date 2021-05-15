@@ -1,5 +1,9 @@
-ion-icon {
-  zoom: 1.3;
+.login-icon {
+  zoom: var(--ion-icon-zoom);
+}
+
+.logo-icon {
+  zoom: 5;  
 }
 
 .input-content {
@@ -10,4 +14,34 @@ ion-icon {
 .input-text {
   padding-top: 3px;
   padding-left: 5px;
+}
+
+.invalid-feedback {
+  color: var(--ion-color-danger);
+  font-size: 14px;
+}
+
+@media only screen and (device-width: 360px){
+  .invalid-feedback {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (device-width: 320px){
+  .invalid-feedback {
+    font-size: 11px;
+  }
+}
+
+.nav-link {
+  color: var(--ion-color-primary-shade);
+  text-decoration: underline;
+}
+
+.terms-of-use {
+  padding: 15px;
+}
+
+.terms-of-use-text {
+  font-size: 14px;
 }

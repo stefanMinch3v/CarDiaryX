@@ -30,5 +30,9 @@
   "Error": "Error",
   "Ok": "Ok",
   "Server is not responding...": "Server is not responding...",
-  "Username is already taken": "Username '{{value}}' is already taken."
+  "Username is already taken": "Username '{{value}}' is already taken.",
+  "By clicking Sign Up for Smart Car Diary, Continue with Google, or Continue with Facebook, you agree to Smart Car Diary's": "By clicking Sign Up for Smart Car Diary, Continue with Google, or Continue with Facebook, you agree to Smart Car Diary's",
+  "Terms of Use.": "Terms of Use.",
+  "Continue with Google": "Continue with Google",
+  "Continue with Facebook": "Continue with Facebook"
 }

@@ -66,4 +66,8 @@ export class AuthPage implements OnInit, OnDestroy {
         await loading.dismiss();
       });
   }
+
+  openUrl(): void {
+    window.open('https://google.com', '_system');
+  }
 }

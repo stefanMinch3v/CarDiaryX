@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ "Log In" | translate }}</ion-title>
+    <ion-title class="ion-text-center">Smart Car Diary</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,13 +8,19 @@
   <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
     <ion-grid>
       <ion-row>
+        <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
+          <ion-icon class="logo-icon" name="car-sport-outline"></ion-icon>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-list>
       
             <ion-item>
               <ion-label position="floating">
                 <div class="input-content">
-                  <ion-icon name="mail-outline"></ion-icon>
+                  <ion-icon class="login-icon" name="mail-outline"></ion-icon>
                   <span class="input-text">{{ "Email" | translate }}</span>
                 </div>
               </ion-label>
@@ -23,19 +29,20 @@
                 type="email" 
                 name="email" 
                 email
+                pattern="\S+@\S+\.\S+"
                 required
                 #emailCntrl="ngModel"
               ></ion-input>
             </ion-item>
             
             <ion-item *ngIf="!emailCntrl.valid && emailCntrl.touched" lines="none">
-              <ion-label>Should be a valid email!</ion-label>
+              <ion-label class="invalid-feedback">{{ "Invalid email!" | translate }}</ion-label>
             </ion-item>
 
             <ion-item>
               <ion-label position="floating">
                 <div class="input-content">
-                  <ion-icon name="lock-closed-outline"></ion-icon>
+                  <ion-icon class="login-icon" name="lock-closed-outline"></ion-icon>
                   <span class="input-text">{{ "Password" | translate }}</span>
                 </div>
               </ion-label>
@@ -50,7 +57,7 @@
             </ion-item>
         
             <ion-item *ngIf="!passwordCntrl.valid && passwordCntrl.touched" lines="none">
-              <ion-label>Password must be at least 6 chars!</ion-label>
+              <ion-label class="invalid-feedback">{{ "Password should be at least 6 symbols long!" | translate }}</ion-label>
             </ion-item>
 
           </ion-list>
@@ -79,6 +86,34 @@
             {{ "Login" | translate }}
           </ion-button>
 
+          <br />
+
+          <ion-button 
+            type="button"
+            expand="block"
+            fill="outline"
+          >
+          <ion-icon slot="start" name="logo-facebook"></ion-icon>
+            {{ "Continue with Facebook" | translate }}
+          </ion-button>
+
+          <ion-button 
+            type="button"
+            expand="block"
+            fill="outline"
+          >
+            <ion-icon slot="start" name="logo-google"></ion-icon>
+            {{ "Continue with Google" | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="terms-of-use">
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-label class="terms-of-use-text">
+            {{ "By clicking Sign Up for Smart Car Diary, Continue with Google, or Continue with Facebook, you agree to Smart Car Diary's" | translate }}
+            <span class="nav-link" (click)="openUrl()">{{ "Terms of Use." | translate }}</span>
+          </ion-label>
         </ion-col>
       </ion-row>
     </ion-grid>
