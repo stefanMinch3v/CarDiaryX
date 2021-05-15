@@ -35,18 +35,14 @@ namespace CarDiaryX.Infrastructure.Identity
                 return INVALID_LOGIN_ERROR_MESSAGE;
             }
 
-            var token = this.jwtTokenGenerator.GenerateToken(user);
+            var (token, expiration) = this.jwtTokenGenerator.GenerateToken(user);
 
-            return new LoginOutputModel(token);
+            return new LoginOutputModel(token, expiration);
         }
 
         public async Task<Result> Register(RegisterUserCommand userInput)
         {
-            var user = new User(userInput.Email, userInput.PhoneNumber)
-            {
-                FirstName = userInput.FirstName,
-                LastName = userInput.LastName
-            };
+            var user = new User(userInput.Email, userInput.FirstName, userInput.LastName, userInput.Age);
 
             var identityResult = await this.userManager.CreateAsync(user, userInput.Password);
 

@@ -1,7 +1,9 @@
-﻿namespace CarDiaryX.Infrastructure.Identity
+﻿using System;
+
+namespace CarDiaryX.Infrastructure.Identity
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(User user);
+        (string Token, DateTime Expiration) GenerateToken(User user);
     }
 }

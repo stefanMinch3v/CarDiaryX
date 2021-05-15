@@ -58,12 +58,7 @@ namespace CarDiaryX.Infrastructure.Common.Extensions
 
                     if (adminFromDb is null)
                     {
-                        var user = new User(adminEmail, "000000")
-                        {
-                            UserName = adminEmail,
-                            FirstName = admin,
-                            LastName = admin
-                        };
+                        var user = new User(adminEmail, admin, admin, 30);
 
                         await userManager.CreateAsync(user, "admin12");
 

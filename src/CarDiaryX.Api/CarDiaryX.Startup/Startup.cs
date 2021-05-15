@@ -37,6 +37,14 @@ namespace CarDiaryX.Startup
                 .UseValidationExceptionHandler()
                 .UseHttpsRedirection()
                 .UseRouting()
+                .UseCors(builder =>
+                {
+                    builder.WithOrigins("http://localhost:8100");
+
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                })
                 .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints => endpoints.MapControllers())

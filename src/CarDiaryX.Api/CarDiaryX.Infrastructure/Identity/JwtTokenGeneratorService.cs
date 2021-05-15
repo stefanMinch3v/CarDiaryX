@@ -15,7 +15,7 @@ namespace CarDiaryX.Infrastructure.Identity
         public JwtTokenGeneratorService(IOptions<ApplicationSettings> applicationSettings)
             => this.applicationSettings = applicationSettings.Value;
 
-        public string GenerateToken(User user)
+        public (string Token, DateTime Expiration) GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this.applicationSettings.Secret);
@@ -27,7 +27,7 @@ namespace CarDiaryX.Infrastructure.Identity
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.Email)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59)).AddDays(7),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
@@ -36,7 +36,7 @@ namespace CarDiaryX.Infrastructure.Identity
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var encryptedToken = tokenHandler.WriteToken(token);
 
-            return encryptedToken;
+            return (encryptedToken, token.ValidTo);
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CarDiaryX.Web
 {
     [ApiController]
-    [Route("V[version]/[controller]/[action]")]
+    [Route("api/V[version]/[controller]/[action]")]
     public abstract class ApiControllerBase : ControllerBase
     {
         private IMediator mediator;

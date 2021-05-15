@@ -29,6 +29,8 @@ namespace CarDiaryX.Web
             });
 
             services.AddSwaggerOptions();
+            services.AddRouting(r => r.LowercaseUrls = true);
+            services.AddCors();
 
             return services;
         }
