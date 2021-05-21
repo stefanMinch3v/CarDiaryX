@@ -5,7 +5,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { RegisterComponent } from './register/register.component';
-import { I18nService } from '../../core/services/i18n.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { AuthService } from '../../core/services/auth.service';
 import { IdentityService } from '../../core/services/identity.service';
 
@@ -23,11 +23,11 @@ export class AuthPage implements OnInit, OnDestroy {
     private loadingCntrl: LoadingController,
     private router: Router,
     private modalCntrl: ModalController,
-    private i18nService: I18nService,
+    private settingsService: SettingsService,
     private translateService: TranslateService) { }
   
   ngOnInit(): void {
-    this.langSub = this.i18nService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {

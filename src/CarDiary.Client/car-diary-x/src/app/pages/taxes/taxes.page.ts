@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { SettingsComponent } from '../../components/settings/settings.component';
-import { I18nService } from '../../core/services/i18n.service';
+import { SettingsService } from '../../core/services/settings.service';
 
 @Component({
   selector: 'app-taxes',
@@ -14,12 +14,12 @@ export class TaxesPage implements OnInit, OnDestroy {
   private langSub: Subscription;
 
   constructor(
-    private i18nService: I18nService, 
+    private settingsService: SettingsService, 
     private translateService: TranslateService,
     private modalCntrl: ModalController) { }
 
   ngOnInit(): void {
-    this.langSub = this.i18nService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {

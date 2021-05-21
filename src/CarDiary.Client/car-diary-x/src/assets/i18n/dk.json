@@ -5,9 +5,9 @@
   "Login": "Log på",
   "Log In": "Log på",
   "Dashboard": "Instrumentbræt",
-  "Documents": "Documenter",
+  "Fees": "Gebyrer",
   "History": "Historie",
-  "Consumptions" : "Forbrug",
+  "Profile" : "Profil",
   "Language": "Sprog",
   "English": "Engelsk",
   "Danish": "Dansk",
@@ -34,5 +34,12 @@
   "By clicking Sign Up for Smart Car Diary, Continue with Google, or Continue with Facebook, you agree to Smart Car Diary's": "Ved at klikke på Tilmeld dig Smart Car Diary, Fortsæt med Google eller Fortsæt med Facebook, accepterer du Smart Car Diary's",
   "Terms of Use.": "Betingelser for Brug.",
   "Continue with Google": "Fortsæt med Google",
-  "Continue with Facebook": "Fortsæt med Facebook"
+  "Continue with Facebook": "Fortsæt med Facebook",
+  "Add": "Tilføj",
+  "Home": "Hjem",
+  "Route": "Rejse",
+  "Refueling": "Tankning",
+  "Repair": "Reparation",
+  "Dark Mode": "Mørk Tilstand",
+  "Currency": "Valutaveksling"
 }

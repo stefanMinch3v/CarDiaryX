@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="" (click)="onDismissModal()"></ion-back-button>
     </ion-buttons>
 
-    <ion-title>{{ "Settings" | translate }}</ion-title>
+    <ion-title class="ion-text-center">{{ "Settings" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -22,19 +22,41 @@
             </ion-list-header>
 
             <ion-item>
+              <ion-icon class="lang-icon" name="language-outline"></ion-icon>
               <ion-label>{{ "Language" | translate }}</ion-label>
               <ion-select
                 [value]="this.currentLanguage" 
                 [okText]="'Save' | translate" 
                 [cancelText]="'Cancel' | translate"
                 (ionChange)="onChangeLanguage($event)"
-                (click)="setIconFlags()"
+                (click)="setLanguageIconFlags()"
               >
-                <ion-select-option value="en">{{ "English" | translate }}</ion-select-option>
                 <ion-select-option value="dk">{{ "Danish" | translate }}</ion-select-option>
+                <ion-select-option value="en">{{ "English" | translate }}</ion-select-option>
               </ion-select>
             </ion-item>
             
+            <ion-item>
+              <ion-icon class="lang-icon" name="cash-outline"></ion-icon>
+              <ion-label>{{ "Currency" | translate }}</ion-label>
+              <ion-select
+                [value]="this.currentCurrency" 
+                [okText]="'Save' | translate" 
+                [cancelText]="'Cancel' | translate"
+                (ionChange)="onCurrencyChange($event)"
+                (click)="setCurrencyIconFlags()"
+              >
+                <ion-select-option value="dkk">{{ "DKK - Krone" | translate }}</ion-select-option>
+                <ion-select-option value="eur">{{ "EUR - Euro" | translate }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon class="lang-icon" name="moon-outline"></ion-icon>
+              <ion-label>{{ "Dark Mode" | translate }}</ion-label>
+              <ion-toggle [(ngModel)]="this.isDarkTheme" (ngModelChange)="onThemeChange($event)"></ion-toggle>
+            </ion-item>
+
           </ion-list>
         </ion-col>
       </ion-row>

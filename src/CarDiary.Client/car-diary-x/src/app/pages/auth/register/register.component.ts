@@ -5,7 +5,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { I18nService } from '../../../core/services/i18n.service';
+import { SettingsService } from '../../../core/services/settings.service';
 import { loadingOverlays } from '../../../core/constants/loadingOverlays';
 import { AuthService } from '../../../core/services/auth.service';
 import { IdentityService } from '../../../core/services/identity.service';
@@ -25,11 +25,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private loadingCntrl: LoadingController,
     private authService: AuthService,
     private router: Router,
-    private i18nService: I18nService,
+    private settingsService: SettingsService,
     private translateService: TranslateService) { }
 
   ngOnInit(): void {
-    this.langSub = this.i18nService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
 
     this.registerForm = new FormGroup({
       firstName: new FormControl(null, {
