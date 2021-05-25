@@ -1,38 +1,44 @@
 ﻿using CarDiaryX.Application.Common;
+using CarDiaryX.Application.Contracts;
 using CarDiaryX.Application.Features.V1.Identity;
 using CarDiaryX.Application.Features.V1.Identity.Commands;
 using CarDiaryX.Application.Features.V1.Identity.OutputModels;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
+using CarDiaryX.Infrastructure.Common.Constants;
+using System.Threading;
 
 namespace CarDiaryX.Infrastructure.Identity
 {
     internal class IdentityService : IIdentity
     {
-        private const string INVALID_LOGIN_ERROR_MESSAGE = "Invalid credentials.";
-
         private readonly UserManager<User> userManager;
         private readonly IJwtTokenGenerator jwtTokenGenerator;
+        private readonly ICurrentUser currentUser;
 
-        public IdentityService(UserManager<User> userManager, IJwtTokenGenerator jwtTokenGenerator)
+        public IdentityService(
+            UserManager<User> userManager,
+            IJwtTokenGenerator jwtTokenGenerator,
+            ICurrentUser currentUser)
         {
             this.userManager = userManager;
             this.jwtTokenGenerator = jwtTokenGenerator;
+            this.currentUser = currentUser;
         }
 
-        public async Task<Result<LoginOutputModel>> Login(LoginUserCommand userInput)
+        public async Task<Result<LoginOutputModel>> Login(LoginUserCommand request)
         {
-            var user = await this.userManager.FindByEmailAsync(userInput.Email);
+            var user = await this.userManager.FindByEmailAsync(request.Email);
             if (user is null)
             {
-                return INVALID_LOGIN_ERROR_MESSAGE;
+                return InfrastructureConstants.INVALID_LOGIN_ERROR_MESSAGE;
             }
 
-            var passwordValid = await this.userManager.CheckPasswordAsync(user, userInput.Password);
+            var passwordValid = await this.userManager.CheckPasswordAsync(user, request.Password);
             if (!passwordValid)
             {
-                return INVALID_LOGIN_ERROR_MESSAGE;
+                return InfrastructureConstants.INVALID_LOGIN_ERROR_MESSAGE;
             }
 
             var (token, expiration) = this.jwtTokenGenerator.GenerateToken(user);
@@ -40,11 +46,90 @@ namespace CarDiaryX.Infrastructure.Identity
             return new LoginOutputModel(token, expiration);
         }
 
-        public async Task<Result> Register(RegisterUserCommand userInput)
+        public async Task<Result> Register(RegisterUserCommand request)
         {
-            var user = new User(userInput.Email, userInput.FirstName, userInput.LastName, userInput.Age);
+            var user = new User(request.Email, request.FirstName, request.LastName, request.Age);
 
-            var identityResult = await this.userManager.CreateAsync(user, userInput.Password);
+            var identityResult = await this.userManager.CreateAsync(user, request.Password);
+
+            var errors = identityResult.Errors.Select(e => e.Description);
+
+            return identityResult.Succeeded
+                ? Result.Success
+                : Result.Failure(errors);
+        }
+
+        public async Task<Result> ChangePassword(ChangeUserPasswordCommand request)
+        {
+            var user = await this.userManager.FindByIdAsync(this.currentUser.UserId);
+
+            if (user is null)
+            {
+                return InfrastructureConstants.UNEXISTING_USER;
+            }
+
+            var identityResult = await this.userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+
+            var errors = identityResult.Errors.Select(e => e.Description);
+
+            return identityResult.Succeeded
+                ? Result.Success
+                : Result.Failure(errors);
+        }
+
+        public async Task<Result> DeleteUser(DeleteUserCommand request)
+        {
+            // TODO: Clean all vehicles and any data connected to this account
+
+            var user = await this.userManager.FindByIdAsync(this.currentUser.UserId);
+
+            if (user is null)
+            {
+                return InfrastructureConstants.UNEXISTING_USER;
+            }
+
+            var isValidPassword = await this.userManager.CheckPasswordAsync(user, request.ConfirmPassword);
+
+            if (!isValidPassword)
+            {
+                return InfrastructureConstants.INVALID_CONFIRM_PASSWORD_ERROR_MESSAGE;
+            }
+
+            var identityResult = await this.userManager.DeleteAsync(user);
+
+            var errors = identityResult.Errors.Select(e => e.Description);
+
+            return identityResult.Succeeded
+                ? Result.Success
+                : Result.Failure(errors);
+        }
+
+        public async Task<UserDetailsOutputModel> GetUserDetails(CancellationToken cancellationToken)
+        {
+            var user = await this.userManager.FindByIdAsync(this.currentUser.UserId);
+
+            if (user is null)
+            {
+                return null;
+            }
+
+            return new UserDetailsOutputModel(user.Email, user.FirstName, user.LastName, user.Age);
+        }
+
+        public async Task<Result> UpdateUserDetails(UpdateUserDetailsCommand request)
+        {
+            var user = await this.userManager.FindByIdAsync(this.currentUser.UserId);
+
+            if (user is null)
+            {
+                return InfrastructureConstants.UNEXISTING_USER;
+            }
+
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Age = request.Age;
+
+            var identityResult = await this.userManager.UpdateAsync(user);
 
             var errors = identityResult.Errors.Select(e => e.Description);
 

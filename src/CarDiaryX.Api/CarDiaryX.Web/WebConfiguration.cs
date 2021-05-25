@@ -1,4 +1,6 @@
 ﻿using CarDiaryX.Application.Common;
+using CarDiaryX.Application.Contracts;
+using CarDiaryX.Web.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +19,7 @@ namespace CarDiaryX.Web
         public static IServiceCollection AddWebComponents(this IServiceCollection services)
         {
             services
-                //.AddScoped<ICurrentUser, CurrentUserService>()
+                .AddScoped<ICurrentUser, CurrentUserService>()
                 .AddControllers()
                 .AddFluentValidation(validation => validation
                     .RegisterValidatorsFromAssemblyContaining<Result>())
