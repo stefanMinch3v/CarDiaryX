@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { SettingsService } from '../../../core/services/settings.service';
 import { loadingOverlays } from '../../../core/constants/loadingOverlays';
 import { AuthService } from '../../../core/services/auth.service';
 import { IdentityService } from '../../../core/services/identity.service';
+import { FormValidator } from '../../../core/helpers/form-validator';
 
 @Component({
   selector: 'app-register',
@@ -49,11 +50,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
       }),
       confirmPassword: new FormControl(null)
     }, {
-      validators: [this.matchPasswords, this.matchEmail]
+      validators: [FormValidator.matchPasswords, FormValidator.matchEmail]
     });
   }
 
   ngOnDestroy(): void {
+    if (this.langSub) {
+      this.langSub.unsubscribe();
+    }
+  }
+
+  ionViewWillLeave(): void {
     if (this.langSub) {
       this.langSub.unsubscribe();
     }
@@ -90,44 +97,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.router.navigate(['tabs']);
 
         this.onDismissModal();
-      }, () => loading.dismiss());
-  }
-
-  private matchPasswords(abstractControl: AbstractControl): ValidationErrors | null {
-    if (!abstractControl) {
-      return null;
-    }
-
-    const password = abstractControl.get('password');
-    const confirmPassword = abstractControl.get('confirmPassword');
-
-    if (confirmPassword.errors && !confirmPassword.errors.mustMatch) {
-      // return if another validator has already found an error on the confirmPassword
-      return;
-    }
-
-    // set error on confirmPassword if validation fails
-    if (password.value !== confirmPassword.value) {
-        confirmPassword.setErrors({ mustMatch: true });
-    } else {
-        confirmPassword.setErrors(null);
-    }
-  }
-
-  private matchEmail(abstractControl: AbstractControl): ValidationErrors | null {
-    if (!abstractControl) {
-      return null;
-    }
-
-    const email = abstractControl.get('email');
-
-    var re = /\S+@\S+\.\S+/;
-    const valid = re.test(email.value);
-
-    if (!valid) {
-      email.setErrors({ mustMatch: true });
-    } else {
-      email.setErrors(null);
-    }
+      }, () => loading.dismiss(), () => loading.dismiss());
   }
 }

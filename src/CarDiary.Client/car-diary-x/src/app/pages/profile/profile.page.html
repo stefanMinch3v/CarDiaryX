@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Profile" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <p class="ion-text-center">Your pro version expires at: 26/01/2022</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <div *ngIf="isLoading" class="ion-text-center">
+          <ion-spinner color="primary"></ion-spinner>
+        </div>
+
+        <form [formGroup]="updateUserForm" *ngIf="!isLoading && userDetails">
+          <ion-list>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="mail-outline"></ion-icon>
+                  <span class="input-text">{{ "Email" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input type="email" [value]="userDetails.email" disabled></ion-input>
+            </ion-item>
+  
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span class="input-text">{{ "First Name" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="firstName" type="text" [value]="userDetails.firstName"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.firstName.valid && f.firstName.touched" lines="none">
+              <ion-label *ngIf="f.firstName.errors.required" class="invalid-feedback">{{ "Name is required!" | translate }}</ion-label>
+              <ion-label *ngIf="f.firstName.errors.minlength" class="invalid-feedback">{{ "Name should be at least 2 symbols long!" | translate }}</ion-label>
+            </ion-item>
+  
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="person-outline"></ion-icon>
+                  <span class="input-text">{{ "Last Name" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="lastName" type="text" [value]="userDetails.lastName"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.lastName.valid && f.lastName.touched" lines="none">
+              <ion-label *ngIf="f.lastName.errors.required" class="invalid-feedback">{{ "Name is required!" | translate }}</ion-label>
+              <ion-label *ngIf="f.lastName.errors.minlength" class="invalid-feedback">{{ "Name should be at least 2 symbols long!" | translate }}</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">
+                <div class="input-content">
+                  <ion-icon name="accessibility-outline"></ion-icon>
+                  <span class="input-text">{{ "Age" | translate }}</span>
+                </div>
+              </ion-label>
+              <ion-input formControlName="age" type="number" [value]="userDetails.age"></ion-input>
+            </ion-item>
+            
+            <ion-item *ngIf="!f.age.valid && f.age.touched" lines="none">
+              <ion-label class="invalid-feedback">{{ "Number between 16 and 120!" | translate }}</ion-label>
+            </ion-item>
+  
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <ion-button 
+          type="submit"
+          color="primary" 
+          expand="block"
+          (click)="onSubmit()"
+          [disabled]="!updateUserForm.valid"
+        >
+          {{ "Save" | translate }}
+        </ion-button>
+
+        <ion-button 
+          type="submit"
+          color="primary" 
+          expand="block"
+          fill="clear"
+          (click)="presentChangePasswordModal()"
+        >
+          {{ "Change Password" | translate }}
+        </ion-button>
+
+        <ion-button 
+          type="submit"
+          color="danger" 
+          expand="block"
+          fill="clear"
+          (click)="presentDeleteAccountAlert()"
+        >
+          {{ "Delete Account" | translate }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

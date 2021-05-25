@@ -1,0 +1,31 @@
+.center-title {
+  padding-left: var(--ion-android-title-with-back-button-padding-left);
+  padding-right: var(--ion-android-title-with-back-button-padding-right);
+}
+
+.input-content {
+  align-items: center;
+  display: flex;
+}
+
+.input-text {
+  padding-top: 3px;
+  padding-left: 5px;
+}
+
+.invalid-feedback {
+  color: var(--ion-color-danger);
+  font-size: 14px;
+}
+
+@media only screen and (device-width: 360px) {
+  .invalid-feedback {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (device-width: 320px) {
+  .invalid-feedback {
+    font-size: 11px;
+  }
+}

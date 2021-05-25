@@ -30,7 +30,7 @@
   "Error": "Fejl",
   "Ok": "Okay",
   "Server is not responding...": "Serveren svarer ikke...",
-  "Username is already taken": "Brugernavn '{{value}}' er allerede taget.",
+  "Username is already taken": "E-mail '{{value}}' er allerede taget.",
   "By clicking Sign Up for Smart Car Diary, Continue with Google, or Continue with Facebook, you agree to Smart Car Diary's": "Ved at klikke på Tilmeld dig Smart Car Diary, Fortsæt med Google eller Fortsæt med Facebook, accepterer du Smart Car Diary's",
   "Terms of Use.": "Betingelser for Brug.",
   "Continue with Google": "Fortsæt med Google",
@@ -41,5 +41,16 @@
   "Refueling": "Tankning",
   "Repair": "Reparation",
   "Dark Mode": "Mørk Tilstand",
-  "Currency": "Valutaveksling"
+  "Currency": "Valutaveksling",
+  "Logout": "Log ud",
+  "Change Password": "Skift Kodeord",
+  "Delete Account": "Slet Konto",
+  "Account will be permanently deleted!": "Kontoen slettes permanent!",
+  "All your data link to the account will be erased!": "Alle dine datalink til kontoen slettes!",
+  "Delete": "Slet",
+  "Current Password": "Nuværende Kodeord",
+  "New Password": "Nyt Kodeord",
+  "Success": "Succes",
+  "Incorrect password.": "Forkert kodeord.",
+  "Invalid password.": "Forkert kodeord."
 }

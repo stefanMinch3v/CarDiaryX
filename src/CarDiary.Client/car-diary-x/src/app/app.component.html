@@ -60,7 +60,7 @@
           </ion-list-header>
 
           <ion-menu-toggle autoHide="false">
-            <ion-item routerLink="/signup" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-item routerLink="/profile" routerLinkActive="active" routerDirection="root" detail="false">
               <ion-icon slot="start" name="person-circle"></ion-icon>
               <ion-label>
                 Profile
@@ -87,10 +87,10 @@
           </ion-menu-toggle>
 
           <ion-menu-toggle autoHide="false">
-            <ion-item routerLink="/login" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-item (click)="onLogout()" detail="false">
               <ion-icon slot="start" name="log-out"></ion-icon>
               <ion-label>
-                Logout
+                {{ "Logout" | translate }}
               </ion-label>
             </ion-item>
           </ion-menu-toggle>

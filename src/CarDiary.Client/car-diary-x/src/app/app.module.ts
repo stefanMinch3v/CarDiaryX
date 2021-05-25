@@ -10,6 +10,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TokenInterceptor } from './core/interceptors/token.interceptor';
 
 @NgModule({
   declarations: [AppComponent, SettingsComponent],
@@ -37,6 +38,11 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
       multi: true
     }],
   bootstrap: [AppComponent],

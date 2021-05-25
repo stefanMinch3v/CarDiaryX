@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from './core/services/auth.service';
 import { SettingsService } from './core/services/settings.service';
 
 @Component({
@@ -45,7 +47,10 @@ export class AppComponent implements OnInit, OnDestroy {
   
   isDarkTheme: boolean;
 
-  constructor(private settingsService: SettingsService) { }
+  constructor(
+    private settingsService: SettingsService,
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.themeSub = this.settingsService.currentTheme.subscribe(isDarkTheme => this.isDarkTheme = isDarkTheme);
@@ -55,5 +60,16 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.themeSub) {
       this.themeSub.unsubscribe();
     }
+  }
+
+  ionViewWillLeave(): void {
+    if (this.themeSub) {
+      this.themeSub.unsubscribe();
+    }
+  }
+
+  onLogout(): void {
+    this.authService.deauthenticateUser();
+    this.router.navigate(['/auth']);
   }
 }

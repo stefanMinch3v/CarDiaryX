@@ -2,3 +2,8 @@
   zoom: 0.8;
   padding-right: 15px;
 }
+
+.center-title {
+  padding-left: var(--ion-android-title-with-back-button-padding-left);
+  padding-right: var(--ion-android-title-with-back-button-padding-right);
+}

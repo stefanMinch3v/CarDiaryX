@@ -45,9 +45,9 @@ export class ErrorInterceptor  implements HttpInterceptor {
     if ([...this.indexOfSubstrings(message, this.DUPLICATE_USERNAME_MESSAGE)].length > 0) {
       message = message.match(/'([^']+)'/)[1]; // cut 'username' out of full sentence
 
-      translated = this.translate.instant(['Error', 'Username is already taken'  , 'Ok'], { value: message });
+      translated = this.translate.instant(['Error', 'Username is already taken', 'Ok'], { value: message });
     } else {
-      translated = this.translate.instant(['Error', message  , 'Ok']);
+      translated = this.translate.instant(['Error', message , 'Ok']);
     }
 
     let result = [];

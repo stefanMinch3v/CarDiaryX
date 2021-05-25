@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { loadingOverlays } from '../../core/constants/loadingOverlays';
 import { SettingsService } from '../../core/services/settings.service';
 
 @Component({
@@ -16,12 +15,10 @@ export class TabsPage implements OnInit, OnDestroy {
   constructor(
     private settingsService: SettingsService, 
     private translateService: TranslateService,
-    private loadingCntrl: LoadingController,
-    private actionsheetCntrl: ActionSheetController) { }
+    private actionsheetCntrl: ActionSheetController) {}
   
   ngOnInit(): void {
     this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
-    this.loadingCntrl.getTop().then(overLay => overLay?.id === loadingOverlays.initialRegistration ? overLay.dismiss() : null);
   }
 
   ngOnDestroy(): void {

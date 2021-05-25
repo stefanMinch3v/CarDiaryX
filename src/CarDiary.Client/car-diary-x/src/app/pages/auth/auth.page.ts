@@ -36,6 +36,12 @@ export class AuthPage implements OnInit, OnDestroy {
     }
   }
 
+  ionViewWillLeave(): void {
+    if (this.langSub) {
+      this.langSub.unsubscribe();
+    }
+  }
+
   async presentModal(): Promise<void> {
     const modal = await this.modalCntrl.create({
       component: RegisterComponent

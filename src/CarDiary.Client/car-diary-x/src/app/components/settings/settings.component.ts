@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { SettingsService } from '../../core/services/settings.service';
 
@@ -17,15 +17,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
   currentLanguage: string;
   currentCurrency: string;
   isDarkTheme: boolean;
+  isIOS: boolean;
 
   constructor(
     private modalCntrl: ModalController, 
-    private settingsService: SettingsService) {}
+    private settingsService: SettingsService,
+    private platform: Platform) {}
 
   ngOnInit(): void {
     this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.currentLanguage = lang);
     this.themeSub = this.settingsService.currentTheme.subscribe(isDarkTheme => this.isDarkTheme = isDarkTheme);
     this.currencySub = this.settingsService.currentCurrency.subscribe(currency => this.currentCurrency = currency);
+    this.isIOS = this.platform.is('ios');
   }
 
   ngOnDestroy(): void {
@@ -37,7 +40,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.themeSub.unsubscribe();
     }
 
-    if (this.currentCurrency) {
+    if (this.currencySub) {
       this.currencySub.unsubscribe();
     }
   }
@@ -46,7 +49,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.modalCntrl.dismiss({ 'dismissed': true });
   }
 
-  onChangeLanguage(event: any): void {
+  onLanguageChange(event: any): void {
     const selectedRawLang = event?.detail?.value;
 
     if (!selectedRawLang) {

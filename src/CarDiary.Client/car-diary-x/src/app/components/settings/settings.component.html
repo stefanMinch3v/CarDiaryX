@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="" (click)="onDismissModal()"></ion-back-button>
     </ion-buttons>
 
-    <ion-title class="ion-text-center">{{ "Settings" | translate }}</ion-title>
+    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Settings" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -28,7 +28,7 @@
                 [value]="this.currentLanguage" 
                 [okText]="'Save' | translate" 
                 [cancelText]="'Cancel' | translate"
-                (ionChange)="onChangeLanguage($event)"
+                (ionChange)="onLanguageChange($event)"
                 (click)="setLanguageIconFlags()"
               >
                 <ion-select-option value="dk">{{ "Danish" | translate }}</ion-select-option>

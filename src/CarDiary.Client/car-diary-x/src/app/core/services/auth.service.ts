@@ -5,8 +5,8 @@ import { Plugins } from '@capacitor/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private static readonly TOKEN_KEY = 'token';
-  private static readonly EXPIRE_KEY = 'expiration';
+  private readonly TOKEN_KEY = 'token';
+  private readonly EXPIRE_KEY = 'expiration';
 
   public async isUserAuthenticated() {
     const expirationTimeResult = await this.getExpirationTime();
@@ -19,8 +19,8 @@ export class AuthService {
   }
 
   public authenticateUser(token, expiration): void {
-    Plugins.Storage.set({ key: AuthService.TOKEN_KEY, value: token });
-    Plugins.Storage.set({ key: AuthService.EXPIRE_KEY, value: expiration });
+    Plugins.Storage.set({ key: this.TOKEN_KEY, value: token });
+    Plugins.Storage.set({ key: this.EXPIRE_KEY, value: expiration });
   }
 
   public deauthenticateUser(): void {
@@ -28,19 +28,19 @@ export class AuthService {
     this.removeExpirationTime();
   }
 
-  private getToken(): Promise<{ value: string }> {
-    return Plugins.Storage.get({ key: AuthService.TOKEN_KEY });
+  public getToken(): Promise<{ value: string }> {
+    return Plugins.Storage.get({ key: this.TOKEN_KEY });
   }
 
   private getExpirationTime(): Promise<{ value: string }> {
-    return Plugins.Storage.get({ key: AuthService.EXPIRE_KEY });
+    return Plugins.Storage.get({ key: this.EXPIRE_KEY });
   }
 
   private removeExpirationTime(): void {
-    Plugins.Storage.remove({ key: AuthService.EXPIRE_KEY });
+    Plugins.Storage.remove({ key: this.EXPIRE_KEY });
   }
 
   private removeToken(): void {
-    Plugins.Storage.remove({ key: AuthService.TOKEN_KEY });
+    Plugins.Storage.remove({ key: this.TOKEN_KEY });
   }
 }
