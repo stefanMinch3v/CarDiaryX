@@ -8,7 +8,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'token';
   private readonly EXPIRE_KEY = 'expiration';
 
-  public async isUserAuthenticated() {
+  public async isUserAuthenticated(): Promise<boolean> {
     const expirationTimeResult = await this.getExpirationTime();
     const tokenResult = await this.getToken();
     if (tokenResult.value !== null && new Date((expirationTimeResult.value)) > new Date) {

@@ -3,13 +3,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { IdentityService } from '../../core/services/identity.service';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { Subscription } from 'rxjs';
 import { UserDetailsModel } from '../../core/models/identity/user-details.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { validations } from '../../core/constants/validations';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +18,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit, OnDestroy {
-  private userSub: Subscription;
+  private userSub$: Subscription;
   updateUserForm: FormGroup;
   userDetails: UserDetailsModel;
   isLoading: boolean;
@@ -37,34 +38,38 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isIOS = this.platform.is('ios');
-    this.userSub = this.identityService.get().subscribe(user => { 
-      this.isLoading = false;
-      this.userDetails = user;
-      this.updateUserForm.patchValue(this.userDetails)
-    });
+
+    this.isLoading = true;
+    this.userSub$ = this.identityService.get().subscribe(user => { 
+      if (user) {
+        this.userDetails = user;
+        this.updateUserForm.patchValue(this.userDetails);
+      }
+    }, () => this.isLoading = false, () => this.isLoading = false);
+
     this.updateUserForm = new FormGroup({
       firstName: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(2)]
+        validators: [Validators.required, Validators.minLength(validations.user.NAME_MIN_LENGTH), Validators.maxLength(validations.user.NAME_MAX_LENGTH)]
       }),
       lastName: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(2)]
+        validators: [Validators.required, Validators.minLength(validations.user.NAME_MIN_LENGTH), Validators.maxLength(validations.user.NAME_MAX_LENGTH)]
       }),
       age: new FormControl(null, {
-        validators: [Validators.required, Validators.min(16), Validators.max(120)]
+        validators: [Validators.required, Validators.min(validations.user.AGE_MIN), Validators.max(validations.user.AGE_MAX)]
       }),
     });
   }
 
   ngOnDestroy(): void {
-    if (this.userSub) {
-      this.userSub.unsubscribe();
+    if (this.userSub$) {
+      this.userSub$.unsubscribe();
     }
   }
   
   // if account is removed I use router navigate cuz ngOnDestroy does not trigger
   ionViewWillLeave(): void {
-    if (this.userSub) {
-      this.userSub.unsubscribe();
+    if (this.userSub$) {
+      this.userSub$.unsubscribe();
     }
   }
 
@@ -107,11 +112,10 @@ export class ProfilePage implements OnInit, OnDestroy {
 
             this.identityService.deleteAccount(alertData?.password)
               .subscribe(_ => {
-                loading.dismiss();
                 this.toastService.presentSuccessToast();
                 this.authService.deauthenticateUser();
                 this.router.navigate(['/auth']);
-              }, () => loading.dismiss());
+              }, () => loading.dismiss(), () => loading.dismiss());
           }
         }
       ]
@@ -134,8 +138,7 @@ export class ProfilePage implements OnInit, OnDestroy {
 
     this.identityService.update({ firstName, lastName, age })
       .subscribe(_ => {
-        loading.dismiss();
         this.toastService.presentSuccessToast();
-      }, () => loading.dismiss());
+      }, () => loading.dismiss(), () => loading.dismiss());
   }
 }

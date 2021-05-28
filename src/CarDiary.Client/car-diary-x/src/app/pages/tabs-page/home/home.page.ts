@@ -2,29 +2,29 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { SettingsComponent } from '../../components/settings/settings.component';
-import { SettingsService } from '../../core/services/settings.service';
+import { SettingsComponent } from '../../../components/settings/settings.component';
+import { SettingsService } from '../../../core/services/settings.service';
 
 @Component({
-  selector: 'app-history',
-  templateUrl: './history.page.html',
-  styleUrls: ['./history.page.scss'],
+  selector: 'app-home',
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
 })
-export class HistoryPage implements OnInit, OnDestroy {
-  private langSub: Subscription;
+export class HomePage implements OnInit, OnDestroy {
+  private langSub$: Subscription;
 
   constructor(
     private settingsService: SettingsService, 
     private translateService: TranslateService,
     private modalCntrl: ModalController) { }
-
+  
   ngOnInit(): void {
-    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 

@@ -10,7 +10,7 @@ import { SettingsService } from '../../core/services/settings.service';
   styleUrls: ['./tabs-page.scss']
 })
 export class TabsPage implements OnInit, OnDestroy {
-  private langSub: Subscription;
+  private langSub$: Subscription;
 
   constructor(
     private settingsService: SettingsService, 
@@ -18,12 +18,12 @@ export class TabsPage implements OnInit, OnDestroy {
     private actionsheetCntrl: ActionSheetController) {}
   
   ngOnInit(): void {
-    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 

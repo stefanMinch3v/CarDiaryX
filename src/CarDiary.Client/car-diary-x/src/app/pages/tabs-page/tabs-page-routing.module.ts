@@ -10,19 +10,19 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
+        loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
       },
       {
         path: 'taxes',
-        loadChildren: () => import('../taxes/taxes.module').then(m => m.TaxesPageModule)
+        loadChildren: () => import('./taxes/taxes.module').then(m => m.TaxesPageModule)
       },
       {
         path: 'history',
-        loadChildren: () => import('../history/history.module').then(m => m.HistoryPageModule)
+        loadChildren: () => import('./history/history.module').then(m => m.HistoryPageModule)
       },
       {
         path: 'fuel',
-        loadChildren: () => import('../fuel/fuel.module').then(m => m.FuelPageModule)
+        loadChildren: () => import('./fuel/fuel.module').then(m => m.FuelPageModule)
       },
       {
         path: '',

@@ -6,10 +6,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { SettingsService } from '../../../core/services/settings.service';
-import { loadingOverlays } from '../../../core/constants/loadingOverlays';
 import { AuthService } from '../../../core/services/auth.service';
 import { IdentityService } from '../../../core/services/identity.service';
 import { FormValidator } from '../../../core/helpers/form-validator';
+import { validations } from '../../../core/constants/validations';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +17,7 @@ import { FormValidator } from '../../../core/helpers/form-validator';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  private langSub: Subscription;
+  private langSub$: Subscription;
   registerForm: FormGroup;
 
   constructor(
@@ -30,23 +30,23 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private translateService: TranslateService) { }
 
   ngOnInit(): void {
-    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
 
     this.registerForm = new FormGroup({
       firstName: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(2)]
+        validators: [Validators.required, Validators.minLength(validations.user.NAME_MIN_LENGTH), Validators.maxLength(validations.user.NAME_MAX_LENGTH)]
       }),
       lastName: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(2)]
+        validators: [Validators.required, Validators.minLength(validations.user.NAME_MIN_LENGTH), Validators.maxLength(validations.user.NAME_MAX_LENGTH)]
       }),
       age: new FormControl(null, {
-        validators: [Validators.required, Validators.min(16), Validators.max(120)]
+        validators: [Validators.required, Validators.min(validations.user.AGE_MIN), Validators.max(validations.user.AGE_MAX)]
       }),
       email: new FormControl(null, {
-        validators: [Validators.required, Validators.email]
+        validators: [Validators.required, Validators.email, Validators.minLength(validations.user.EMAIL_MIN_LENGTH), Validators.maxLength(validations.user.EMAIL_MAX_LENGTH)]
       }),
       password: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(6)]
+        validators: [Validators.required, Validators.minLength(validations.user.PASSWORD_MIN_LENGTH), Validators.maxLength(validations.user.PASSWORD_MAX_LENGTH)]
       }),
       confirmPassword: new FormControl(null)
     }, {
@@ -55,14 +55,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 
   ionViewWillLeave(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 
@@ -83,15 +83,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
     const email = this.registerForm.value.email;
     const password = this.registerForm.value.password;
 
-    const loading = await this.loadingCntrl.create({ keyboardClose: true, id: loadingOverlays.initialRegistration });
+    const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
     this.identityService.register({ firstName, lastName, age, email, password })
       .pipe(
         switchMap(_ => this.identityService.login({ email, password })))
       .subscribe(response => {
-        const token = response.token;
-        const expiration = response.expiration;
+        const token = response?.token;
+        const expiration = response?.expiration;
 
         this.authService.authenticateUser(token, expiration);
         this.router.navigate(['tabs']);

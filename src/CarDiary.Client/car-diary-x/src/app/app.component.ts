@@ -10,7 +10,7 @@ import { SettingsService } from './core/services/settings.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private themeSub: Subscription;
+  private themeSub$: Subscription;
 
   appPages = [
     {
@@ -53,18 +53,18 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.themeSub = this.settingsService.currentTheme.subscribe(isDarkTheme => this.isDarkTheme = isDarkTheme);
+    this.themeSub$ = this.settingsService.currentTheme.subscribe(isDarkTheme => this.isDarkTheme = isDarkTheme);
   }
 
   ngOnDestroy(): void {
-    if (this.themeSub) {
-      this.themeSub.unsubscribe();
+    if (this.themeSub$) {
+      this.themeSub$.unsubscribe();
     }
   }
 
   ionViewWillLeave(): void {
-    if (this.themeSub) {
-      this.themeSub.unsubscribe();
+    if (this.themeSub$) {
+      this.themeSub$.unsubscribe();
     }
   }
 

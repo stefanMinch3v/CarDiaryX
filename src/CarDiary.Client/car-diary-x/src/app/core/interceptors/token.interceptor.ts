@@ -5,24 +5,28 @@ import { AuthService } from '../services/auth.service';
   
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-    constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-    intercept(
-        req: HttpRequest<any>,
-        next: HttpHandler
+  intercept(
+      req: HttpRequest<any>,
+      next: HttpHandler
     ): Observable<HttpEvent<any>> {
-        return from(this.handle(req, next));
-    }
+    return from(this.handle(req, next));
+  }
 
-    private async handle(req: HttpRequest<any>, next: HttpHandler) {
+  private async handle(req: HttpRequest<any>, next: HttpHandler) {
+    try {
       const result = await this.authService.getToken();
 
       if (result && result.value) {
-          req = req.clone({
-              headers: req.headers.set('Authorization', 'Bearer ' + result.value)
-          });
+        req = req.clone({
+          headers: req.headers.set('Authorization', 'Bearer ' + result.value)
+        });
       }
-
-      return next.handle(req).toPromise();
+    } catch (error) {
+      console.log(error);
     }
+
+    return next.handle(req).toPromise();
+  }
 }

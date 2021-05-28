@@ -4,6 +4,7 @@ import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { IdentityService } from '../../../core/services/identity.service';
 import { FormValidator } from '../../../core/helpers/form-validator';
 import { ToastService } from '../../../core/services/toast.service';
+import { validations } from '../../../core/constants/validations';
 
 @Component({
   selector: 'app-change-password',
@@ -29,7 +30,7 @@ export class ChangePasswordComponent implements OnInit {
         validators: [Validators.required]
       }),
       password: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(6)]
+        validators: [Validators.required, Validators.minLength(validations.user.PASSWORD_MIN_LENGTH), Validators.maxLength(validations.user.PASSWORD_MAX_LENGTH)]
       }),
       confirmPassword: new FormControl(null)
     }, {
@@ -51,16 +52,13 @@ export class ChangePasswordComponent implements OnInit {
     const currentPassword = this.changePasswordForm.value.currentPassword;
     const newPassword = this.changePasswordForm.value.password;
 
-    console.log(currentPassword, newPassword);
-
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
     this.identityService.changePassword({ currentPassword, newPassword })
       .subscribe(_ => {
-        loading.dismiss();
         this.onDismissModal();
         this.toastService.presentSuccessToast();
-      }, () => loading.dismiss());
+      }, () => loading.dismiss(), () => loading.dismiss());
   }
 }

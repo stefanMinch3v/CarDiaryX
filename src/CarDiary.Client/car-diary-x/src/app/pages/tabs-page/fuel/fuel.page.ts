@@ -2,16 +2,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { SettingsComponent } from '../../components/settings/settings.component';
-import { SettingsService } from '../../core/services/settings.service';
+import { SettingsComponent } from '../../../components/settings/settings.component';
+import { SettingsService } from '../../../core/services/settings.service';
 
 @Component({
-  selector: 'app-taxes',
-  templateUrl: './taxes.page.html',
-  styleUrls: ['./taxes.page.scss'],
+  selector: 'app-fuel',
+  templateUrl: './fuel.page.html',
+  styleUrls: ['./fuel.page.scss'],
 })
-export class TaxesPage implements OnInit, OnDestroy {
-  private langSub: Subscription;
+export class FuelPage implements OnInit, OnDestroy {
+  private langSub$: Subscription;
 
   constructor(
     private settingsService: SettingsService, 
@@ -19,12 +19,12 @@ export class TaxesPage implements OnInit, OnDestroy {
     private modalCntrl: ModalController) { }
 
   ngOnInit(): void {
-    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 

@@ -8,29 +8,29 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SettingsService {
-  private static readonly DEFAULT_LANGUAGE = 'dk';
-  private static readonly ALLOWED_LANGUAGES = ['en', 'dk'];
-  private static readonly LANGUAGE_KEY = 'language';
+  private readonly DEFAULT_LANGUAGE = 'dk';
+  private readonly ALLOWED_LANGUAGES = ['en', 'dk'];
+  private readonly LANGUAGE_KEY = 'language';
 
-  private static readonly THEME_KEY = 'isDarkTheme';
+  private readonly THEME_KEY = 'isDarkTheme';
 
-  private static readonly CURRENCY_KEY = 'currency';
-  private static readonly DEFAULT_CURRENCY = 'dkk';
-  private static readonly ALLOWED_CURRENCIES = ['dkk', 'eur'];
+  private readonly CURRENCY_KEY = 'currency';
+  private readonly DEFAULT_CURRENCY = 'dkk';
+  private readonly ALLOWED_CURRENCIES = ['dkk', 'eur'];
 
-  private _langSub = new BehaviorSubject<string>(null);
-  private _themeSub = new BehaviorSubject<boolean>(false);
-  private _currencySub = new BehaviorSubject<string>(null);
+  private _langSub$ = new BehaviorSubject<string>(null);
+  private _themeSub$ = new BehaviorSubject<boolean>(false);
+  private _currencySub$ = new BehaviorSubject<string>(null);
 
   constructor(private translate: TranslateService) {
     this.setupSubscriptions();
   }
 
   get currentLanguage(): Observable<string> {
-    return this._langSub.asObservable()
+    return this._langSub$.asObservable()
       .pipe(map(lang => {
         if (!lang) {
-          return SettingsService.DEFAULT_LANGUAGE;
+          return this.DEFAULT_LANGUAGE;
         }
 
         return lang;
@@ -38,24 +38,24 @@ export class SettingsService {
   }
 
   set setCurrentLanguage(lang: 'en' | 'dk') {
-    this._langSub.next(lang);
-    Plugins.Storage.set({ key: SettingsService.LANGUAGE_KEY, value: lang });
+    this._langSub$.next(lang);
+    Plugins.Storage.set({ key: this.LANGUAGE_KEY, value: lang });
   }
 
   get currentTheme(): Observable<boolean> {
-    return this._themeSub.asObservable();
+    return this._themeSub$.asObservable();
   }
 
   set setCurrentTheme(theme: boolean) {
-    this._themeSub.next(theme);
-    Plugins.Storage.set({ key: SettingsService.THEME_KEY, value: String(theme) });
+    this._themeSub$.next(theme);
+    Plugins.Storage.set({ key: this.THEME_KEY, value: String(theme) });
   }
 
   get currentCurrency(): Observable<string> {
-    return this._currencySub.asObservable()
+    return this._currencySub$.asObservable()
       .pipe(map(currency => {
         if (!currency) {
-          return SettingsService.DEFAULT_CURRENCY;
+          return this.DEFAULT_CURRENCY;
         }
 
         return currency;
@@ -63,16 +63,16 @@ export class SettingsService {
   }
 
   set setCurrentCurrency(currency: 'dkk' | 'eur') {
-    this._currencySub.next(currency);
-    Plugins.Storage.set({ key: SettingsService.CURRENCY_KEY, value: currency });
+    this._currencySub$.next(currency);
+    Plugins.Storage.set({ key: this.CURRENCY_KEY, value: currency });
   }
 
   private setupSubscriptions(): void {
-    this.translate.addLangs(SettingsService.ALLOWED_LANGUAGES);
+    this.translate.addLangs(this.ALLOWED_LANGUAGES);
 
-    Plugins.Storage.get({ key: SettingsService.LANGUAGE_KEY })
+    Plugins.Storage.get({ key: this.LANGUAGE_KEY })
       .then(storedLang => {
-        if (!storedLang || !storedLang.value || !SettingsService.ALLOWED_LANGUAGES.includes(storedLang.value)) {
+        if (!storedLang || !storedLang.value || !this.ALLOWED_LANGUAGES.includes(storedLang.value)) {
           return;
         }
 
@@ -81,25 +81,25 @@ export class SettingsService {
         // translate.use(browserLang.match(/en|fr/) ? browserLang : 'en');
 
         this.translate.setDefaultLang(storedLang.value);
-        this._langSub.next(storedLang.value);
+        this._langSub$.next(storedLang.value);
       });
 
-    Plugins.Storage.get({ key: SettingsService.THEME_KEY })
+    Plugins.Storage.get({ key: this.THEME_KEY })
       .then(storedTheme => {
         if (!storedTheme) {
           return;
         }
 
-        this._themeSub.next(JSON.parse(storedTheme.value));
+        this._themeSub$.next(JSON.parse(storedTheme.value));
       });
 
-    Plugins.Storage.get({ key: SettingsService.CURRENCY_KEY })
+    Plugins.Storage.get({ key: this.CURRENCY_KEY })
       .then(storedCurrency => {
-        if (!storedCurrency || !storedCurrency.value || !SettingsService.ALLOWED_CURRENCIES.includes(storedCurrency.value)) {
+        if (!storedCurrency || !storedCurrency.value || !this.ALLOWED_CURRENCIES.includes(storedCurrency.value)) {
           return;
         }
 
-        this._currencySub.next(storedCurrency.value);
+        this._currencySub$.next(storedCurrency.value);
       });
   }
 }

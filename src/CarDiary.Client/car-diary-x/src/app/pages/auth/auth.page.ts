@@ -15,7 +15,7 @@ import { IdentityService } from '../../core/services/identity.service';
   styleUrls: ['./auth.page.scss'],
 })
 export class AuthPage implements OnInit, OnDestroy {
-  private langSub: Subscription;
+  private langSub$: Subscription;
 
   constructor(
     private identityService: IdentityService, 
@@ -27,18 +27,18 @@ export class AuthPage implements OnInit, OnDestroy {
     private translateService: TranslateService) { }
   
   ngOnInit(): void {
-    this.langSub = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
+    this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 
   ionViewWillLeave(): void {
-    if (this.langSub) {
-      this.langSub.unsubscribe();
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
     }
   }
 
@@ -63,14 +63,13 @@ export class AuthPage implements OnInit, OnDestroy {
 
     this.identityService
       .login({ email, password })
-      .subscribe(async response => {
-        const token = response.token;
-        const expiration = response.expiration;
+      .subscribe(response => {
+        const token = response?.token;
+        const expiration = response?.expiration;
 
         this.authService.authenticateUser(token, expiration);
         this.router.navigate(['tabs']);
-        await loading.dismiss();
-      });
+      }, () => loading.dismiss(), () => loading.dismiss());
   }
 
   openUrl(): void {

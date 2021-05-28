@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { HistoryPageRoutingModule } from './history-routing.module';
 import { HistoryPage } from './history.page';
-import { CoreModule } from 'src/app/core/modules/core.module';
+import { CoreModule } from '../../../core/modules/core.module';
 
 @NgModule({
   imports: [
