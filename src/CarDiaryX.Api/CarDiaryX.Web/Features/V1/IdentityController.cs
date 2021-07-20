@@ -16,28 +16,28 @@ namespace CarDiaryX.Web.Features.V1
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
-            => await this.Send(command);
+            => await base.Send(command);
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<LoginOutputModel>> Login([FromBody] LoginUserCommand command)
-            => await this.Send(command);
+            => await base.Send(command);
 
         [HttpPut]
         public async Task<ActionResult> ChangePassword([FromBody] ChangeUserPasswordCommand command)
-            => await this.Send(command);
+            => await base.Send(command);
 
         [HttpDelete]
         public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
-            => await this.Send(command);
+            => await base.Send(command);
 
         [HttpGet]
-        public async Task<ActionResult<UserDetailsOutputModel>> Get()
-            => await this.Send(new GetUserDetailsQuery());
+        public async Task<ActionResult<UserDetailsOutputModel>> UserDetails()
+            => await base.Send(new GetUserDetailsQuery());
 
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] UpdateUserDetailsCommand command)
-            => await this.Send(command);
+            => await base.Send(command);
 
         // To test if JWT is working
         [HttpGet]

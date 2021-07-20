@@ -24,8 +24,7 @@ namespace CarDiaryX.Infrastructure.Identity
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user.Email)
+                    new Claim(ClaimTypes.NameIdentifier, user.Id)
                 }),
                 Expires = (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59)).AddDays(7),
                 SigningCredentials = new SigningCredentials(

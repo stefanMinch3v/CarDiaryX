@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace CarDiaryX.Web
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/V[version]/[controller]/[action]")]
     public abstract class ApiControllerBase : ControllerBase
     {

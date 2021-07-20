@@ -3,11 +3,12 @@ using CarDiaryX.Application.Contracts;
 using CarDiaryX.Application.Features.V1.Identity;
 using CarDiaryX.Application.Features.V1.Identity.Commands;
 using CarDiaryX.Application.Features.V1.Identity.OutputModels;
+using CarDiaryX.Application.Features.V1.Vehicles;
+using CarDiaryX.Infrastructure.Common.Constants;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
-using System.Threading.Tasks;
-using CarDiaryX.Infrastructure.Common.Constants;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CarDiaryX.Infrastructure.Identity
 {
@@ -16,15 +17,18 @@ namespace CarDiaryX.Infrastructure.Identity
         private readonly UserManager<User> userManager;
         private readonly IJwtTokenGenerator jwtTokenGenerator;
         private readonly ICurrentUser currentUser;
+        private readonly IPermissionRepository permissionRepository;
 
         public IdentityService(
             UserManager<User> userManager,
             IJwtTokenGenerator jwtTokenGenerator,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            IPermissionRepository permissionRepository)
         {
             this.userManager = userManager;
             this.jwtTokenGenerator = jwtTokenGenerator;
             this.currentUser = currentUser;
+            this.permissionRepository = permissionRepository;
         }
 
         public async Task<Result<LoginOutputModel>> Login(LoginUserCommand request)
@@ -48,11 +52,16 @@ namespace CarDiaryX.Infrastructure.Identity
 
         public async Task<Result> Register(RegisterUserCommand request)
         {
-            var user = new User(request.Email, request.FirstName, request.LastName, request.Age);
+            var user = new User(request.Email, request.FirstName, request.LastName);
 
             var identityResult = await this.userManager.CreateAsync(user, request.Password);
 
             var errors = identityResult.Errors.Select(e => e.Description);
+
+            if (identityResult.Succeeded)
+            {
+                await this.permissionRepository.AddDefault(user.Id);
+            }
 
             return identityResult.Succeeded
                 ? Result.Success
@@ -113,7 +122,7 @@ namespace CarDiaryX.Infrastructure.Identity
                 return null;
             }
 
-            return new UserDetailsOutputModel(user.Email, user.FirstName, user.LastName, user.Age);
+            return new UserDetailsOutputModel(user.Email, user.FirstName, user.LastName);
         }
 
         public async Task<Result> UpdateUserDetails(UpdateUserDetailsCommand request)
@@ -127,7 +136,6 @@ namespace CarDiaryX.Infrastructure.Identity
 
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
-            user.Age = request.Age;
 
             var identityResult = await this.userManager.UpdateAsync(user);
 

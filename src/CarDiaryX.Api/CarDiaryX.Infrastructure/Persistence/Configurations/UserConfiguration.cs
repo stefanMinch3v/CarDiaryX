@@ -1,4 +1,6 @@
-﻿using CarDiaryX.Infrastructure.Identity;
+﻿using CarDiaryX.Domain.Vehicles;
+using CarDiaryX.Infrastructure.Common.Constants;
+using CarDiaryX.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +10,21 @@ namespace CarDiaryX.Infrastructure.Common.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            // TODO
+            builder
+                .HasMany(u => u.RegistrationNumbers)
+                .WithOne(rn => (User)rn.User)
+                .HasForeignKey(rn => rn.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Property(u => u.ModifiedBy)
+                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+
+            builder
+                .HasOne(u => u.Permission)
+                .WithOne(p => (User)p.User)
+                .HasForeignKey<Permission>(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

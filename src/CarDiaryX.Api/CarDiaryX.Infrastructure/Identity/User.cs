@@ -1,24 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CarDiaryX.Domain.Vehicles;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 
 namespace CarDiaryX.Infrastructure.Identity
 {
-    public class User : IdentityUser
+    public class User : IdentityUser, IUser
     {
-        internal User(string email, string firstName, string lastName, int age)
+        internal User(string email, string firstName, string lastName)
             : base(email)
         {
             base.Email = email;
             this.FirstName = firstName;
             this.LastName = lastName;
-            this.Age = age;
         }
 
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
+        public HashSet<UserRegistrationNumbers> RegistrationNumbers { get; set; } = new HashSet<UserRegistrationNumbers>();
+        public Permission Permission { get; set; }
 
-        public int Age { get; set; }
-
-        // public HashSet<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
+        public string ModifiedBy { get; set; }
+        public DateTimeOffset? ModifiedOn { get; set; }
     }
 }

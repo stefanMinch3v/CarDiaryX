@@ -1,6 +1,8 @@
 using CarDiaryX.Application;
+using CarDiaryX.Application.Features.V1.Vehicles;
 using CarDiaryX.Infrastructure;
 using CarDiaryX.Infrastructure.Common.Extensions;
+using CarDiaryX.Integration;
 using CarDiaryX.Web;
 using CarDiaryX.Web.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http;
 
 namespace CarDiaryX.Startup
 {
@@ -21,10 +24,14 @@ namespace CarDiaryX.Startup
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-            => services
+        {
+            services
                 .AddApplication(this.Configuration)
                 .AddInfrastructure(this.Configuration)
                 .AddWebComponents();
+
+            this.AddIntegration(services);
+        }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -52,5 +59,16 @@ namespace CarDiaryX.Startup
                 .ApplyMigrations()
                 .AddDefaultUser();
         }
+
+        private void AddIntegration(IServiceCollection services)
+            => services
+                .AddHttpContextAccessor()
+                .AddMemoryCache()
+                .AddHttpClient<IVehicleHttpService, VehicleHttpService>()
+                    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                    {
+                        AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
+                        UseCookies = false
+                    });
     }
 }

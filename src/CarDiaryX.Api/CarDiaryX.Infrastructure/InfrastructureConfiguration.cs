@@ -1,15 +1,18 @@
 ﻿using CarDiaryX.Application.Common;
 using CarDiaryX.Application.Features.V1.Identity;
+using CarDiaryX.Application.Features.V1.Vehicles;
 using CarDiaryX.Infrastructure.Common;
 using CarDiaryX.Infrastructure.Common.Extensions;
 using CarDiaryX.Infrastructure.Common.Persistence;
 using CarDiaryX.Infrastructure.Identity;
+using CarDiaryX.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace CarDiaryX.Infrastructure
@@ -32,7 +35,12 @@ namespace CarDiaryX.Infrastructure
                     .UseSqlServer(
                         configuration.GetDefaultConnectionString(),
                         sqlServer => sqlServer
-                            .MigrationsAssembly(typeof(CarDiaryXDbContext).Assembly.FullName)).EnableSensitiveDataLogging());
+                            .MigrationsAssembly(typeof(CarDiaryXDbContext).Assembly.FullName)
+                            .EnableRetryOnFailure(
+                                maxRetryCount: 5,
+                                maxRetryDelay: TimeSpan.FromSeconds(10),
+                                errorNumbersToAdd: null
+                            )).EnableSensitiveDataLogging());
 
         private static IServiceCollection AddIdentity(
             this IServiceCollection services,
@@ -74,8 +82,11 @@ namespace CarDiaryX.Infrastructure
                     };
                 });
 
-            services.AddTransient<IIdentity, IdentityService>();
-            services.AddTransient<IJwtTokenGenerator, JwtTokenGeneratorService>();
+            services.AddScoped<IIdentity, IdentityService>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGeneratorService>();
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IRegistrationNumberRepository, RegistrationNumberRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
 
             return services;
         }

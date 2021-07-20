@@ -1,6 +1,8 @@
-﻿namespace CarDiaryX.Domain.Common
+﻿using System;
+
+namespace CarDiaryX.Domain.Common
 {
-    public abstract class Entity<TKey> where TKey : struct
+    public abstract class Entity<TKey> where TKey : IEquatable<TKey>
     {
         public TKey Id { get; set; } = default;
 

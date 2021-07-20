@@ -27,10 +27,6 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
                 .MinimumLength(Users.NAME_MIN_LENGTH)
                 .MaximumLength(Users.NAME_MAX_LENGTH)
                 .NotEmpty();
-
-            this.RuleFor(u => u.Age)
-                .GreaterThanOrEqualTo(Users.AGE_MIN)
-                .LessThanOrEqualTo(Users.AGE_MAX);
         }
     }
 }

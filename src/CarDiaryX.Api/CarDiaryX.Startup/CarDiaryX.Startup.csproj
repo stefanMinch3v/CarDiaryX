@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
     <ProjectReference Include="..\CarDiaryX.Application\CarDiaryX.Application.csproj" />
     <ProjectReference Include="..\CarDiaryX.Domain\CarDiaryX.Domain.csproj" />
     <ProjectReference Include="..\CarDiaryX.Infrastructure\CarDiaryX.Infrastructure.csproj" />
+    <ProjectReference Include="..\CarDiaryX.Integration\CarDiaryX.Integration.csproj" />
     <ProjectReference Include="..\CarDiaryX.Web\CarDiaryX.Web.csproj" />
   </ItemGroup>
 

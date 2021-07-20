@@ -9,7 +9,6 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Age { get; set; }
 
         public class UpdateUserDetailsCommandHandler : IRequestHandler<UpdateUserDetailsCommand, Result>
         {

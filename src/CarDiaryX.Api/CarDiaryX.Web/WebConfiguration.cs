@@ -1,9 +1,11 @@
 ﻿using CarDiaryX.Application.Common;
 using CarDiaryX.Application.Contracts;
+using CarDiaryX.Web.Common;
 using CarDiaryX.Web.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -20,7 +22,10 @@ namespace CarDiaryX.Web
         {
             services
                 .AddScoped<ICurrentUser, CurrentUserService>()
-                .AddControllers()
+                .AddControllers(options =>
+                {
+                    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+                })
                 .AddFluentValidation(validation => validation
                     .RegisterValidatorsFromAssemblyContaining<Result>())
                 .AddNewtonsoftJson();

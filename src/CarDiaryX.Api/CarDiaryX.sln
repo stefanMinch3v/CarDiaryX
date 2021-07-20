@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDiaryX.Startup", "CarDiaryX.Startup\CarDiaryX.Startup.csproj", "{110571AB-D6D0-4283-9950-3D658226B3C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDiaryX.Startup", "CarDiaryX.Startup\CarDiaryX.Startup.csproj", "{110571AB-D6D0-4283-9950-3D658226B3C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDiaryX.Web", "CarDiaryX.Web\CarDiaryX.Web.csproj", "{34399D04-8459-4B10-A12F-C7B8D38B167A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDiaryX.Web", "CarDiaryX.Web\CarDiaryX.Web.csproj", "{34399D04-8459-4B10-A12F-C7B8D38B167A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDiaryX.Domain", "CarDiaryX.Domain\CarDiaryX.Domain.csproj", "{1A1644BC-6E93-4F6F-8050-C028990A23C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDiaryX.Domain", "CarDiaryX.Domain\CarDiaryX.Domain.csproj", "{1A1644BC-6E93-4F6F-8050-C028990A23C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDiaryX.Application", "CarDiaryX.Application\CarDiaryX.Application.csproj", "{D1CC01E3-77C3-46D8-AF81-30E6121AA7EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDiaryX.Application", "CarDiaryX.Application\CarDiaryX.Application.csproj", "{D1CC01E3-77C3-46D8-AF81-30E6121AA7EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDiaryX.Infrastructure", "CarDiaryX.Infrastructure\CarDiaryX.Infrastructure.csproj", "{091CB333-24ED-4AF6-8846-6FA872528BF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDiaryX.Infrastructure", "CarDiaryX.Infrastructure\CarDiaryX.Infrastructure.csproj", "{091CB333-24ED-4AF6-8846-6FA872528BF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDiaryX.Integration", "CarDiaryX.Integration\CarDiaryX.Integration.csproj", "{7219F857-C6C8-4669-BE2D-8047E902E498}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{091CB333-24ED-4AF6-8846-6FA872528BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{091CB333-24ED-4AF6-8846-6FA872528BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{091CB333-24ED-4AF6-8846-6FA872528BF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7219F857-C6C8-4669-BE2D-8047E902E498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7219F857-C6C8-4669-BE2D-8047E902E498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7219F857-C6C8-4669-BE2D-8047E902E498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7219F857-C6C8-4669-BE2D-8047E902E498}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -78,7 +78,7 @@ namespace CarDiaryX.Web.Middlewares
                 result = new ProblemDetailsError
                 {
                     Status = (int)code,
-                    Detail = exception.Message,
+                    Detail = "An unexpected error has occured. Please try again later.",
                     Instance = context.Request.Path
                 };
             }
