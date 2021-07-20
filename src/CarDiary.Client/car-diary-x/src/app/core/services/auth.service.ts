@@ -8,7 +8,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'token';
   private readonly EXPIRE_KEY = 'expiration';
 
-  public async isUserAuthenticated(): Promise<boolean> {
+  async isUserAuthenticated(): Promise<boolean> {
     const expirationTimeResult = await this.getExpirationTime();
     const tokenResult = await this.getToken();
     if (tokenResult.value !== null && new Date((expirationTimeResult.value)) > new Date) {
@@ -18,17 +18,17 @@ export class AuthService {
     return false;
   }
 
-  public authenticateUser(token, expiration): void {
+  authenticateUser(token, expiration): void {
     Plugins.Storage.set({ key: this.TOKEN_KEY, value: token });
     Plugins.Storage.set({ key: this.EXPIRE_KEY, value: expiration });
   }
 
-  public deauthenticateUser(): void {
+  deauthenticateUser(): void {
     this.removeToken();
     this.removeExpirationTime();
   }
 
-  public getToken(): Promise<{ value: string }> {
+  getToken(): Promise<{ value: string }> {
     return Plugins.Storage.get({ key: this.TOKEN_KEY });
   }
 

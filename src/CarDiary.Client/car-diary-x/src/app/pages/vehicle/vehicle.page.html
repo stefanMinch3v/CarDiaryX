@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">{{ "Vehicles" | translate }}</ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button (click)="toggleFilter()">
+        <ion-icon [name]="showList ? 'filter-circle-outline' : 'filter-outline'" slot="icon-only"></ion-icon>
+      </ion-button>
+      
+      <ion-button (click)="onNavigateToForm()" routerDirection="forward">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="!showList && !isLoading">
+    <ion-card *ngFor="let registrationNumber of registrationNumbers" class="ion-activatable">
+      <ion-item>
+        <ion-icon name="car-outline" slot="start" (click)="test(registrationNumber)"></ion-icon>
+        <ion-label (click)="test(registrationNumber)">{{ registrationNumber?.number }}</ion-label>
+        <ion-button fill="clear" slot="end" (click)="presentActionSheet()">
+          <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <ion-card-content (click)="test(registrationNumber)">{{ this.prettifyShortDescription(registrationNumber?.shortDescription) }}</ion-card-content>
+    </ion-card>
+  </ng-container>
+  
+  <ion-card *ngIf="showList && !isLoading">
+    <ion-item [href]="registrationNumber.number" *ngFor="let registrationNumber of registrationNumbers" details="true">
+      <ion-icon name="car-outline" slot="start"></ion-icon>
+      <ion-label>{{ registrationNumber?.number }}</ion-label>
+      <ion-button fill="outline" slot="end">permissions</ion-button>
+    </ion-item>
+  </ion-card>
+</ion-content>

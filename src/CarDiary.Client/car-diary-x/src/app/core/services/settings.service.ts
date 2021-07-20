@@ -13,6 +13,7 @@ export class SettingsService {
   private readonly LANGUAGE_KEY = 'language';
 
   private readonly THEME_KEY = 'isDarkTheme';
+  private readonly VEHICLE_FILTER_SHOW_LIST_KEY = "showVehicleList";
 
   private readonly CURRENCY_KEY = 'currency';
   private readonly DEFAULT_CURRENCY = 'dkk';
@@ -21,6 +22,7 @@ export class SettingsService {
   private _langSub$ = new BehaviorSubject<string>(null);
   private _themeSub$ = new BehaviorSubject<boolean>(false);
   private _currencySub$ = new BehaviorSubject<string>(null);
+  private _showVehicleList$ = new BehaviorSubject<boolean>(false);
 
   constructor(private translate: TranslateService) {
     this.setupSubscriptions();
@@ -67,6 +69,15 @@ export class SettingsService {
     Plugins.Storage.set({ key: this.CURRENCY_KEY, value: currency });
   }
 
+  get currentVehicleFilter(): Observable<boolean> {
+    return this._showVehicleList$.asObservable();
+  }
+
+  set setCurrentVehicleFilter(showList: boolean) {
+    this._showVehicleList$.next(showList);
+    Plugins.Storage.set({ key: this.VEHICLE_FILTER_SHOW_LIST_KEY, value: String(showList) });
+  }
+
   private setupSubscriptions(): void {
     this.translate.addLangs(this.ALLOWED_LANGUAGES);
 
@@ -100,6 +111,15 @@ export class SettingsService {
         }
 
         this._currencySub$.next(storedCurrency.value);
+      });
+
+    Plugins.Storage.get({ key: this.VEHICLE_FILTER_SHOW_LIST_KEY })
+      .then(storedFilter => {
+        if (!storedFilter) {
+          return;
+        }
+
+        this._showVehicleList$.next(JSON.parse(storedFilter.value));
       });
   }
 }

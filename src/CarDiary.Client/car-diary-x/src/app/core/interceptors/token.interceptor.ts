@@ -20,7 +20,9 @@ export class TokenInterceptor implements HttpInterceptor {
 
       if (result && result.value) {
         req = req.clone({
-          headers: req.headers.set('Authorization', 'Bearer ' + result.value)
+          headers: req.headers
+            .set('Authorization', 'Bearer ' + result.value)
+            .set('Content-Type', 'application/json')
         });
       }
     } catch (error) {

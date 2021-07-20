@@ -22,7 +22,7 @@
             </ion-list-header>
 
             <ion-item>
-              <ion-icon class="lang-icon" name="language-outline"></ion-icon>
+              <ion-icon name="language-outline"></ion-icon>
               <ion-label>{{ "Language" | translate }}</ion-label>
               <ion-select
                 [value]="this.currentLanguage" 
@@ -37,7 +37,7 @@
             </ion-item>
             
             <ion-item>
-              <ion-icon class="lang-icon" name="cash-outline"></ion-icon>
+              <ion-icon name="cash-outline"></ion-icon>
               <ion-label>{{ "Currency" | translate }}</ion-label>
               <ion-select
                 [value]="this.currentCurrency" 
@@ -52,7 +52,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-icon class="lang-icon" name="moon-outline"></ion-icon>
+              <ion-icon name="moon-outline"></ion-icon>
               <ion-label>{{ "Dark Mode" | translate }}</ion-label>
               <ion-toggle [(ngModel)]="this.isDarkTheme" (ngModelChange)="onThemeChange($event)"></ion-toggle>
             </ion-item>

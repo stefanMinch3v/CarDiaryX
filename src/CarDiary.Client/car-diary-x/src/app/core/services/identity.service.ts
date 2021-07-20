@@ -18,36 +18,36 @@ export class IdentityService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  public login(login: LoginModel): Observable<LoginResponseModel> {
+  login(login: LoginModel): Observable<LoginResponseModel> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/login`;
     return this.http.post<LoginResponseModel>(url, login);
   }
 
-  public register(register: RegisterModel): Observable<any> {
+  register(register: RegisterModel): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/register`;
     return this.http.post(url, register);
   }
 
-  public logout(): void {
+  logout(): void {
     this.authService.deauthenticateUser();
   }
 
-  public changePassword(changePassword: ChangePasswordModel): Observable<any> {
-    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/changepassword`;
+  changePassword(changePassword: ChangePasswordModel): Observable<any> {
+    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/change-password`;
     return this.http.put(url, changePassword);
   }
 
-  public deleteAccount(confirmPassword: string): Observable<any> {
+  deleteAccount(confirmPassword: string): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/delete`;
     return this.http.request('delete', url, { body: { confirmPassword: confirmPassword } });
   }
 
-  public get(): Observable<UserDetailsModel> {
-    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/get`;
+  get(): Observable<UserDetailsModel> {
+    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/user-details`;
     return this.http.get<UserDetailsModel>(url);
   }
 
-  public update(updateUser: UpdateUserModel): Observable<any> {
+  update(updateUser: UpdateUserModel): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/update`;
     return this.http.put(url, updateUser);
   }

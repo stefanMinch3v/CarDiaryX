@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Vehicle form" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+    <ion-row><ion-col size-sm="6" offset-sm="3"></ion-col></ion-row>
+
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <form [formGroup]="searchRegistrationNumberForm">
+          <ion-item style="border: 1px solid black">
+            <ion-input 
+              formControlName="registrationNumber"
+              class="ion-text-center" 
+              [placeholder]="'Registration number' | translate"
+              [maxlength]="registrationNumberMaxLength"
+              autocapitalize="on"
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <ion-button 
+          type="submit"
+          color="primary" 
+          expand="block"
+          (click)="onSubmit()"
+          [disabled]="!searchRegistrationNumberForm.valid"
+        >
+          {{ "Search" | translate }}
+        </ion-button>
+
+        <ion-button 
+          type="submit"
+          color="primary" 
+          expand="block"
+          fill="clear"
+        >
+          {{ "History" | translate }}
+        </ion-button>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

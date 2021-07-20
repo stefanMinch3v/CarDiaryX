@@ -1,21 +1,11 @@
-.center-title {
-  padding-left: var(--ion-android-title-with-back-button-padding-left);
-  padding-right: var(--ion-android-title-with-back-button-padding-right);
-}
-
 ion-icon {
   zoom: var(--ion-input-field-icon-zoom);
   padding-right: var(--ion-field-icon-padding-right);
 }
 
-.input-content {
-  align-items: center;
-  display: flex;
-}
-
-.input-text {
-  padding-top: 3px;
-  padding-left: 5px;
+.center-title {
+  padding-left: var(--ion-android-title-with-back-button-padding-left);
+  padding-right: var(--ion-android-title-with-back-button-padding-right);
 }
 
 .invalid-feedback {
@@ -33,4 +23,14 @@ ion-icon {
   .invalid-feedback {
     font-size: 11px;
   }
+}
+
+.input-content {
+  align-items: center;
+  display: flex;
+}
+
+.input-text {
+  padding-top: 3px;
+  padding-left: 5px;
 }

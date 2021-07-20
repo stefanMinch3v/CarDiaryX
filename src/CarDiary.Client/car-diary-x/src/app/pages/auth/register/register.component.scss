@@ -1,5 +1,6 @@
 ion-icon {
-  zoom: var(--ion-icon-zoom);
+  zoom: var(--ion-input-field-icon-zoom);
+  padding-right: var(--ion-field-icon-padding-right);
 }
 
 .input-content {

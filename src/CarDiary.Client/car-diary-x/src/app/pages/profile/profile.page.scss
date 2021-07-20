@@ -1,3 +1,8 @@
+ion-icon {
+  zoom: var(--ion-input-field-icon-zoom);
+  padding-right: var(--ion-field-icon-padding-right);
+}
+
 .center-title {
   padding-left: var(--ion-android-title-with-back-button-padding-left);
   padding-right: var(--ion-android-title-with-back-button-padding-right);

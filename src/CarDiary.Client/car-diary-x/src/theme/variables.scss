@@ -21,10 +21,12 @@
  */
 
  :root {
-  --ion-icon-zoom: 1.1;
+  --ion-input-field-icon-zoom: 1.1;
+  --ion-field-icon-zoom: 0.8;
+  --ion-field-icon-padding-right: 3px;
   --ion-android-title-with-back-button-padding-left: 0;
   --ion-android-title-with-back-button-padding-right: 45px;
-
+  
   // original
   /** primary **/
   // --ion-color-primary: #3880ff;

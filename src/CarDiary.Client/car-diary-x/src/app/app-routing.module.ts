@@ -23,6 +23,11 @@ const routes: Routes = [
     path: 'profile',
     loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule),
     canLoad: [AuthGuard]
+  },
+  {
+    path: 'vehicles',
+    loadChildren: () => import('./pages/vehicle/vehicle.module').then( m => m.VehiclePageModule),
+    canLoad: [AuthGuard]
   }
 ];
 

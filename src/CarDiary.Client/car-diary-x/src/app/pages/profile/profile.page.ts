@@ -53,10 +53,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       }),
       lastName: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(validations.user.NAME_MIN_LENGTH), Validators.maxLength(validations.user.NAME_MAX_LENGTH)]
-      }),
-      age: new FormControl(null, {
-        validators: [Validators.required, Validators.min(validations.user.AGE_MIN), Validators.max(validations.user.AGE_MAX)]
-      }),
+      })
     });
   }
 
@@ -131,12 +128,11 @@ export class ProfilePage implements OnInit, OnDestroy {
 
     const firstName = this.updateUserForm.value.firstName;
     const lastName = this.updateUserForm.value.lastName;
-    const age = this.updateUserForm.value.age;
 
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.identityService.update({ firstName, lastName, age })
+    this.identityService.update({ firstName, lastName })
       .subscribe(_ => {
         this.toastService.presentSuccessToast();
       }, () => loading.dismiss(), () => loading.dismiss());

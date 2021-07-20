@@ -1,6 +1,6 @@
-.lang-icon {
-  zoom: 0.8;
-  padding-right: 15px;
+ion-icon {
+  zoom: var(--ion-input-field-icon-zoom);
+  padding-right: var(--ion-field-icon-padding-right);
 }
 
 .center-title {

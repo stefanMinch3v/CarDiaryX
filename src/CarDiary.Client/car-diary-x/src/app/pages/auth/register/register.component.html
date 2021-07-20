@@ -44,20 +44,6 @@
             <ion-item>
               <ion-label position="floating">
                 <div class="input-content">
-                  <ion-icon name="accessibility-outline"></ion-icon>
-                  <span class="input-text">{{ "Age" | translate }}</span>
-                </div>
-              </ion-label>
-              <ion-input formControlName="age" type="number"></ion-input>
-            </ion-item>
-            
-            <ion-item *ngIf="!f.age.valid && f.age.touched" lines="none">
-              <ion-label class="invalid-feedback">{{ "Number between 16 and 120!" | translate }}</ion-label>
-            </ion-item>
-
-            <ion-item>
-              <ion-label position="floating">
-                <div class="input-content">
                   <ion-icon name="mail-outline"></ion-icon>
                   <span class="input-text">{{ "Email" | translate }}</span>
                 </div>

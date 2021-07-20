@@ -39,9 +39,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       lastName: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(validations.user.NAME_MIN_LENGTH), Validators.maxLength(validations.user.NAME_MAX_LENGTH)]
       }),
-      age: new FormControl(null, {
-        validators: [Validators.required, Validators.min(validations.user.AGE_MIN), Validators.max(validations.user.AGE_MAX)]
-      }),
       email: new FormControl(null, {
         validators: [Validators.required, Validators.email, Validators.minLength(validations.user.EMAIL_MIN_LENGTH), Validators.maxLength(validations.user.EMAIL_MAX_LENGTH)]
       }),
@@ -79,14 +76,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     const firstName = this.registerForm.value.firstName;
     const lastName = this.registerForm.value.lastName;
-    const age = this.registerForm.value.age;
     const email = this.registerForm.value.email;
     const password = this.registerForm.value.password;
 
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.identityService.register({ firstName, lastName, age, email, password })
+    this.identityService.register({ firstName, lastName, email, password })
       .pipe(
         switchMap(_ => this.identityService.login({ email, password })))
       .subscribe(response => {

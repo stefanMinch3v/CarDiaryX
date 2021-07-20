@@ -1,5 +1,6 @@
-.login-icon {
-  zoom: var(--ion-icon-zoom);
+ion-icon {
+  zoom: var(--ion-input-field-icon-zoom);
+  padding-right: var(--ion-field-icon-padding-right);
 }
 
 .logo-icon {

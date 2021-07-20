@@ -5,8 +5,9 @@ export const validations = {
     NAME_MIN_LENGTH: 2,
     NAME_MAX_LENGTH: 100,
     PASSWORD_MIN_LENGTH: 6,
-    PASSWORD_MAX_LENGTH: 100,
-    AGE_MAX: 120,
-    AGE_MIN: 16
+    PASSWORD_MAX_LENGTH: 100
+  },
+  vehicle: {
+    REGISTRATION_NUMBER_LENGTH: 7
   }
 }
