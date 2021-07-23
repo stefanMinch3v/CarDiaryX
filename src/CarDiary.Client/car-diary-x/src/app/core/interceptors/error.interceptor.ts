@@ -1,5 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, throwError } from 'rxjs';
@@ -7,13 +8,16 @@ import { catchError, retry } from 'rxjs/operators';
 
 @Injectable()
 export class ErrorInterceptor  implements HttpInterceptor {
-  private readonly UNKNOWN_ERROR = 'Server is not responding...';
+  private readonly UNKNOWN_ERROR = 'An unexpected server error has occurred. Our team has been notified.';
   private readonly DUPLICATE_USERNAME_MESSAGE = 'is already taken.';
+  private readonly SESSION_EXPIRED = 'Your session has expired.';
+  private readonly UNEXPECTED_SERVER_ERROR = 'An unexpected error has occurred. Please try again later.';
 
   constructor(
     private loadingCntrl: LoadingController, 
     private alertCntrl: AlertController,
-    private translate: TranslateService) {}
+    private translate: TranslateService,
+    private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
@@ -22,9 +26,9 @@ export class ErrorInterceptor  implements HttpInterceptor {
         // reset all overlays
         this.loadingCntrl.getTop().then(overlay => overlay ? overlay.dismiss() : null);
 
-        const message = this.parseErrorData(err);
+        const messages = this.parseErrorData(err);
 
-        const translated =  this.formatAndTranslateMessages(message);
+        const translated =  this.formatAndTranslateMessages(messages);
 
         this.alertCntrl.create({
           header: translated[0], 
@@ -32,55 +36,55 @@ export class ErrorInterceptor  implements HttpInterceptor {
           buttons: [translated[2]]
         }).then(el => el.present());
 
+        if (messages.some(m => m === this.SESSION_EXPIRED)) {
+          this.router.navigate(['auth']);
+        }
+
         return throwError(err);
       }));
   }
 
   // add custom messages here that come in format Abc 'specific name' defgh
-  private formatAndTranslateMessages(message: string): string[] {
-    message = message.toString(); // sometimes gets ['abc'] instead of 'abc'
+  private formatAndTranslateMessages(messages: Array<string>): Array<string> {
+    const translated = [];
 
-    let translated = [];
+    for (const message of messages) {
+      if ([...this.indexOfSubstrings(message, this.DUPLICATE_USERNAME_MESSAGE)].length > 0) {
+        const email = message.match(/'([^']+)'/)[1]; // cut 'email' out of full sentence
 
-    if ([...this.indexOfSubstrings(message, this.DUPLICATE_USERNAME_MESSAGE)].length > 0) {
-      message = message.match(/'([^']+)'/)[1]; // cut 'username' out of full sentence
-
-      translated = this.translate.instant(['Error', 'Username is already taken', 'Ok'], { value: message });
-    } else {
-      translated = this.translate.instant(['Error', message , 'Ok']);
+        translated.push(this.translate.instant(['Error', 'Email is already taken', 'Ok'], { value: email }));
+      } else {
+        translated.push(this.translate.instant(['Error', message, 'Ok']));
+      }
     }
 
-    let result = [];
+    const result = [];
 
-    for (const [key, value] of Object.entries(translated)) {
-      result.push(value);
+    for (const translate of translated) {
+      for (const [key, value] of Object.entries(translate)) {
+        result.push(value);
+      }
     }
 
     return result;
   }
 
-  private parseErrorData(err: any): string {
-    let errorDescription = '';
-
-    if (err?.error?.detail) {
-      errorDescription = err.error.detail;
-    } else {
-      errorDescription = String(err.error);
-    }
-
-    let message = '';
+  private parseErrorData(err: any): Array<string> {
+    let errorMessages: Array<string> = [];
 
     if (err.status === 400) {
-      if (!errorDescription) {
-        message = this.UNKNOWN_ERROR;
+      if (!err.error?.errors) {
+        errorMessages = [this.UNEXPECTED_SERVER_ERROR];
       } else {
-        message = errorDescription;
+        errorMessages = err.error?.errors;
       }
+    } else if (err.status === 401) {
+      errorMessages = [this.SESSION_EXPIRED];
     } else {
-      message = this.UNKNOWN_ERROR;
+      errorMessages = [this.UNKNOWN_ERROR];
     }
 
-    return message;
+    return errorMessages;
   }
 
   // https://github.com/30-seconds/30-seconds-of-code/blob/master/snippets/indexOfSubstrings.md
