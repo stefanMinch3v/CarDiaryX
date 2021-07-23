@@ -27,9 +27,9 @@ namespace CarDiaryX.Application.Common.Behaviours
                 .Select(v => v.Validate(context))
                 .SelectMany(result => result.Errors)
                 .Where(f => f != null)
-                .ToList();
+                .ToArray();
 
-            if (errors.Count != 0)
+            if (errors.Length > 0)
             {
                 throw new ModelValidationException(errors);
             }

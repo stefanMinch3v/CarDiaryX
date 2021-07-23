@@ -45,7 +45,7 @@ namespace CarDiaryX.Integration
 
             var response = await this.httpClient.GetAsync($"{BASE_URL}/data?registration={plates}&mode=license&kid=", cancellationToken);
             var content = await response.Content.ReadAsStringAsync();
-
+            
             var root = JsonConvert.DeserializeObject<RootInformation>(content);
             root.RawData = content;
 

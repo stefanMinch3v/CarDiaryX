@@ -1,7 +1,6 @@
 ﻿using CarDiaryX.Domain.Integration;
 using CarDiaryX.Domain.Vehicles;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +15,5 @@ namespace CarDiaryX.Application.Features.V1.Vehicles
         Task SaveInformation(string registrationNumber, RootInformation information);
         Task SaveDMR(string registrationNumber, DateTime? nextGreenTaxDate, DateTime? nextInspectionDate, string jsonData);
         Task SaveInspection(string registrationNumber, string jsonData);
-
-        Task<IReadOnlyCollection<VehicleInformation>> GetInformationByUser(string userId, CancellationToken cancellationToken);
-        Task<IReadOnlyCollection<VehicleDMR>> GetDMRByUser(string userId, CancellationToken cancellationToken);
-        Task<IReadOnlyCollection<VehicleInspection>> GetInspectionsByUser(string userId, CancellationToken cancellationToken);
     }
 }

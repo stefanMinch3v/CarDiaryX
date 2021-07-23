@@ -20,6 +20,7 @@
         public static class External
         {
             public const string SERVER_IS_NOT_RESPONDING = "Could not connect to the external server. Please try again later.";
+            public const string NO_RESULTS_FOUND_ON_THE_SERVER = "No results found on the external server.";
         }
     }
 }

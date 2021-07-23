@@ -24,7 +24,7 @@ namespace CarDiaryX.Web.Common
 
             if (!result.Succeeded)
             {
-                return new BadRequestObjectResult(result.Errors);
+                return new BadRequestObjectResult(new ErrorResult(result.Errors));
             }
 
             return new OkResult();
@@ -36,7 +36,7 @@ namespace CarDiaryX.Web.Common
 
             if (!result.Succeeded)
             {
-                return new BadRequestObjectResult(result.Errors);
+                return new BadRequestObjectResult(new ErrorResult(result.Errors));
             }
 
             return result.Data;

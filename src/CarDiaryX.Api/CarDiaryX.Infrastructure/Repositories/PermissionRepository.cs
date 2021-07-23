@@ -13,11 +13,11 @@ namespace CarDiaryX.Infrastructure.Repositories
         public PermissionRepository(CarDiaryXDbContext dbContext) 
             => this.dbContext = dbContext;
 
-        public async Task AddDefault(string userId)
+        public Task AddDefault(string userId)
         {
             var permission = new Permission { UserId = userId };
             this.dbContext.Permissions.Add(permission);
-            await this.dbContext.SaveChangesAsync();
+            return this.dbContext.SaveChangesAsync();
         }
 
         public Task<Permission> GetByUser(string userId)

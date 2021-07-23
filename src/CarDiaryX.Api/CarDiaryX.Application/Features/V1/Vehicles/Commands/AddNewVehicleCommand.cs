@@ -52,6 +52,11 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
                 {
                     var errors = new[] { ApplicationConstants.External.SERVER_IS_NOT_RESPONDING };
                     return Result.Failure(errors);
+                } 
+                else if (vehicleRootInfo.Data is null)
+                {
+                    var errors = new[] { ApplicationConstants.External.NO_RESULTS_FOUND_ON_THE_SERVER };
+                    return Result.Failure(errors);
                 }
 
                 await this.vehicleRepository.SaveInformation(request.RegistrationNumber, vehicleRootInfo);

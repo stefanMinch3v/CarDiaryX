@@ -1,14 +1,13 @@
-﻿using CarDiaryX.Application.Common.Exceptions;
+﻿using CarDiaryX.Application.Common;
+using CarDiaryX.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CarDiaryX.Web.Middlewares
@@ -32,7 +31,7 @@ namespace CarDiaryX.Web.Middlewares
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await this.HandleExceptionAsync(context, ex);
             }
         }
 
@@ -40,50 +39,24 @@ namespace CarDiaryX.Web.Middlewares
         {
             var code = HttpStatusCode.InternalServerError;
 
-            ProblemDetailsError result = null;
+            ErrorResult errorResult = null;
 
             switch (exception)
             {
                 case ModelValidationException validationException:
                     code = HttpStatusCode.BadRequest;
-                    result = new ProblemDetailsError
-                    {
-                        Status = (int)code,
-                        Detail = MergeErrors(validationException.Errors.SelectMany(e => e.Value)),
-                        Instance = context.Request.Path
-                    };
-                    break;
-                //case ExampleException2 _:
-                //    code = HttpStatusCode.NotFound;
-                //    break;
-                case BaseDomainException domainException:
-                    code = HttpStatusCode.BadRequest;
-                    result = new ProblemDetailsError
-                    {
-                        Status = (int)code,
-                        Detail = domainException.Message,
-                        Instance = context.Request.Path
-                    };
+                    errorResult = new ErrorResult(validationException.Errors.SelectMany(e => e.Value));
                     break;
                 default:
                     this.logger.LogError(JsonConvert.SerializeObject(exception));
+                    errorResult = new ErrorResult(new[] { "An unexpected error has occurred. Please try again later." });
                     break;
             }
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 
-            if (result is null)
-            {
-                result = new ProblemDetailsError
-                {
-                    Status = (int)code,
-                    Detail = "An unexpected error has occured. Please try again later.",
-                    Instance = context.Request.Path
-                };
-            }
-
-            return context.Response.WriteAsync(SerializeObject(result));
+            return context.Response.WriteAsync(SerializeObject(errorResult));
         }
 
         private static string SerializeObject(object obj)
@@ -94,25 +67,6 @@ namespace CarDiaryX.Web.Middlewares
                     NamingStrategy = new CamelCaseNamingStrategy(true, true)
                 }
             });
-
-        private static string MergeErrors(IEnumerable<string> errors)
-        {
-            var sb = new StringBuilder();
-
-            foreach (var error in errors)
-            {
-                sb.AppendLine(error);
-            }
-
-            return sb.ToString();
-        }
-
-        private class ProblemDetailsError
-        {
-            public string Detail { get; set; }
-            public int Status { get; set; }
-            public string Instance { get; set; }
-        }
     }
 
     public static class ValidationExceptionHandlerMiddlewareExtensions
