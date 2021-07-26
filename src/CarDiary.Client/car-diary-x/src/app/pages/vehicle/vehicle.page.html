@@ -19,22 +19,40 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="isLoading" class="ion-text-center">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
   <ng-container *ngIf="!showList && !isLoading">
     <ion-card *ngFor="let registrationNumber of registrationNumbers" class="ion-activatable">
       <ion-item>
-        <ion-icon name="car-outline" slot="start" (click)="test(registrationNumber)"></ion-icon>
-        <ion-label (click)="test(registrationNumber)">{{ registrationNumber?.number }}</ion-label>
+        <ion-icon 
+          *ngIf="!isMotorCycle(registrationNumber?.number)" 
+          name="car-outline" 
+          slot="start" 
+          (click)="onNavigateToDetails(registrationNumber.number)"
+        ></ion-icon>
+
+        <ion-icon 
+          *ngIf="isMotorCycle(registrationNumber?.number)" 
+          src="assets/icon/scooter.svg" 
+          slot="start" 
+          (click)="onNavigateToDetails(registrationNumber.number)"
+        ></ion-icon>
+
+        <ion-label (click)="onNavigateToDetails(registrationNumber.number)">{{ registrationNumber?.number }}</ion-label>
         <ion-button fill="clear" slot="end" (click)="presentActionSheet()">
           <ion-icon name="ellipsis-vertical-outline"></ion-icon>
         </ion-button>
       </ion-item>
 
-      <ion-card-content (click)="test(registrationNumber)">{{ this.prettifyShortDescription(registrationNumber?.shortDescription) }}</ion-card-content>
+      <ion-card-content (click)="onNavigateToDetails(registrationNumber.number)">
+        {{ this.prettifyShortDescription(registrationNumber?.shortDescription) }}
+      </ion-card-content>
     </ion-card>
   </ng-container>
   
   <ion-card *ngIf="showList && !isLoading">
-    <ion-item [href]="registrationNumber.number" *ngFor="let registrationNumber of registrationNumbers" details="true">
+    <ion-item [href]="registrationNumber.number" *ngFor="let registrationNumber of registrationNumbers" detail="true">
       <ion-icon name="car-outline" slot="start"></ion-icon>
       <ion-label>{{ registrationNumber?.number }}</ion-label>
       <ion-button fill="outline" slot="end">permissions</ion-button>

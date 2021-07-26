@@ -21,4 +21,9 @@ export class VehicleService {
     const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/get-all-registration-numbers`;
     return this.http.get<Array<RegistrationNumberModel>>(url);
   }
+
+  get(registrationNumber: string): Observable<any> {
+    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/get?registrationNumber=${registrationNumber}`;
+    return this.http.get<any>(url);
+  }
 }

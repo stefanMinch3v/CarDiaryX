@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CoreModule } from '../../core/modules/core.module';
+import { VehicleDetailsComponent } from './vehicle-details/vehicle-details.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { VehiclePageRoutingModule } from './vehicle-routing.module';
 import { VehiclePage } from './vehicle.page';
@@ -13,6 +14,6 @@ import { VehiclePage } from './vehicle.page';
     CoreModule,
     ReactiveFormsModule
   ],
-  declarations: [VehiclePage, VehicleFormComponent]
+  declarations: [VehiclePage, VehicleFormComponent, VehicleDetailsComponent]
 })
 export class VehiclePageModule {}

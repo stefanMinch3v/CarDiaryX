@@ -8,6 +8,7 @@ export const validations = {
     PASSWORD_MAX_LENGTH: 100
   },
   vehicle: {
-    REGISTRATION_NUMBER_LENGTH: 7
+    REGISTRATION_NUMBER_MAX_LENGTH: 7,
+    REGISTRATION_NUMBER_MIN_LENGTH: 6
   }
 }

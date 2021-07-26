@@ -80,8 +80,13 @@ export class VehiclePage implements OnInit, OnDestroy {
       .join(' ');
   }
 
-  test($event) {
-    console.log($event);
+  onNavigateToDetails(registrationNumber: string) {
+    console.log('here');
+    this.router.navigate(['vehicles', 'vehicle-details', registrationNumber]);
+  }
+
+  isMotorCycle(registrationNumber: string): boolean {
+    return registrationNumber.length === 6;
   }
 
   async presentActionSheet(): Promise<void> {

@@ -15,7 +15,7 @@ export class VehicleFormComponent implements OnInit {
   isIOS: boolean;
   isLoading: boolean;
   searchRegistrationNumberForm: FormGroup;
-  registrationNumberMaxLength = validations.vehicle.REGISTRATION_NUMBER_LENGTH;
+  registrationNumberMaxLength = validations.vehicle.REGISTRATION_NUMBER_MAX_LENGTH;
 
   constructor(
     private location: Location, 
@@ -31,8 +31,8 @@ export class VehicleFormComponent implements OnInit {
       registrationNumber: new FormControl(null, {
         validators: [
           Validators.required, 
-          Validators.maxLength(validations.vehicle.REGISTRATION_NUMBER_LENGTH),
-          Validators.minLength(validations.vehicle.REGISTRATION_NUMBER_LENGTH)]
+          Validators.maxLength(validations.vehicle.REGISTRATION_NUMBER_MAX_LENGTH),
+          Validators.minLength(validations.vehicle.REGISTRATION_NUMBER_MIN_LENGTH)]
       })
     });
   }
