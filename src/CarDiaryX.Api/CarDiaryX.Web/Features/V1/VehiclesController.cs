@@ -22,5 +22,9 @@ namespace CarDiaryX.Web.Features.V1
         [HttpGet]
         public async Task<ActionResult<object>> GetAllRegistrationNumbers()
             => await base.Send(new GetAllRegistrationNumbersQuery());
+
+        [HttpGet]
+        public async Task<ActionResult<object>> Get(string registrationNumber)
+            => await base.Send(new GetVehicleQuery { RegistrationNumber = registrationNumber });
     }
 }

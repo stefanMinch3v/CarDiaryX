@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
@@ -31,16 +32,26 @@ namespace CarDiaryX.Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
             => services
-                .AddDbContext<CarDiaryXDbContext>(options => options
-                    .UseSqlServer(
-                        configuration.GetDefaultConnectionString(),
-                        sqlServer => sqlServer
-                            .MigrationsAssembly(typeof(CarDiaryXDbContext).Assembly.FullName)
-                            .EnableRetryOnFailure(
-                                maxRetryCount: 5,
-                                maxRetryDelay: TimeSpan.FromSeconds(10),
-                                errorNumbersToAdd: null
-                            )).EnableSensitiveDataLogging());
+                .AddDbContext<CarDiaryXDbContext>(options => 
+                {
+                    options
+                        .UseSqlServer(
+                            configuration.GetDefaultConnectionString(),
+                            sqlServer => sqlServer
+                                .MigrationsAssembly(typeof(CarDiaryXDbContext).Assembly.FullName)
+                                .EnableRetryOnFailure(
+                                    maxRetryCount: 5,
+                                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                                    errorNumbersToAdd: null
+                                ));
+
+                    var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == Environments.Development;
+
+                    if (isDevelopment)
+                    {
+                        options.EnableSensitiveDataLogging();
+                    }
+                });
 
         private static IServiceCollection AddIdentity(
             this IServiceCollection services,

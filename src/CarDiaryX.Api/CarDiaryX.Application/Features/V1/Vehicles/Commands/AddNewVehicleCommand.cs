@@ -52,7 +52,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
                 {
                     var errors = new[] { ApplicationConstants.External.SERVER_IS_NOT_RESPONDING };
                     return Result.Failure(errors);
-                } 
+                }
                 else if (vehicleRootInfo.Data is null)
                 {
                     var errors = new[] { ApplicationConstants.External.NO_RESULTS_FOUND_ON_THE_SERVER };
@@ -62,12 +62,12 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
                 await this.vehicleRepository.SaveInformation(request.RegistrationNumber, vehicleRootInfo);
 
                 var permission = await this.permissionRepository.GetByUser(this.currentUser.UserId);
-                if (permission?.PermissionType == PermissionType.Premium 
+                if (permission?.PermissionType == PermissionType.Premium
                     || permission?.PermissionType == PermissionType.Professional)
                 {
                     // TODO
                     var vehicleDMRRawContent = await this.vehicleHttpService.GetDMR(
-                        vehicleRootInfo.Data.TsId, 
+                        vehicleRootInfo.Data.TsId,
                         cancellationToken); // slow request 5-8 seconds
 
                     if (vehicleDMRRawContent is null)
@@ -78,7 +78,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
 
                     // TODO: parse data: nextGreenTaxDate, nextInspectionDate
                     await this.vehicleRepository.SaveDMR(
-                        request.RegistrationNumber, 
+                        request.RegistrationNumber,
                         DateTime.Now, //nextGreenTaxDate
                         DateTime.Now, //nextInspectionDate
                         vehicleDMRRawContent);

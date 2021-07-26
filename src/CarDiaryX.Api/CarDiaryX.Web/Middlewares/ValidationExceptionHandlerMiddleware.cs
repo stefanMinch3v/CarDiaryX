@@ -6,8 +6,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CarDiaryX.Web.Middlewares
@@ -48,7 +52,13 @@ namespace CarDiaryX.Web.Middlewares
                     errorResult = new ErrorResult(validationException.Errors.SelectMany(e => e.Value));
                     break;
                 default:
-                    this.logger.LogError(JsonConvert.SerializeObject(exception));
+                    var userId = context
+                        .User
+                        ?.Claims
+                        ?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                        ?.Value ?? "Anonymous request";
+
+                    this.logger.LogError(JsonConvert.SerializeObject(exception), new { UserId = userId });
                     errorResult = new ErrorResult(new[] { "An unexpected error has occurred. Please try again later." });
                     break;
             }
