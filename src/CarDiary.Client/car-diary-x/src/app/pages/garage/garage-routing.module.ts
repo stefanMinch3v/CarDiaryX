@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { VehicleDetailsComponent } from './vehicle-details/vehicle-details.component';
-import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
+import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
 
-import { VehiclePage } from './vehicle.page';
+import { GaragePage } from './garage.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: VehiclePage
+    component: GaragePage
   },
   {
-    path: 'vehicle-form',
-    component: VehicleFormComponent
+    path: 'add-vehicle',
+    component: AddVehicleComponent
   },
   {
     path: 'vehicle-details/:registrationNumber',
@@ -24,4 +24,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class VehiclePageRoutingModule {}
+export class GaragePageRoutingModule {}

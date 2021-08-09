@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">{{ "My Garage" | translate }}</ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button (click)="toggleFilter()">
+        <ion-icon [name]="showList ? 'filter-circle-outline' : 'filter-outline'" slot="icon-only"></ion-icon>
+      </ion-button>
+      
+      <ion-button (click)="onNavigateToForm()" routerDirection="forward">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isLoading" class="ion-text-center">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && (!registrationNumbers || registrationNumbers.length === 0)" class="ion-text-center">
+    <p>No results found</p>
+  </div>
+
+  <ng-container *ngIf="!showList && !isLoading">
+    <ion-card *ngFor="let registrationNumber of registrationNumbers" class="ion-activatable">
+      <ion-item>
+        <ion-icon 
+          *ngIf="!isMotorCycle(registrationNumber?.number)" 
+          name="car-outline" 
+          slot="start" 
+          (click)="onNavigateToDetails(registrationNumber.number)"
+        ></ion-icon>
+
+        <ion-icon 
+          *ngIf="isMotorCycle(registrationNumber?.number)" 
+          src="assets/icon/scooter.svg" 
+          slot="start" 
+          (click)="onNavigateToDetails(registrationNumber.number)"
+        ></ion-icon>
+
+        <ion-label (click)="onNavigateToDetails(registrationNumber.number)">{{ registrationNumber?.number }}</ion-label>
+        <ion-button fill="clear" slot="end" (click)="presentActionSheet(registrationNumber?.number)">
+          <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <ion-card-content (click)="onNavigateToDetails(registrationNumber.number)">
+        {{ this.prettifyShortDescription(registrationNumber?.shortDescription) }}
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+  
+  <ion-card *ngIf="showList && !isLoading">
+    <ng-container *ngFor="let registrationNumber of registrationNumbers">
+
+      <ion-item-sliding>
+        <ion-item-options side="start">
+          <ion-item-option color="primary" expandable (click)="onNavigateToDetails(registrationNumber?.number)">{{ 'Open' | translate }}</ion-item-option>
+          <ion-item-option color="danger" expandable (click)="onDeleteVehicle(registrationNumber?.number)">{{ 'Delete' | translate }}</ion-item-option>
+        </ion-item-options>
+    
+        <ion-item (click)="onNavigateToDetails(registrationNumber.number)" detail="true">
+          <ion-icon 
+            *ngIf="!isMotorCycle(registrationNumber?.number)" 
+            name="car-outline" 
+            slot="start"
+          ></ion-icon>
+
+          <ion-icon 
+            *ngIf="isMotorCycle(registrationNumber?.number)" 
+            src="assets/icon/scooter.svg" 
+            slot="start"
+          ></ion-icon>
+
+          <ion-label>{{ registrationNumber?.number }}</ion-label>
+          <ion-icon name="swap-horizontal-outline"></ion-icon>
+          <ion-button fill="outline" slot="end">TODO</ion-button>
+        </ion-item>
+    
+        <ion-item-options side="end">
+          <ion-item-option color="primary" expandable (click)="onNavigateToDetails(registrationNumber?.number)">{{ 'Open' | translate }}</ion-item-option>
+          <ion-item-option color="danger" expandable (click)="onDeleteVehicle(registrationNumber?.number)">{{ 'Delete' | translate }}</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
+    </ng-container>
+  </ion-card>
+</ion-content>

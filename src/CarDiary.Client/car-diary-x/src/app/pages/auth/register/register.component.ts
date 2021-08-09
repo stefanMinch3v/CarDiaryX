@@ -18,6 +18,7 @@ import { validations } from '../../../core/constants/validations';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   private langSub$: Subscription;
+  private registerSub$: Subscription;
   registerForm: FormGroup;
 
   constructor(
@@ -55,11 +56,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (this.langSub$) {
       this.langSub$.unsubscribe();
     }
+
+    if (this.registerSub$) {
+      this.registerSub$.unsubscribe();
+    }
   }
 
   ionViewWillLeave(): void {
     if (this.langSub$) {
       this.langSub$.unsubscribe();
+    }
+
+    if (this.registerSub$) {
+      this.registerSub$.unsubscribe();
     }
   }
 
@@ -82,7 +91,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.identityService.register({ firstName, lastName, email, password })
+    this.registerSub$ = this.identityService.register({ firstName, lastName, email, password })
       .pipe(
         switchMap(_ => this.identityService.login({ email, password })))
       .subscribe(response => {

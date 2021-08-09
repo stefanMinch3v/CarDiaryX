@@ -1,0 +1,282 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ registrationNumber }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="isLoading" class="ion-text-center center-spinner">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && !jsonData" class="ion-text-center">
+    <p>No results found</p>
+  </div>
+  
+  <ion-grid *ngIf="!isLoading && jsonData">
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <ion-list>
+          <ion-item-divider>
+            <ion-title class="ion-text-center">{{ "Basic information" | translate }}</ion-title>
+          </ion-item-divider>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Make" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.brand) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Model" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.model) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Type" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.car_type) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Model year" | translate }}</ion-label>
+            <ion-note 
+              *ngIf="jsonData.model_year" 
+              slot="end" 
+              color="dark"
+            >{{ getPropertyOrNotAvailable(jsonData.model_year) }}</ion-note>
+
+            <ion-note 
+              *ngIf="!jsonData.model_year" 
+              slot="end" 
+              color="dark"
+            >{{ getVehicleYearFromMetaDescription(jsonData.presented?.meta_description) }}</ion-note>
+          </ion-item>
+
+          <ion-item *ngIf="jsonData.model_year" lines="full">
+            <ion-label>{{ "Model age" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ calculateHowOldIsTheVehicle(jsonData.model_year) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Status" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.registration_status) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "First registered" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.first_reg_date) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Last updated" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.status_updated_date) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Color" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.color_name) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Fuel type" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.fuel_type) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Euro status" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.euronorm) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Engine size" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.engine_displacement) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full" (click)="presentCO2EmissionModal(jsonData.emission_co2)">
+            <ion-label>{{ "CO2 emissions" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">
+              <ion-icon *ngIf="jsonData.emission_co2" name="help-circle-outline"></ion-icon> 
+              {{ getPropertyOrNotAvailable(jsonData.emission_co2) }}
+            </ion-note>
+          </ion-item>
+
+          <ion-item-divider color="primary">
+            <ion-title class="ion-text-center">{{ "Detailed information" | translate }}</ion-title>
+          </ion-item-divider>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Registration" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.registration) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Chassis" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.vin) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Body type" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.body_type_name) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Total weight" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.total_weight) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Engine power" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.engine_power) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Engine code" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.engine_code) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Engine cylinders" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.engine_cylinders) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Top speed" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">
+              {{ getPropertyOrNotAvailable(jsonData.presented?.max_velocity) + (jsonData.presented?.max_velocity !== '-' ? ' km/t' : '')}}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Stated consumption" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.fuel_efficiency) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "CO emissions" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.emission_co)}}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Doors" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.doors) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>{{ "Seats" | translate }}</ion-label>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.maximum_seats) }}</ion-note>
+          </ion-item>
+
+          <ion-item lines="full" *ngIf="jsonData.presented?.meta_description">
+            <ion-label
+              [class.android-text-area-label]="!isIOS"
+              [class.ios-text-area-label]="isIOS"
+              color="dark" 
+              position="stacked"
+            >{{ "Additional info" | translate }}</ion-label>
+            <ion-textarea
+              [class.android-text-area]="!isIOS"
+              rows="3"
+              readonly 
+              [value]="getPropertyOrNotAvailable(jsonData.presented?.meta_description)"
+            ></ion-textarea>
+          </ion-item>
+
+          <ion-item lines="full" *ngIf="jsonData.wheels">
+            <ion-label 
+              [class.android-text-area-label]="!isIOS"
+              [class.ios-text-area-label]="isIOS" 
+              color="dark" 
+              position="stacked"
+            >{{ "Wheels" | translate }}</ion-label>
+            <ion-textarea
+              [class.android-text-area]="!isIOS"
+              rows="3"
+              readonly 
+              [value]="jsonData.wheels"
+            ></ion-textarea>
+          </ion-item>
+
+          <ion-item lines="full" *ngIf="jsonData.equipment && jsonData.equipment.length > 0">
+            <ion-label 
+              [class.android-text-area-label]="!isIOS" 
+              [class.ios-text-area-label]="isIOS"
+              color="dark" 
+              position="stacked"
+            >{{ "Equipment" | translate }}</ion-label>
+            <ion-textarea
+              [class.android-text-area]="!isIOS"
+              rows="3"
+              readonly 
+              [value]="getEquipment(jsonData.equipment)"
+            ></ion-textarea>
+          </ion-item>
+
+          <ion-item lines="full" *ngIf="jsonData.extra_equipment">
+            <ion-label 
+              [class.android-text-area-label]="!isIOS" 
+              [class.ios-text-area-label]="isIOS"
+              color="dark" 
+              position="stacked"
+            >{{ "Extra equipment" | translate }}</ion-label>
+            <ion-textarea
+              [class.android-text-area]="!isIOS"
+              rows="3"
+              readonly 
+              [value]="jsonData.extra_equipment"
+            ></ion-textarea>
+          </ion-item>
+
+          <ng-container *ngIf="jsonData.last_inspection_date">
+            <ion-item-divider color="secondary">
+              <ion-title class="ion-text-center">{{ "Inspections" | translate }}</ion-title>
+            </ion-item-divider>
+  
+            <ion-item lines="full">
+              <ion-label>{{ "Last inspection" | translate }}</ion-label>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.last_inspection_date) }}</ion-note>
+            </ion-item>
+  
+            <ion-item lines="full">
+              <ion-label>{{ "Inspection odometer" | translate }}</ion-label>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.last_inspection_odometer) }}</ion-note>
+            </ion-item>
+  
+            <ion-item lines="full">
+              <ion-label>{{ "Inspection result" | translate }}</ion-label>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.last_inspection_result) }}</ion-note>
+            </ion-item>
+          </ng-container>
+
+          <ng-container *ngIf="jsonData.permits && jsonData.permits.length > 0">
+            <ion-item-divider color="tertiary">
+              <ion-title class="ion-text-center">{{ "Permits" | translate }}</ion-title>
+            </ion-item-divider>
+
+            <ion-item lines="full" *ngFor="let permit of jsonData.permits">
+              <ion-label>{{ permit?.id }}</ion-label>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(permit?.name) }}</ion-note>
+            </ion-item>
+          </ng-container>
+
+          <ng-container *ngIf="jsonData.leasing_period_start">
+            <ion-item-divider color="medium">
+              <ion-title class="ion-text-center">{{ "Leased period" | translate }}</ion-title>
+            </ion-item-divider>
+
+            <ion-item lines="full">
+              <ion-label>{{ "From" | translate }}</ion-label>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.leasing_period_start) }}</ion-note>
+            </ion-item>
+
+            <ion-item lines="full">
+              <ion-label>{{ "To" | translate }}</ion-label>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.leasing_period_end) }}</ion-note>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

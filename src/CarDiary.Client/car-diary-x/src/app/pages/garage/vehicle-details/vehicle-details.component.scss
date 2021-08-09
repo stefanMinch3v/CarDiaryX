@@ -1,0 +1,29 @@
+.center-title {
+  padding-left: var(--ion-android-title-with-back-button-padding-left);
+  padding-right: var(--ion-android-title-with-back-button-padding-right);
+}
+
+.android-text-area-label {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.ios-text-area-label {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.android-text-area {
+  font-size: 11px;
+}
+
+.center-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+ion-label {
+  font-weight: bold;
+}

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { IdentityService } from '../../../core/services/identity.service';
 import { FormValidator } from '../../../core/helpers/form-validator';
 import { ToastService } from '../../../core/services/toast.service';
@@ -11,7 +12,8 @@ import { validations } from '../../../core/constants/validations';
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss'],
 })
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent implements OnInit, OnDestroy {
+  private changePasswordSub$: Subscription;
   isIOS: boolean;
   changePasswordForm: FormGroup;
 
@@ -38,6 +40,18 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.changePasswordSub$) {
+      this.changePasswordSub$.unsubscribe();
+    }
+  }
+
+  ionViewWillLeave(): void {
+    if (this.changePasswordSub$) {
+      this.changePasswordSub$.unsubscribe();
+    }
+  }
+
   get f() { return this.changePasswordForm.controls; }
 
   onDismissModal(): void {
@@ -55,7 +69,7 @@ export class ChangePasswordComponent implements OnInit {
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.identityService.changePassword({ currentPassword, newPassword })
+    this.changePasswordSub$ = this.identityService.changePassword({ currentPassword, newPassword })
       .subscribe(_ => {
         this.onDismissModal();
         this.toastService.presentSuccessToast();

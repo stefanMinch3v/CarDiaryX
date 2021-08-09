@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { RegistrationNumberModel } from '../models/vehicles/registration-number.model';
+import { VehicleInfoModel } from '../models/vehicles/vehicle-info.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,13 @@ export class VehicleService {
     return this.http.get<Array<RegistrationNumberModel>>(url);
   }
 
-  get(registrationNumber: string): Observable<any> {
-    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/get?registrationNumber=${registrationNumber}`;
-    return this.http.get<any>(url);
+  getInformation(registrationNumber: string): Observable<VehicleInfoModel> {
+    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/get-information`;
+    return this.http.get<VehicleInfoModel>(url, { params: { registrationNumber } });
+  }
+
+  removeFromUser(registrationNumber: string): Observable<any> {
+    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/remove-from-user`;
+    return this.http.delete(url, { params: { registrationNumber } });
   }
 }

@@ -31,3 +31,9 @@
 .delete-account-alert .alert-wrapper .alert-button-group .alert-button-role-delete {
   color: var(--ion-color-danger);
 }
+
+.transparent-modal {
+  .modal-wrapper {
+      --background: rgba(44, 39, 45, 0.2);
+  }
+}

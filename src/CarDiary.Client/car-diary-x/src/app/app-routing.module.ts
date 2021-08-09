@@ -25,8 +25,8 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'vehicles',
-    loadChildren: () => import('./pages/vehicle/vehicle.module').then( m => m.VehiclePageModule),
+    path: 'garage',
+    loadChildren: () => import('./pages/garage/garage.module').then( m => m.GaragePageModule),
     canLoad: [AuthGuard]
   }
 ];

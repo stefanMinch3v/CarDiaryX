@@ -14,8 +14,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   appPages = [
     {
-      title: 'My Vehicles',
-      url: '/vehicles',
+      title: 'My Garage',
+      url: '/garage',
       icon: 'calendar'
     },
     {

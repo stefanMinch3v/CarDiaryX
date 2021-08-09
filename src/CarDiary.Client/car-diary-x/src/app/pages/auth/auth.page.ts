@@ -16,6 +16,7 @@ import { IdentityService } from '../../core/services/identity.service';
 })
 export class AuthPage implements OnInit, OnDestroy {
   private langSub$: Subscription;
+  private loginSub$: Subscription;
 
   constructor(
     private identityService: IdentityService, 
@@ -34,11 +35,19 @@ export class AuthPage implements OnInit, OnDestroy {
     if (this.langSub$) {
       this.langSub$.unsubscribe();
     }
+
+    if (this.loginSub$) {
+      this.loginSub$.unsubscribe();
+    }
   }
 
   ionViewWillLeave(): void {
     if (this.langSub$) {
       this.langSub$.unsubscribe();
+    }
+
+    if (this.loginSub$) {
+      this.loginSub$.unsubscribe();
     }
   }
 
@@ -61,7 +70,7 @@ export class AuthPage implements OnInit, OnDestroy {
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.identityService
+    this.loginSub$ = this.identityService
       .login({ email, password })
       .subscribe(response => {
         const token = response?.token;
