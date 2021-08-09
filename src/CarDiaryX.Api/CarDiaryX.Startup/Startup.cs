@@ -1,5 +1,5 @@
 using CarDiaryX.Application;
-using CarDiaryX.Application.Features.V1.Vehicles;
+using CarDiaryX.Application.Contracts;
 using CarDiaryX.Infrastructure;
 using CarDiaryX.Infrastructure.Common.Extensions;
 using CarDiaryX.Integration;
@@ -33,7 +33,9 @@ namespace CarDiaryX.Startup
             this.AddIntegration(services);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+#pragma warning restore CA1822 // Mark members as static
         {
             if (env.IsDevelopment())
             {

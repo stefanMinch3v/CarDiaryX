@@ -1,10 +1,13 @@
-﻿using CarDiaryX.Application.Features.V1.Vehicles;
+﻿using CarDiaryX.Application.Contracts;
+using CarDiaryX.Application.Features.V1.Vehicles;
 using CarDiaryX.Domain.Integration;
 using CarDiaryX.Domain.Vehicles;
 using CarDiaryX.Infrastructure.Common.Constants;
 using CarDiaryX.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,9 +16,19 @@ namespace CarDiaryX.Infrastructure.Repositories
     internal class VehicleRepository : IVehicleRepository
     {
         private readonly CarDiaryXDbContext dbContext;
+        private readonly ICurrentUser currentUser;
 
-        public VehicleRepository(CarDiaryXDbContext dbContext) 
-            => this.dbContext = dbContext;
+        public VehicleRepository(CarDiaryXDbContext dbContext, ICurrentUser currentUser)
+        {
+            this.dbContext = dbContext;
+            this.currentUser = currentUser;
+        }
+
+        public Task<(long TsId, long DataId)> GetDataAndTsIds(string registrationNumber, CancellationToken cancellationToken)
+            => this.dbContext.VehicleInformations
+                .Where(vi => vi.RegistrationNumber == registrationNumber)
+                .Select(vi => new Tuple<long, long>(vi.DataTsId, vi.DataId).ToValueTuple())
+                .FirstOrDefaultAsync(cancellationToken);
 
         public Task<VehicleDMR> GetDMR(string registrationNumber, CancellationToken cancellationToken)
             => this.dbContext.VehicleDMRs.FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
@@ -25,17 +38,101 @@ namespace CarDiaryX.Infrastructure.Repositories
 
         public Task<VehicleInspection> GetInspection(string registrationNumber, CancellationToken cancellationToken)
             => this.dbContext.VehicleInspections.FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
-        
-        public async Task SaveDMR(string registrationNumber, DateTime? nextGreenTaxDate, DateTime? nextInspectionDate, string jsonData)
+
+        public async Task RemoveAllVehicleData(bool allRegistrationNumbers = true, string registrationNum = null)
+        {
+            if ((!allRegistrationNumbers && string.IsNullOrEmpty(registrationNum))
+                || (allRegistrationNumbers && !string.IsNullOrEmpty(registrationNum)))
+            {
+                return;
+            }
+
+            UserRegistrationNumbers[] userRegNumbers = null;
+
+            if (allRegistrationNumbers)
+            {
+                userRegNumbers = await this.dbContext.UserRegistrationNumbers
+                    .Include(u => u.RegistrationNumber)
+                    .Where(u => u.UserId == this.currentUser.UserId)
+                    .ToArrayAsync();
+            }
+            else
+            {
+                userRegNumbers = await this.dbContext.UserRegistrationNumbers
+                    .Include(u => u.RegistrationNumber)
+                    .Where(u => u.UserId == this.currentUser.UserId && u.RegistrationNumber.Number == registrationNum)
+                    .ToArrayAsync();
+            }
+
+            if (userRegNumbers is null || userRegNumbers.Length == 0)
+            {
+                return;
+            }
+
+            this.dbContext.UserRegistrationNumbers.RemoveRange(userRegNumbers);
+
+            var numbersToDelete = new List<UserRegistrationNumbers>();
+
+            foreach (var number in userRegNumbers)
+            {
+                var otherUsersHavingSameVehicle = (await this.dbContext.UserRegistrationNumbers
+                    .Where(urn => urn.RegistrationNumberId == number.RegistrationNumberId)
+                    .CountAsync()) > 1;
+
+                if (!otherUsersHavingSameVehicle)
+                {
+                    numbersToDelete.Add(number);
+                }
+            }
+
+            if (numbersToDelete.Count > 0)
+            {
+                foreach (var numberToDelete in numbersToDelete)
+                {
+                    var registrationNumber = numberToDelete.RegistrationNumber;
+
+                    var vehicleInformation = await this.dbContext.VehicleInformations
+                        .FirstOrDefaultAsync(vi => vi.RegistrationNumber == registrationNumber.Number);
+
+                    if (vehicleInformation is not null)
+                    {
+                        this.dbContext.VehicleInformations.Remove(vehicleInformation);
+                    }
+
+                    var vehicleDmr = await this.dbContext.VehicleDMRs
+                        .FirstOrDefaultAsync(dmr => dmr.RegistrationNumber == registrationNumber.Number);
+
+                    if (vehicleDmr is not null)
+                    {
+                        this.dbContext.VehicleDMRs.Remove(vehicleDmr);
+                    }
+
+                    var vehicleInspection = await this.dbContext.VehicleInspections
+                        .FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber.Number);
+
+                    if (vehicleInspection is not null)
+                    {
+                        this.dbContext.VehicleInspections.Remove(vehicleInspection);
+                    }
+                    
+                    this.dbContext.RegistrationNumbers.Remove(registrationNumber);
+                }
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task SaveDMR(string registrationNumber, DateTime? nextGreenTaxDate, DateTime? nextInspectionDate, string jsonData, string userId)
         {
             var dmr = new VehicleDMR
             {
                 NextGreenTaxDate = nextGreenTaxDate,
                 NextInspectionDate = nextInspectionDate,
                 JsonData = jsonData,
-                RegistrationNumber = registrationNumber
+                RegistrationNumber = registrationNumber,
+                CreatedBy = userId
             };
-            
+
             try
             {
                 this.dbContext.VehicleDMRs.Add(dmr);
@@ -57,14 +154,15 @@ namespace CarDiaryX.Infrastructure.Repositories
             }
         }
 
-        public async Task SaveInformation(string registrationNumber, RootInformation information)
+        public async Task SaveInformation(string registrationNumber, RootInformation information, string userId = null)
         {
             var informationDb = new VehicleInformation
             {
                 DataId = information.Data.Id,
                 DataTsId = information.Data.TsId,
                 RegistrationNumber = registrationNumber,
-                JsonData = information.RawData
+                JsonData = information.RawData,
+                CreatedBy = userId
             };
 
             try
@@ -87,13 +185,14 @@ namespace CarDiaryX.Infrastructure.Repositories
                 this.dbContext.VehicleInformations.Local.Remove(informationDb);
             }
         }
-        
-        public async Task SaveInspection(string registrationNumber, string jsonData)
+
+        public async Task SaveInspection(string registrationNumber, string jsonData, string userId)
         {
             var inspection = new VehicleInspection
             {
                 RegistrationNumber = registrationNumber,
-                JsonData = jsonData
+                JsonData = jsonData,
+                CreatedBy = userId
             };
 
             try

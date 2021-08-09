@@ -1,6 +1,6 @@
 ﻿namespace CarDiaryX.Infrastructure.Common.Constants
 {
-    public class InfrastructureConstants
+    internal static class InfrastructureConstants
     {
         public const string UNEXISTING_USER = "User does not exist in the system.";
         public const string INVALID_LOGIN_ERROR_MESSAGE = "Invalid credentials.";

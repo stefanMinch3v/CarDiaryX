@@ -1,4 +1,4 @@
-﻿using CarDiaryX.Application.Features.V1.Vehicles;
+﻿using CarDiaryX.Application.Contracts;
 using CarDiaryX.Domain.Integration;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -31,12 +31,17 @@ namespace CarDiaryX.Integration
             this.httpClient = httpClient;
         }
 
-        public async Task<string> GetDMR(long tsId, CancellationToken cancellationToken)
+        public async Task<RootDMR> GetDMR(long tsId, CancellationToken cancellationToken)
         {
             await this.AddDefaultAuthCookieRequest(cancellationToken);
 
             var response = await this.httpClient.GetAsync($"{BASE_URL}/dmr?ts_id={tsId}", cancellationToken);
-            return await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync();
+
+            var root = JsonConvert.DeserializeObject<RootDMR>(content);
+            root.RawData = content;
+
+            return root;
         }
 
         public async Task<RootInformation> GetInformation(string plates, CancellationToken cancellationToken)

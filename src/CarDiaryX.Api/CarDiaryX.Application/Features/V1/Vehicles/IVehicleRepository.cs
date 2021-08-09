@@ -11,9 +11,12 @@ namespace CarDiaryX.Application.Features.V1.Vehicles
         Task<VehicleInformation> GetInformation(string registrationNumber, CancellationToken cancellationToken);
         Task<VehicleDMR> GetDMR(string registrationNumber, CancellationToken cancellationToken);
         Task<VehicleInspection> GetInspection(string registrationNumber, CancellationToken cancellationToken);
+        Task<(long TsId, long DataId)> GetDataAndTsIds(string registrationNumber, CancellationToken cancellationToken);
 
-        Task SaveInformation(string registrationNumber, RootInformation information);
-        Task SaveDMR(string registrationNumber, DateTime? nextGreenTaxDate, DateTime? nextInspectionDate, string jsonData);
-        Task SaveInspection(string registrationNumber, string jsonData);
+        Task SaveInformation(string registrationNumber, RootInformation information, string userId = null);
+        Task SaveDMR(string registrationNumber, DateTime? nextGreenTaxDate, DateTime? nextInspectionDate, string jsonData, string userId);
+        Task SaveInspection(string registrationNumber, string jsonData, string userId);
+
+        Task RemoveAllVehicleData(bool allRegistrationNumbers = true, string registrationNumber = null);
     }
 }

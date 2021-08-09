@@ -1,4 +1,5 @@
 ﻿using CarDiaryX.Application.Common;
+using CarDiaryX.Application.Common.BackgroundServices;
 using CarDiaryX.Application.Common.Behaviours;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -14,18 +15,16 @@ namespace CarDiaryX.Application
                 .Configure<ApplicationSettings>(
                     configuration.GetSection(nameof(ApplicationSettings)),
                     options => options.BindNonPublicProperties = true)
-                .AddAutoMapper(Assembly.GetExecutingAssembly())
                 .AddMediatR(Assembly.GetExecutingAssembly())
-                //.AddEventHandlers()
-                .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-
-        //private static IServiceCollection AddEventHandlers(this IServiceCollection services)
-        //    => services
-        //        .Scan(scan => scan
-        //            .FromCallingAssembly()
-        //            .AddClasses(classes => classes
-        //                .AssignableTo(typeof(IEventHandler<>)))
-        //            .AsImplementedInterfaces()
-        //            .WithTransientLifetime());
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
+                .AddHostedService<QueuedHostedService>()
+                .AddSingleton<IBackgroundTaskQueue>(ctx =>
+                {
+                    if (!int.TryParse(configuration["QueueCapacity"], out var queueCapacity))
+                    {
+                        queueCapacity = 100;
+                    }
+                    return new BackgroundTaskQueue(queueCapacity);
+                });
     }
 }

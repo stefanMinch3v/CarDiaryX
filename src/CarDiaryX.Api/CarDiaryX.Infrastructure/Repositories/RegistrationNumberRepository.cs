@@ -1,4 +1,5 @@
-﻿using CarDiaryX.Application.Features.V1.Vehicles;
+﻿using CarDiaryX.Application.Contracts;
+using CarDiaryX.Application.Features.V1.Vehicles;
 using CarDiaryX.Domain.Vehicles;
 using CarDiaryX.Infrastructure.Common.Constants;
 using CarDiaryX.Infrastructure.Common.Persistence;
@@ -14,13 +15,15 @@ namespace CarDiaryX.Infrastructure.Repositories
     internal class RegistrationNumberRepository : IRegistrationNumberRepository
     {
         private readonly CarDiaryXDbContext dbContext;
+        private readonly ICurrentUser currentUser;
 
-        public RegistrationNumberRepository(CarDiaryXDbContext dbContext)
+        public RegistrationNumberRepository(CarDiaryXDbContext dbContext, ICurrentUser currentUser)
         {
             this.dbContext = dbContext;
+            this.currentUser = currentUser;
         }
 
-        public async Task AddToUser(Guid registrationNumberId, string userId)
+        public async Task AddToUser(Guid registrationNumberId)
         {
             var registrationNumber = await this.dbContext.RegistrationNumbers.FindAsync(registrationNumberId);
 
@@ -32,7 +35,7 @@ namespace CarDiaryX.Infrastructure.Repositories
             var existingRelation = await this.dbContext.UserRegistrationNumbers
                 .AsNoTracking()
                 .AnyAsync(ur => ur.RegistrationNumberId == registrationNumberId
-                    && ur.UserId == userId);
+                    && ur.UserId == this.currentUser.UserId);
 
             if (existingRelation)
             {
@@ -42,7 +45,7 @@ namespace CarDiaryX.Infrastructure.Repositories
             var userRegistrationNumber = new UserRegistrationNumbers
             {
                 RegistrationNumberId = registrationNumberId,
-                UserId = userId
+                UserId = this.currentUser.UserId
             };
 
             registrationNumber.Users.Add(userRegistrationNumber);
@@ -51,14 +54,14 @@ namespace CarDiaryX.Infrastructure.Repositories
             await this.dbContext.SaveChangesAsync();
         }
 
-        public Task<RegistrationNumber> Get(string registrationNumber)
-            => this.dbContext.RegistrationNumbers.FirstOrDefaultAsync(rn => rn.Number == registrationNumber);
+        public Task<RegistrationNumber> Get(string registrationNumber, CancellationToken cancellationToken)
+            => this.dbContext.RegistrationNumbers.FirstOrDefaultAsync(rn => rn.Number == registrationNumber, cancellationToken);
 
-        public async Task<IReadOnlyCollection<RegistrationNumber>> GetByUser(string userId, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<RegistrationNumber>> GetByUser(CancellationToken cancellationToken)
             => await this.dbContext.RegistrationNumbers
-                .Where(rn => rn.Users.Any(u => u.UserId == userId))
+                .Where(rn => rn.Users.Any(u => u.UserId == this.currentUser.UserId))
                 .OrderBy(rn => rn.CreatedOn)
-                .ToListAsync(cancellationToken);
+                .ToArrayAsync(cancellationToken);
 
         public async Task<Guid> Save(string registrationNumber, string shortDescription)
         {

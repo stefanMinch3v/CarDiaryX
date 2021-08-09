@@ -11,7 +11,7 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
 
         public string NewPassword { get; set; }
 
-        public class ChangeUserPasswordCommandHandler : IRequestHandler<ChangeUserPasswordCommand, Result>
+        internal class ChangeUserPasswordCommandHandler : IRequestHandler<ChangeUserPasswordCommand, Result>
         {
             private readonly IIdentity identity;
 

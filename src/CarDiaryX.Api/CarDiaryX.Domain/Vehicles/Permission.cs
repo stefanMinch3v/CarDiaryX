@@ -8,8 +8,6 @@ namespace CarDiaryX.Domain.Vehicles
         public string UserId { get; set; }
         public IUser User { get; set; }
         public PermissionType PermissionType { get; set; }
-        public int OwnedVehiclesCounter { get; set; }
-        public int ExternalEndpointCounter { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

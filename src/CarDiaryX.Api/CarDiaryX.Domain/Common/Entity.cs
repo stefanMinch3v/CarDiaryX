@@ -8,7 +8,7 @@ namespace CarDiaryX.Domain.Common
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Entity<TKey> other))
+            if (obj is not Entity<TKey> other)
             {
                 return false;
             }

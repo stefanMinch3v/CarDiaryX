@@ -10,7 +10,7 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public class UpdateUserDetailsCommandHandler : IRequestHandler<UpdateUserDetailsCommand, Result>
+        internal class UpdateUserDetailsCommandHandler : IRequestHandler<UpdateUserDetailsCommand, Result>
         {
             private readonly IIdentity identity;
 

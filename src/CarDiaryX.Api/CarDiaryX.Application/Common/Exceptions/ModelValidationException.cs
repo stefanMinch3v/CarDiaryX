@@ -25,5 +25,15 @@ namespace CarDiaryX.Application.Common.Exceptions
         }
 
         public IDictionary<string, string[]> Errors { get; }
+
+        public ModelValidationException(string message) : base(message)
+        {
+            throw new NotImplementedException("Forbidden usage of ctor");
+        }
+
+        public ModelValidationException(string message, Exception innerException) : base(message, innerException)
+        {
+            throw new NotImplementedException("Forbidden usage of ctor");
+        }
     }
 }

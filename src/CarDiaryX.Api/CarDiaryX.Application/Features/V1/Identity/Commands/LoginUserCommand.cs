@@ -12,7 +12,7 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
 
         public string Password { get; set; }
 
-        public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<LoginOutputModel>>
+        internal class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<LoginOutputModel>>
         {
             private readonly IIdentity identity;
 

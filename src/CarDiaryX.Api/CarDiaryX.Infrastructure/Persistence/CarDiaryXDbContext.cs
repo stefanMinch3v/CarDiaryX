@@ -67,14 +67,14 @@ namespace CarDiaryX.Infrastructure.Common.Persistence
                 if (entry.State == EntityState.Added && entry.Entity is not IUser)
                 {
                     var entity = (ICreatedEntity)entry.Entity;
-                    entity.CreatedOn = DateTime.UtcNow;
-                    entity.CreatedBy = this.currentUser.UserId ?? DEFAULT_SYSTEM;
+                    entity.CreatedOn = DateTimeOffset.UtcNow;
+                    entity.CreatedBy ??= this.currentUser?.UserId ?? DEFAULT_SYSTEM;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     var entity = (IModifiedEntity)entry.Entity;
-                    entity.ModifiedOn = DateTime.UtcNow;
-                    entity.ModifiedBy = this.currentUser.UserId ?? DEFAULT_SYSTEM;
+                    entity.ModifiedOn = DateTimeOffset.UtcNow;
+                    entity.ModifiedBy ??= this.currentUser?.UserId ?? DEFAULT_SYSTEM;
                 }
             }
         }

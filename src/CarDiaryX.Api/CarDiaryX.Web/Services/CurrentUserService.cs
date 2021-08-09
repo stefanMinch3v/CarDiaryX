@@ -8,9 +8,10 @@ namespace CarDiaryX.Web.Services
     {
         public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
-            var user = httpContextAccessor.HttpContext?.User;
-
-            this.UserId = user?.FindFirstValue(ClaimTypes.NameIdentifier);
+            this.UserId = httpContextAccessor
+                .HttpContext
+                ?.User
+                ?.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         public string UserId { get; }

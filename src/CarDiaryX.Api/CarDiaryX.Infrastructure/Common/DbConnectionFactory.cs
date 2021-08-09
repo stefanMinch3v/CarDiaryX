@@ -12,6 +12,6 @@ namespace CarDiaryX.Infrastructure.Common
             => this.dbConnectionString = configuration.GetDefaultConnectionString();
 
         public SqlConnection GetConnection
-            => new SqlConnection(this.dbConnectionString);
+            => new (this.dbConnectionString);
     }
 }

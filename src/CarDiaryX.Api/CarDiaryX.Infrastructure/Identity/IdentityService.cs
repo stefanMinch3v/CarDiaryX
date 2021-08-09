@@ -21,19 +21,22 @@ namespace CarDiaryX.Infrastructure.Identity
         private readonly ICurrentUser currentUser;
         private readonly IPermissionRepository permissionRepository;
         private readonly CarDiaryXDbContext dbContext;
+        private readonly IVehicleRepository vehicleRepository;
 
         public IdentityService(
             UserManager<User> userManager,
             IJwtTokenGenerator jwtTokenGenerator,
             ICurrentUser currentUser,
             IPermissionRepository permissionRepository,
-            CarDiaryXDbContext dbContext)
+            CarDiaryXDbContext dbContext,
+            IVehicleRepository vehicleRepository)
         {
             this.userManager = userManager;
             this.jwtTokenGenerator = jwtTokenGenerator;
             this.currentUser = currentUser;
             this.permissionRepository = permissionRepository;
             this.dbContext = dbContext;
+            this.vehicleRepository = vehicleRepository;
         }
 
         public async Task<Result<LoginOutputModel>> Login(LoginUserCommand request)
@@ -65,7 +68,7 @@ namespace CarDiaryX.Infrastructure.Identity
 
             if (identityResult.Succeeded)
             {
-                await this.permissionRepository.AddDefault(user.Id);
+                await this.permissionRepository.AddDefault();
             }
 
             return identityResult.Succeeded
@@ -108,12 +111,9 @@ namespace CarDiaryX.Infrastructure.Identity
                 return InfrastructureConstants.INVALID_CONFIRM_PASSWORD_ERROR_MESSAGE;
             }
 
-            var identityResult = await this.userManager.DeleteAsync(user);
+            await this.RemoveAllUserData(this.currentUser.UserId);
 
-            if (identityResult.Succeeded)
-            {
-                await this.RemoveAllUserData(this.currentUser.UserId);
-            }
+            var identityResult = await this.userManager.DeleteAsync(user);
 
             var errors = identityResult.Errors.Select(e => e.Description);
 
@@ -157,54 +157,12 @@ namespace CarDiaryX.Infrastructure.Identity
 
         private async Task RemoveAllUserData(string userId)
         {
-            await using var transaction = await dbContext.Database.BeginTransactionAsync();
+            var userPermission = await this.dbContext.Permissions.FirstOrDefaultAsync(p => p.UserId == userId);
+            this.dbContext.Permissions.Remove(userPermission);
 
-            try
-            {
-                var userPermission = await this.dbContext.Permissions.FirstOrDefaultAsync(p => p.UserId == userId);
-                this.dbContext.Permissions.Remove(userPermission);
+            await this.vehicleRepository.RemoveAllVehicleData();
 
-                var userRegNumber = await this.dbContext.UserRegistrationNumbers
-                    .Include(u => u.RegistrationNumber)
-                    .FirstOrDefaultAsync(urn => urn.UserId == userId);
-
-                if (userRegNumber is not null)
-                {
-                    this.dbContext.UserRegistrationNumbers.Remove(userRegNumber);
-
-                    var otherUsersHavingSameVehicle = (await this.dbContext.UserRegistrationNumbers
-                        .Where(urn => urn.RegistrationNumberId == userRegNumber.RegistrationNumberId)
-                        .CountAsync()) > 1;
-                    
-                    if (!otherUsersHavingSameVehicle)
-                    {
-                        var registrationNumber = userRegNumber.RegistrationNumber.Number;
-                        var registrationNumberObj = userRegNumber.RegistrationNumber;
-
-                        var vehicleInformation = await this.dbContext.VehicleInformations
-                            .FirstOrDefaultAsync(vi => vi.RegistrationNumber == registrationNumber);
-
-                        var vehicleDmr = await this.dbContext.VehicleDMRs
-                            .FirstOrDefaultAsync(dmr => dmr.RegistrationNumber == registrationNumber);
-
-                        var vehicleInspection = await this.dbContext.VehicleInspections
-                            .FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber);
-
-                        this.dbContext.VehicleInformations.Remove(vehicleInformation);
-                        this.dbContext.VehicleDMRs.Remove(vehicleDmr);
-                        this.dbContext.VehicleInspections.Remove(vehicleInspection);
-                        this.dbContext.RegistrationNumbers.Remove(registrationNumberObj);
-                    }
-                }
-
-                await this.dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+            await this.dbContext.SaveChangesAsync();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace CarDiaryX.Application.Features.V1.Identity.Queries
 {
     public class GetUserDetailsQuery : IRequest<UserDetailsOutputModel>
     {
-        public class GetUserDetailsQueryHandler : IRequestHandler<GetUserDetailsQuery, UserDetailsOutputModel>
+        internal class GetUserDetailsQueryHandler : IRequestHandler<GetUserDetailsQuery, UserDetailsOutputModel>
         {
             private readonly IIdentity identity;
 

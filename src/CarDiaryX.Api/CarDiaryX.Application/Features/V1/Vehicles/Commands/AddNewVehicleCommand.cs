@@ -1,10 +1,10 @@
 ﻿using CarDiaryX.Application.Common;
+using CarDiaryX.Application.Common.BackgroundServices;
 using CarDiaryX.Application.Common.Constants;
+using CarDiaryX.Application.Common.Helpers;
 using CarDiaryX.Application.Contracts;
 using CarDiaryX.Domain.Integration;
-using CarDiaryX.Domain.Vehicles;
 using MediatR;
-using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,35 +15,45 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
     {
         public string RegistrationNumber { get; set; }
 
-        public class CreateVehicleCommandHandler : IRequestHandler<AddNewVehicleCommand, Result>
+        internal class AddNewVehicleCommandCommandHandler : IRequestHandler<AddNewVehicleCommand, Result>
         {
             private readonly IVehicleHttpService vehicleHttpService;
             private readonly IVehicleRepository vehicleRepository;
             private readonly IRegistrationNumberRepository registrationNumberRepository;
             private readonly IPermissionRepository permissionRepository;
+            private readonly IBackgroundTaskQueue backgroundTaskQueue;
             private readonly ICurrentUser currentUser;
 
-            public CreateVehicleCommandHandler(
-                IVehicleHttpService vehicleHttpService, 
+            public AddNewVehicleCommandCommandHandler(
+                IVehicleHttpService vehicleHttpService,
                 IVehicleRepository vehicleRepository,
                 IRegistrationNumberRepository registrationNumberRepository,
                 IPermissionRepository permissionRepository,
+                IBackgroundTaskQueue backgroundTaskQueue,
                 ICurrentUser currentUser)
             {
                 this.vehicleHttpService = vehicleHttpService;
                 this.vehicleRepository = vehicleRepository;
                 this.registrationNumberRepository = registrationNumberRepository;
                 this.permissionRepository = permissionRepository;
+                this.backgroundTaskQueue = backgroundTaskQueue;
                 this.currentUser = currentUser;
             }
 
             public async Task<Result> Handle(AddNewVehicleCommand request, CancellationToken cancellationToken)
             {
-                // TODO: permissions table count external calls
-                var existingRegistrationNumber = await this.registrationNumberRepository.Get(request.RegistrationNumber);
+                var permission = await this.permissionRepository.GetByUser(cancellationToken);
+
+                var existingRegistrationNumber = await this.registrationNumberRepository.Get(request.RegistrationNumber, cancellationToken);
                 if (existingRegistrationNumber is not null)
                 {
-                    await this.registrationNumberRepository.AddToUser(existingRegistrationNumber.Id, this.currentUser.UserId);
+                    await this.registrationNumberRepository.AddToUser(existingRegistrationNumber.Id);
+
+                    if (PermissionsHelper.IsPaidUser(permission))
+                    {
+                        await this.ExecuteBackgroundTasksForPaidUsers(request.RegistrationNumber, this.currentUser.UserId);
+                    }
+
                     return Result.Success;
                 }
 
@@ -61,44 +71,16 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
 
                 await this.vehicleRepository.SaveInformation(request.RegistrationNumber, vehicleRootInfo);
 
-                var permission = await this.permissionRepository.GetByUser(this.currentUser.UserId);
-                if (permission?.PermissionType == PermissionType.Premium
-                    || permission?.PermissionType == PermissionType.Professional)
+                if (PermissionsHelper.IsPaidUser(permission))
                 {
-                    // TODO
-                    var vehicleDMRRawContent = await this.vehicleHttpService.GetDMR(
-                        vehicleRootInfo.Data.TsId,
-                        cancellationToken); // slow request 5-8 seconds
-
-                    if (vehicleDMRRawContent is null)
-                    {
-                        var errors = new[] { ApplicationConstants.External.SERVER_IS_NOT_RESPONDING };
-                        return Result.Failure(errors);
-                    }
-
-                    // TODO: parse data: nextGreenTaxDate, nextInspectionDate
-                    await this.vehicleRepository.SaveDMR(
-                        request.RegistrationNumber,
-                        DateTime.Now, //nextGreenTaxDate
-                        DateTime.Now, //nextInspectionDate
-                        vehicleDMRRawContent);
-
-                    //var vehicleInspections = await this.vehicleHttpService.GetInspections(vehicleInfo.Data.Id, cancellationToken); //4518851
+                    await this.ExecuteBackgroundTasksForPaidUsers(request.RegistrationNumber, this.currentUser.UserId);
                 }
 
                 var shortDescription = this.BuildShortDescription(vehicleRootInfo);
                 var savedId = await this.registrationNumberRepository.Save(request.RegistrationNumber, shortDescription);
-                await this.registrationNumberRepository.AddToUser(savedId, this.currentUser.UserId);
+                await this.registrationNumberRepository.AddToUser(savedId);
 
                 return Result.Success;
-                //return new
-                //{
-                //    info = vehicleRootInfo,
-                //    inspections = vehicleInspections,
-                //    dmr = vehicleDMR,
-                //    jdmr = JsonConvert.DeserializeObject<JObject>(vehicleDMR),
-                //    jInpsections = JsonConvert.DeserializeObject<JArray>(vehicleInspections),
-                //};
             }
 
             private string BuildShortDescription(RootInformation rootInformation)
@@ -122,6 +104,18 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
                 sb.Append(rootInformation.Data.FuelType ??= string.Empty);
 
                 return sb.ToString().TrimEnd();
+            }
+
+            private async Task ExecuteBackgroundTasksForPaidUsers(string registrationNumber, string userId)
+            {
+                Task<IRequest<Result>> taskDMR(CancellationToken token)
+                    => Task.FromResult<IRequest<Result>>(new UpdateVehicleDMRCommand(registrationNumber, userId));
+
+                //Task<IRequest<Result>> taskInspections(CancellationToken token)
+                //    => Task.FromResult<IRequest<Result>>(new UpdateVehicleInspectionCommand(registrationNumber, userId));
+
+                await this.backgroundTaskQueue.QueueBackgroundWorkItemAsync(taskDMR);
+                // await this.backgroundTaskQueue.QueueBackgroundWorkItemAsync(taskInspections);
             }
         }
     }

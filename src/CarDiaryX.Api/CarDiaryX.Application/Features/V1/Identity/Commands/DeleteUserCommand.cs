@@ -9,7 +9,7 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
     {
         public string ConfirmPassword { get; set; }
 
-        public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Result>
+        internal class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Result>
         {
             private readonly IIdentity identity;
 

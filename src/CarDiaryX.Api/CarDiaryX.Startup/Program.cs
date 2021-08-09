@@ -9,7 +9,9 @@ using System.IO;
 
 namespace CarDiaryX.Startup
 {
+#pragma warning disable CA1052 // Static holder types should be Static or NotInheritable
     public class Program
+#pragma warning restore CA1052 // Static holder types should be Static or NotInheritable
     {
         public static void Main(string[] args)
         {
@@ -18,21 +20,6 @@ namespace CarDiaryX.Startup
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            // TODO: for azure might need an additional set-up
-            var appSettings = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
-                .Enrich.FromLogContext()
-                .WriteTo.MSSqlServer(
-                    appSettings.GetConnectionString("DefaultConnection"),
-                    sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true }
-                )
-                .CreateLogger();
-
             var host = Host
                 .CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -52,6 +39,21 @@ namespace CarDiaryX.Startup
             }
             else
             {
+                // TODO: for azure might need an additional set-up
+                var appSettings = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+                Log.Logger = new LoggerConfiguration()
+                    .Enrich.FromLogContext()
+                    .WriteTo.MSSqlServer(
+                        appSettings.GetConnectionString("DefaultConnection"),
+                        sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true },
+                        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning
+                    )
+                    .CreateLogger();
+
                 host.UseSerilog();
             }
 

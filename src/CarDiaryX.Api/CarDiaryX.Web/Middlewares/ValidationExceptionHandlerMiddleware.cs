@@ -2,16 +2,14 @@
 using CarDiaryX.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CarDiaryX.Web.Middlewares
@@ -33,10 +31,12 @@ namespace CarDiaryX.Web.Middlewares
             {
                 await this.next(context);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
             {
                 await this.HandleExceptionAsync(context, ex);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
@@ -52,13 +52,29 @@ namespace CarDiaryX.Web.Middlewares
                     errorResult = new ErrorResult(validationException.Errors.SelectMany(e => e.Value));
                     break;
                 default:
-                    var userId = context
-                        .User
-                        ?.Claims
-                        ?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
-                        ?.Value ?? "Anonymous request";
+                    var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-                    this.logger.LogError(JsonConvert.SerializeObject(exception), new { UserId = userId });
+                    if (environment == Environments.Development)
+                    {
+                        this.logger.LogError(JsonConvert.SerializeObject(exception));
+                    }
+                    else
+                    {
+                        var userId = context
+                            .User
+                            ?.Claims
+                            ?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                            ?.Value ?? "Anonymous request";
+
+                        this.logger.LogError(
+                            exception,
+                            "An unexpected error has occurred. {UserId} - {Environment}; {0} - {1}",
+                            userId,
+                            environment,
+                            nameof(userId),
+                            nameof(environment));
+                    }
+
                     errorResult = new ErrorResult(new[] { "An unexpected error has occurred. Please try again later." });
                     break;
             }

@@ -1,28 +1,34 @@
-﻿using CarDiaryX.Application.Contracts;
+﻿using CarDiaryX.Application.Features.V1.Vehicles.OutputModels;
 using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
 {
-    public class GetAllRegistrationNumbersQuery : IRequest<object>
+    public class GetAllRegistrationNumbersQuery : IRequest<IReadOnlyCollection<RegistrationNumberOutputModel>>
     {
-        public class GetAllRegistrationNumbersQueryHandler : IRequestHandler<GetAllRegistrationNumbersQuery, object>
+        internal class GetAllRegistrationNumbersQueryHandler : IRequestHandler<GetAllRegistrationNumbersQuery, IReadOnlyCollection<RegistrationNumberOutputModel>>
         {
-            private readonly ICurrentUser currentUser;
             private readonly IRegistrationNumberRepository numberRepository;
 
-            public GetAllRegistrationNumbersQueryHandler(ICurrentUser currentUser, IRegistrationNumberRepository numberRepository)
+            public GetAllRegistrationNumbersQueryHandler(IRegistrationNumberRepository numberRepository)
             {
-                this.currentUser = currentUser;
                 this.numberRepository = numberRepository;
             }
 
-            public async Task<object> Handle(GetAllRegistrationNumbersQuery request, CancellationToken cancellationToken)
+            public async Task<IReadOnlyCollection<RegistrationNumberOutputModel>> Handle(GetAllRegistrationNumbersQuery request, CancellationToken cancellationToken)
             {
-                var result = await this.numberRepository.GetByUser(this.currentUser.UserId, cancellationToken);
-                return result.Select(r => new { r.Number, r.ShortDescription });
+                var result = await this.numberRepository.GetByUser(cancellationToken);
+
+                return result
+                    .Select(r => new RegistrationNumberOutputModel 
+                    { 
+                        Number = r.Number, 
+                        ShortDescription = r.ShortDescription 
+                    })
+                    .ToArray();
             }
         }
     }

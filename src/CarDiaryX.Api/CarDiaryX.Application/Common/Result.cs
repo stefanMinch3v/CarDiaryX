@@ -22,10 +22,10 @@ namespace CarDiaryX.Application.Common
                 : this.errors;
 
         public static Result Success
-            => new Result(true, Enumerable.Empty<string>());
+            => new (true, Enumerable.Empty<string>());
 
         public static Result Failure(IEnumerable<string> errors)
-            => new Result(false, errors);
+            => new (false, errors);
 
         public static implicit operator Result(string error)
             => Failure(new[] { error });
@@ -55,10 +55,10 @@ namespace CarDiaryX.Application.Common
                     $"{nameof(this.Data)} is not available with a failed result. Use {this.Errors} instead.");
 
         public static Result<TData> SuccessWith(TData data)
-            => new Result<TData>(true, data, Enumerable.Empty<string>());
+            => new (true, data, Enumerable.Empty<string>());
 
         public new static Result<TData> Failure(IEnumerable<string> errors)
-            => new Result<TData>(false, default, errors);
+            => new (false, default, errors);
 
         public static implicit operator Result<TData>(string error)
             => Failure(new[] { error });

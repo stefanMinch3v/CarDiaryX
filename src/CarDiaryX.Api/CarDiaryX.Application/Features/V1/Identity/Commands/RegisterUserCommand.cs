@@ -15,7 +15,7 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
 
         public string Password { get; set; }
 
-        public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result>
+        internal class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result>
         {
             private readonly IIdentity identity;
 
