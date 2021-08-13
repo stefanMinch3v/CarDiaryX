@@ -55,10 +55,13 @@ namespace CarDiaryX.Infrastructure.Repositories
         }
 
         public Task<RegistrationNumber> Get(string registrationNumber, CancellationToken cancellationToken)
-            => this.dbContext.RegistrationNumbers.FirstOrDefaultAsync(rn => rn.Number == registrationNumber, cancellationToken);
+            => this.dbContext.RegistrationNumbers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(rn => rn.Number == registrationNumber, cancellationToken);
 
         public async Task<IReadOnlyCollection<RegistrationNumber>> GetByUser(CancellationToken cancellationToken)
             => await this.dbContext.RegistrationNumbers
+                .AsNoTracking()
                 .Where(rn => rn.Users.Any(u => u.UserId == this.currentUser.UserId))
                 .OrderBy(rn => rn.CreatedOn)
                 .ToArrayAsync(cancellationToken);

@@ -27,6 +27,8 @@ namespace CarDiaryX.Infrastructure.Repositories
         }
 
         public Task<Permission> GetByUser(CancellationToken cancellationToken)
-            => this.dbContext.Permissions.FirstOrDefaultAsync(p => p.UserId == this.currentUser.UserId, cancellationToken);
+            => this.dbContext.Permissions
+                .AsNoTracking()    
+                .FirstOrDefaultAsync(p => p.UserId == this.currentUser.UserId, cancellationToken);
     }
 }

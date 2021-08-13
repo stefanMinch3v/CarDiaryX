@@ -158,7 +158,10 @@ namespace CarDiaryX.Infrastructure.Identity
 
         private async Task RemoveAllUserData(string userId)
         {
-            var userPermission = await this.dbContext.Permissions.FirstOrDefaultAsync(p => p.UserId == userId);
+            var userPermission = await this.dbContext.Permissions
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
             this.dbContext.Permissions.Remove(userPermission);
 
             await this.vehicleRepository.RemoveAllVehicleData(userId);

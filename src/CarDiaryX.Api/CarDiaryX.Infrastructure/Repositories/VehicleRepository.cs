@@ -21,18 +21,25 @@ namespace CarDiaryX.Infrastructure.Repositories
 
         public Task<(long TsId, long DataId, DateTimeOffset CreatedOn)> GetParamsForExternalCall(string registrationNumber, CancellationToken cancellationToken)
             => this.dbContext.VehicleInformations
+                .AsNoTracking()
                 .Where(vi => vi.RegistrationNumber == registrationNumber)
                 .Select(vi => new Tuple<long, long, DateTimeOffset>(vi.DataTsId, vi.DataId, vi.CreatedOn).ToValueTuple())
                 .FirstOrDefaultAsync(cancellationToken);
 
         public Task<VehicleDMR> GetDMR(string registrationNumber, CancellationToken cancellationToken)
-            => this.dbContext.VehicleDMRs.FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
+            => this.dbContext.VehicleDMRs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
 
         public Task<VehicleInformation> GetInformation(string registrationNumber, CancellationToken cancellationToken)
-            => this.dbContext.VehicleInformations.FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
+            => this.dbContext.VehicleInformations
+                .AsNoTracking()
+                .FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
 
         public Task<VehicleInspection> GetInspection(string registrationNumber, CancellationToken cancellationToken)
-            => this.dbContext.VehicleInspections.FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
+            => this.dbContext.VehicleInspections
+                .AsNoTracking()
+                .FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
 
         public async Task RemoveAllVehicleData(string userId, bool allRegistrationNumbers = true, string registrationNum = null)
         {
@@ -47,6 +54,7 @@ namespace CarDiaryX.Infrastructure.Repositories
             if (allRegistrationNumbers)
             {
                 userRegNumbers = await this.dbContext.UserRegistrationNumbers
+                    .AsNoTracking()
                     .Include(u => u.RegistrationNumber)
                     .Where(u => u.UserId == userId)
                     .ToArrayAsync();
@@ -54,6 +62,7 @@ namespace CarDiaryX.Infrastructure.Repositories
             else
             {
                 userRegNumbers = await this.dbContext.UserRegistrationNumbers
+                    .AsNoTracking()
                     .Include(u => u.RegistrationNumber)
                     .Where(u => u.UserId == userId && u.RegistrationNumber.Number == registrationNum)
                     .ToArrayAsync();
@@ -71,6 +80,7 @@ namespace CarDiaryX.Infrastructure.Repositories
             foreach (var number in userRegNumbers)
             {
                 var otherUsersHavingSameVehicle = (await this.dbContext.UserRegistrationNumbers
+                    .AsNoTracking()
                     .Where(urn => urn.RegistrationNumberId == number.RegistrationNumberId)
                     .CountAsync()) > 1;
 
@@ -87,6 +97,7 @@ namespace CarDiaryX.Infrastructure.Repositories
                     var registrationNumber = numberToDelete.RegistrationNumber;
 
                     var vehicleInformation = await this.dbContext.VehicleInformations
+                        .AsNoTracking()
                         .FirstOrDefaultAsync(vi => vi.RegistrationNumber == registrationNumber.Number);
 
                     if (vehicleInformation is not null)
@@ -95,6 +106,7 @@ namespace CarDiaryX.Infrastructure.Repositories
                     }
 
                     var vehicleDmr = await this.dbContext.VehicleDMRs
+                        .AsNoTracking()
                         .FirstOrDefaultAsync(dmr => dmr.RegistrationNumber == registrationNumber.Number);
 
                     if (vehicleDmr is not null)
@@ -103,6 +115,7 @@ namespace CarDiaryX.Infrastructure.Repositories
                     }
 
                     var vehicleInspection = await this.dbContext.VehicleInspections
+                        .AsNoTracking()
                         .FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber.Number);
 
                     if (vehicleInspection is not null)
@@ -213,7 +226,9 @@ namespace CarDiaryX.Infrastructure.Repositories
 
         public async Task UpdateInformation(string registrationNumber, RootInformation information, string userId)
         {
-            var dbInformation = await this.dbContext.VehicleInformations.FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber);
+            var dbInformation = await this.dbContext.VehicleInformations
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber);
 
             if (dbInformation is null)
             {
@@ -231,7 +246,9 @@ namespace CarDiaryX.Infrastructure.Repositories
 
         public async Task UpdateDMR(string registrationNumber, DateTime? nextGreenTaxDate, DateTime? nextInspectionDate, string jsonData, string userId)
         {
-            var dbDMR = await this.dbContext.VehicleDMRs.FirstOrDefaultAsync(d => d.RegistrationNumber == registrationNumber);
+            var dbDMR = await this.dbContext.VehicleDMRs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.RegistrationNumber == registrationNumber);
 
             if (dbDMR is null)
             {
@@ -249,7 +266,9 @@ namespace CarDiaryX.Infrastructure.Repositories
 
         public async Task UpdateInspection(string registrationNumber, string jsonData, string userId)
         {
-            var dbInspection = await this.dbContext.VehicleInspections.FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber);
+            var dbInspection = await this.dbContext.VehicleInspections
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.RegistrationNumber == registrationNumber);
 
             if (dbInspection is null)
             {
