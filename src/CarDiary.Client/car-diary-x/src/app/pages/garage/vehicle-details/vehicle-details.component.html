@@ -14,7 +14,7 @@
   </div>
 
   <div *ngIf="!isLoading && !jsonData" class="ion-text-center">
-    <p>No results found</p>
+    <p>{{ 'No results found!' | translate }}</p>
   </div>
   
   <ion-grid *ngIf="!isLoading && jsonData">
@@ -67,12 +67,12 @@
 
           <ion-item lines="full">
             <ion-label>{{ "First registered" | translate }}</ion-label>
-            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.first_reg_date) }}</ion-note>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.first_reg_date, true) }}</ion-note>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label>{{ "Last updated" | translate }}</ion-label>
-            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.status_updated_date) }}</ion-note>
+            <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.status_updated_date, true) }}</ion-note>
           </ion-item>
 
           <ion-item lines="full">
@@ -145,7 +145,7 @@
           <ion-item lines="full">
             <ion-label>{{ "Top speed" | translate }}</ion-label>
             <ion-note slot="end" color="dark">
-              {{ getPropertyOrNotAvailable(jsonData.presented?.max_velocity) + (jsonData.presented?.max_velocity !== '-' ? ' km/t' : '')}}</ion-note>
+              {{ getPropertyOrNotAvailable(jsonData.presented?.max_velocity) + (jsonData.presented?.max_velocity !== this.DASH_SYMBOL ? ' km/t' : '')}}</ion-note>
           </ion-item>
 
           <ion-item lines="full">
@@ -255,7 +255,7 @@
             </ion-item-divider>
 
             <ion-item lines="full" *ngFor="let permit of jsonData.permits">
-              <ion-label>{{ permit?.id }}</ion-label>
+              <ion-label>{{ 'Type' | translate }}</ion-label>
               <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(permit?.name) }}</ion-note>
             </ion-item>
           </ng-container>
@@ -267,12 +267,12 @@
 
             <ion-item lines="full">
               <ion-label>{{ "From" | translate }}</ion-label>
-              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.leasing_period_start) }}</ion-note>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.leasing_period_start, true) }}</ion-note>
             </ion-item>
 
             <ion-item lines="full">
               <ion-label>{{ "To" | translate }}</ion-label>
-              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.leasing_period_end) }}</ion-note>
+              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.leasing_period_end, true) }}</ion-note>
             </ion-item>
           </ng-container>
         </ion-list>

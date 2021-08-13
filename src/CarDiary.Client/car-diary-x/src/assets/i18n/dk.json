@@ -108,5 +108,12 @@
   "Permits": "Tilladelser",
   "Last inspection": "Sidste syn",
   "Inspection odometer": "Syn kilometertæller",
-  "Inspection result": "Syn resultat"
+  "Inspection result": "Syn resultat",
+  "The vehicle has been deleted from your garage.": "Køretøjet er blevet slettet fra din garage.",
+  "This account has no permissions to see the data.": "Denne konto har ingen tilladelser til at se dataene.",
+  "No results found!": "Ingen resultater fundet!",
+  "Leased period": "Lejeperiode",
+  "From": "Fra",
+  "To": "Til",
+  "Vehicle will be permanently deleted!": "Køretøjet slettes permanent!"
 }

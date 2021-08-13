@@ -108,5 +108,12 @@
   "Permits": "Permits",
   "Last inspection": "Last inspection",
   "Inspection odometer": "Inspection odometer",
-  "Inspection result": "Inspection result"
+  "Inspection result": "Inspection result",
+  "The vehicle has been deleted from your garage.": "The vehicle has been deleted from your garage.",
+  "This account has no permissions to see the data.": "This account has no permissions to see the data.",
+  "No results found!": "No results found!",
+  "Leased period": "Leased period",
+  "From": "From",
+  "To": "To",
+  "Vehicle will be permanently deleted!": "Vehicle will be permanently deleted!"
 }

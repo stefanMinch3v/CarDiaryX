@@ -33,7 +33,7 @@ export class IdentityService {
   }
 
   changePassword(changePassword: ChangePasswordModel): Observable<any> {
-    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/change-password`;
+    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/password`;
     return this.http.put(url, changePassword);
   }
 
@@ -43,7 +43,7 @@ export class IdentityService {
   }
 
   get(): Observable<UserDetailsModel> {
-    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/user-details`;
+    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/details`;
     return this.http.get<UserDetailsModel>(url);
   }
 

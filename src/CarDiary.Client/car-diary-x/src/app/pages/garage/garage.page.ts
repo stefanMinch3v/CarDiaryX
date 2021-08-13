@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { VehicleService } from '../../core/services/vehicle.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { RegistrationNumberModel } from '../../core/models/vehicles/registration-number.model';
+import { VehicleType } from '../../core/models/vehicles/vehicle-type';
 
 @Component({
   selector: 'app-garage',
@@ -17,6 +18,7 @@ export class GaragePage implements OnInit, OnDestroy {
   private vehicleFilterSub$: Subscription;
   private userRegistrationNumbersSub$: Subscription;
   private vehicleRemoveFromUserSub$: Subscription;
+  protected readonly iconsUrlPath = 'assets/icon/';
   registrationNumbers: Array<RegistrationNumberModel>;
   showList: boolean;
   isLoading: boolean;;
@@ -124,8 +126,55 @@ export class GaragePage implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  isMotorCycle(registrationNumber: string): boolean {
-    return registrationNumber.length === 6;
+  isCarOrBus(vehicleType: string): boolean {
+    if (!vehicleType) {
+      return true;
+    }
+
+    var type = vehicleType as VehicleType;
+    return type === VehicleType.CAR || type === VehicleType.BUS;
+  }
+
+  getCarOrBusIcon(vehicleType: string): string {
+    if (!vehicleType) {
+      return 'car-outline';
+    }
+
+    var type = vehicleType as VehicleType;
+
+    if (type === VehicleType.CAR) {
+      return 'car-outline';
+    } else if (type === VehicleType.BUS) {
+      return 'bus-outline';
+    }
+
+    return 'car-outline';
+  }
+
+  getTruckOrMotortCycleUrlPath(vehicleType: string): string {
+    if (!vehicleType) {
+      return 'truck.svg';
+    }
+
+    const type = vehicleType as VehicleType;
+
+    if (type === VehicleType.MOTORCYCLE) {
+      return this.iconsUrlPath + 'scooter.svg';
+    } else if (type === VehicleType.TRUCK) {
+      return this.iconsUrlPath + 'truck.svg';
+    }
+  }
+
+  isKnownType(vehicleType: any): boolean {
+    if (!vehicleType) {
+      return false;
+    }
+
+    if (Object.values(VehicleType).indexOf(vehicleType) !== -1) {
+      return true;
+    }
+
+    return false;
   }
 
   async presentActionSheet(registrationNumber: string): Promise<void> {

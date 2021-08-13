@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, Platform } from '@ionic/angular';
@@ -14,6 +14,7 @@ import { VehicleService } from '../../../core/services/vehicle.service';
 })
 export class VehicleDetailsComponent implements OnInit {
   private vehicleDetailsSub$: Subscription;
+  protected readonly DASH_SYMBOL = '-';
   isIOS: boolean;
   registrationNumber: string;
   jsonData: any;
@@ -24,7 +25,8 @@ export class VehicleDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private platform: Platform,
     private vehicleService: VehicleService,
-    private modalCntrl: ModalController) { }
+    private modalCntrl: ModalController,
+    private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -38,7 +40,7 @@ export class VehicleDetailsComponent implements OnInit {
       )
       .subscribe(result => {
         this.isLoading = false;
-        this.jsonData = JSON.parse(result.jsonDataInformation)?.data;
+        this.jsonData = JSON.parse(result.jsonData)?.data;
       }, () => this.isLoading = false, () => this.isLoading = false);
   }
 
@@ -58,9 +60,17 @@ export class VehicleDetailsComponent implements OnInit {
     return this.location.back();
   }
 
-  getPropertyOrNotAvailable(propName: any): any {
+  getPropertyOrNotAvailable(propName: any, isDate: boolean = false): any {
     if (!propName) {
-      return '-';
+      return this.DASH_SYMBOL;
+    }
+
+    if (isDate) {
+      const value = propName.split('-')[0];
+
+      if (value.length > 2) {
+        return this.datePipe.transform(propName, 'dd-MM-yyyy');
+      }
     }
 
     return propName;
@@ -84,7 +94,7 @@ export class VehicleDetailsComponent implements OnInit {
     const yearString =  splitArr[1]?.trim();
 
     if (Number.isNaN(yearString) || !yearString) {
-      return '-';
+      return this.DASH_SYMBOL;
     } else {
       return yearString;
     }

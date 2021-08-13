@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from './core/services/auth.service';
+import { IdentityService } from './core/services/identity.service';
 import { SettingsService } from './core/services/settings.service';
 
 @Component({
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private settingsService: SettingsService,
-    private authService: AuthService,
+    private identityService: IdentityService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onLogout(): void {
-    this.authService.deauthenticateUser();
+    this.identityService.logout();
     this.router.navigate(['/auth']);
   }
 }
