@@ -32,5 +32,8 @@ namespace CarDiaryX.Domain.Integration
 
         [JsonProperty("version")]
         public string Version { get; set; }
+
+        [JsonProperty("car_type")]
+        public string CarType { get; set; }
     }
 }

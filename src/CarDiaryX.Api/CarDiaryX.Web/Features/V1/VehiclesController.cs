@@ -32,15 +32,11 @@ namespace CarDiaryX.Web.Features.V1
             => await base.Send(new GetAllRegistrationNumbersQuery());
 
         [HttpGet]
-        public async Task<ActionResult<VehicleInformationOutputModel>> GetInformation(string registrationNumber)
+        public async Task<ActionResult<VehicleSharedOutputModel>> GetInformation(string registrationNumber)
             => await base.Send(new GetVehicleInformationQuery { RegistrationNumber = registrationNumber });
 
         [HttpGet]
-        public async Task<ActionResult<object>> GetInspections(string registrationNumber)
-            => await base.Send(new GetVehicleInspectionQuery { RegistrationNumber = registrationNumber });
-
-        [HttpGet]
-        public async Task<ActionResult<object>> GetDMR(string registrationNumber)
-            => await base.Send(new GetVehicleInspectionQuery { RegistrationNumber = registrationNumber });
+        public async Task<ActionResult<VehicleSharedOutputModel>> GetDMR(string registrationNumber)
+            => await base.Send(new GetVehicleDMRQuery { RegistrationNumber = registrationNumber });
     }
 }

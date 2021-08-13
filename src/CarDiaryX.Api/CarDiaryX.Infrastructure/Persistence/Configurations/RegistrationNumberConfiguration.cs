@@ -43,6 +43,10 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
                 .WithOne(urn => urn.RegistrationNumber)
                 .HasForeignKey(urn => urn.RegistrationNumberId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Property(r => r.VehicleType)
+                .HasMaxLength(InfrastructureConstants.VEHICLE_TYPE_MAX_LENGTH);
         }
     }
 }

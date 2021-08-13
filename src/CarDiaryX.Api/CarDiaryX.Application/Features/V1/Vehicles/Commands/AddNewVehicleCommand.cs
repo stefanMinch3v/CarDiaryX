@@ -3,6 +3,7 @@ using CarDiaryX.Application.Common.BackgroundServices;
 using CarDiaryX.Application.Common.Constants;
 using CarDiaryX.Application.Common.Helpers;
 using CarDiaryX.Application.Contracts;
+using CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks;
 using CarDiaryX.Domain.Integration;
 using MediatR;
 using System.Text;
@@ -77,7 +78,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
                 }
 
                 var shortDescription = this.BuildShortDescription(vehicleRootInfo);
-                var savedId = await this.registrationNumberRepository.Save(request.RegistrationNumber, shortDescription);
+                var savedId = await this.registrationNumberRepository.Save(request.RegistrationNumber, shortDescription, vehicleRootInfo.Data.CarType);
                 await this.registrationNumberRepository.AddToUser(savedId);
 
                 return Result.Success;
@@ -85,7 +86,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
 
             private string BuildShortDescription(RootInformation rootInformation)
             {
-                if (rootInformation is null)
+                if (rootInformation is null || rootInformation.Data is null)
                 {
                     return null;
                 }
@@ -109,12 +110,13 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
             private async Task ExecuteBackgroundTasksForPaidUsers(string registrationNumber, string userId)
             {
                 Task<IRequest<Result>> taskDMR(CancellationToken token)
-                    => Task.FromResult<IRequest<Result>>(new UpdateVehicleDMRCommand(registrationNumber, userId));
+                    => Task.FromResult<IRequest<Result>>(new CrupdateVehicleDMRCommand(registrationNumber, userId));
 
+                await this.backgroundTaskQueue.EnqueueWorkItem(taskDMR);
+
+                // Upcoming feature
                 //Task<IRequest<Result>> taskInspections(CancellationToken token)
                 //    => Task.FromResult<IRequest<Result>>(new UpdateVehicleInspectionCommand(registrationNumber, userId));
-
-                await this.backgroundTaskQueue.QueueBackgroundWorkItemAsync(taskDMR);
                 // await this.backgroundTaskQueue.QueueBackgroundWorkItemAsync(taskInspections);
             }
         }

@@ -10,8 +10,8 @@ namespace CarDiaryX.Application.Common.BackgroundServices
     /// </summary>
     public interface IBackgroundTaskQueue
     {
-        ValueTask QueueBackgroundWorkItemAsync(Func<CancellationToken, Task<IRequest<Result>>> workItem);
-        ValueTask<Func<CancellationToken, Task<IRequest<Result>>>> DequeueAsync(CancellationToken cancellationToken);
+        ValueTask EnqueueWorkItem(Func<CancellationToken, Task<IRequest<Result>>> workItem);
+        ValueTask<Func<CancellationToken, Task<IRequest<Result>>>> DequeueWorkItem(CancellationToken cancellationToken);
         int WorkItemsCount { get; }
     }
 }

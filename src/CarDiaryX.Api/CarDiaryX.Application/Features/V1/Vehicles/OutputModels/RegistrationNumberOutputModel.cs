@@ -4,5 +4,6 @@
     {
         public string Number { get; set; }
         public string ShortDescription { get; set; }
+        public string VehicleType { get; set; }
     }
 }

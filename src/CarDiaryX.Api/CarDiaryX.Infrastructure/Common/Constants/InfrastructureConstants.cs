@@ -13,5 +13,6 @@
         public const string DUPLICATE_KEY_FOR_REGISTRATION_NUMBER_EXCEPTION_MESSAGE_IN_VII = "Cannot insert duplicate key row in object 'dbo.VehicleInspections' with unique index";
         public const string DUPLICATE_KEY_FOR_REGISTRATION_NUMBER_EXCEPTION_MESSAGE_IN_RN = "Cannot insert duplicate key row in object 'dbo.RegistrationNumbers' with unique index";
         public const string SAVED_REGISTRATION_NUMBER_EXCEPTION_IN_DUPLICATE_AND_UNEXISTING_STATE = "Trying to fetch existing 'RegistrationNumber' failed, the entry has been deleted right before fetching in 'catch' state of 'try catch' block.";
+        public const int VEHICLE_TYPE_MAX_LENGTH = 30;
     }
 }

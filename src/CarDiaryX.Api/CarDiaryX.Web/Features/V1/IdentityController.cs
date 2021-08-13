@@ -24,7 +24,7 @@ namespace CarDiaryX.Web.Features.V1
             => await base.Send(command);
 
         [HttpPut]
-        public async Task<ActionResult> ChangePassword([FromBody] ChangeUserPasswordCommand command)
+        public async Task<ActionResult> Password([FromBody] ChangeUserPasswordCommand command)
             => await base.Send(command);
 
         [HttpDelete]
@@ -32,7 +32,7 @@ namespace CarDiaryX.Web.Features.V1
             => await base.Send(command);
 
         [HttpGet]
-        public async Task<ActionResult<UserDetailsOutputModel>> UserDetails()
+        public async Task<ActionResult<UserDetailsOutputModel>> Details()
             => await base.Send(new GetUserDetailsQuery());
 
         [HttpPut]

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace CarDiaryX.Infrastructure.Identity
 {
+    // REmove current user service
     internal class IdentityService : IIdentity
     {
         private readonly UserManager<User> userManager;
@@ -160,7 +161,7 @@ namespace CarDiaryX.Infrastructure.Identity
             var userPermission = await this.dbContext.Permissions.FirstOrDefaultAsync(p => p.UserId == userId);
             this.dbContext.Permissions.Remove(userPermission);
 
-            await this.vehicleRepository.RemoveAllVehicleData();
+            await this.vehicleRepository.RemoveAllVehicleData(userId);
 
             await this.dbContext.SaveChangesAsync();
         }

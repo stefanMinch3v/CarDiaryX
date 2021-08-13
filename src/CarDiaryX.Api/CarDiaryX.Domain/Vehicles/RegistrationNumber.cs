@@ -15,6 +15,8 @@ namespace CarDiaryX.Domain.Vehicles
 
         public string ShortDescription { get; set; }
 
+        public string VehicleType { get; set; }
+
         public HashSet<UserRegistrationNumbers> Users { get; set; } = new HashSet<UserRegistrationNumbers>();
 
         public string CreatedBy { get; set; }

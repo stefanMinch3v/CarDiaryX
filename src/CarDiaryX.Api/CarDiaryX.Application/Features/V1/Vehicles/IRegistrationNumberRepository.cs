@@ -11,6 +11,6 @@ namespace CarDiaryX.Application.Features.V1.Vehicles
         Task AddToUser(Guid registrationNumberId);
         Task<RegistrationNumber> Get(string registrationNumber, CancellationToken cancellationToken);
         Task<IReadOnlyCollection<RegistrationNumber>> GetByUser(CancellationToken cancellationToken);
-        Task<Guid> Save(string registrationNumber, string shortDescription);
+        Task<Guid> Save(string registrationNumber, string shortDescription, string vehicleType);
     }
 }

@@ -38,7 +38,7 @@ namespace CarDiaryX.Application.Common.BackgroundServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var workItem = await this.TaskQueue.DequeueAsync(stoppingToken);
+                var workItem = await this.TaskQueue.DequeueWorkItem(stoppingToken);
 
                 try
                 {

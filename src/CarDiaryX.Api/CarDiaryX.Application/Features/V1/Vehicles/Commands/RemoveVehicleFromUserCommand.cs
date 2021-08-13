@@ -1,4 +1,5 @@
 ﻿using CarDiaryX.Application.Common;
+using CarDiaryX.Application.Contracts;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,13 +13,17 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
         internal class RemoveVehicleFromUserCommandHandler : IRequestHandler<RemoveVehicleFromUserCommand, Result>
         {
             private readonly IVehicleRepository vehicleRepository;
+            private readonly ICurrentUser currentUser;
 
-            public RemoveVehicleFromUserCommandHandler(IVehicleRepository vehicleRepository) 
-                => this.vehicleRepository = vehicleRepository;
+            public RemoveVehicleFromUserCommandHandler(IVehicleRepository vehicleRepository, ICurrentUser currentUser)
+            {
+                this.vehicleRepository = vehicleRepository;
+                this.currentUser = currentUser;
+            }
 
             public async Task<Result> Handle(RemoveVehicleFromUserCommand request, CancellationToken cancellationToken)
             {
-                await this.vehicleRepository.RemoveAllVehicleData(false, request.RegistrationNumber);
+                await this.vehicleRepository.RemoveAllVehicleData(this.currentUser.UserId, false, request.RegistrationNumber);
                 return Result.Success;
             }
         }

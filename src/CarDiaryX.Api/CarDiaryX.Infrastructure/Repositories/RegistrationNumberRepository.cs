@@ -63,12 +63,20 @@ namespace CarDiaryX.Infrastructure.Repositories
                 .OrderBy(rn => rn.CreatedOn)
                 .ToArrayAsync(cancellationToken);
 
-        public async Task<Guid> Save(string registrationNumber, string shortDescription)
+        public async Task<Guid> Save(string registrationNumber, string shortDescription, string vehicleType)
         {
+            if (!string.IsNullOrEmpty(vehicleType))
+            {
+                vehicleType = vehicleType.Length > InfrastructureConstants.VEHICLE_TYPE_MAX_LENGTH
+                    ? vehicleType = vehicleType.Substring(0, InfrastructureConstants.VEHICLE_TYPE_MAX_LENGTH - 1)
+                    : vehicleType;
+            }
+
             var number = new RegistrationNumber
             {
                 Number = registrationNumber,
-                ShortDescription = shortDescription
+                ShortDescription = shortDescription,
+                VehicleType = vehicleType
             };
 
             try

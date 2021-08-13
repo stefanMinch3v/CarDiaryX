@@ -43,7 +43,7 @@ namespace CarDiaryX.Application.Common.BackgroundServices
             }
         }
 
-        public ValueTask QueueBackgroundWorkItemAsync(Func<CancellationToken, Task<IRequest<Result>>> workItem)
+        public ValueTask EnqueueWorkItem(Func<CancellationToken, Task<IRequest<Result>>> workItem)
         {
             if (workItem is null)
             {
@@ -53,7 +53,7 @@ namespace CarDiaryX.Application.Common.BackgroundServices
             return this.queue.Writer.WriteAsync(workItem);
         }
 
-        public ValueTask<Func<CancellationToken, Task<IRequest<Result>>>> DequeueAsync(CancellationToken cancellationToken)
+        public ValueTask<Func<CancellationToken, Task<IRequest<Result>>>> DequeueWorkItem(CancellationToken cancellationToken)
             => this.queue.Reader.ReadAsync(cancellationToken);     
     }
 }
