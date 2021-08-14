@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -11,6 +11,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
+import { initSynchronousFactory } from './core/helpers/init-synchronous.factory';
+import { SettingsService } from './core/services/settings.service';
 
 @NgModule({
   declarations: [AppComponent, SettingsComponent],
@@ -31,6 +33,12 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
       }
     })],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initSynchronousFactory,
+      deps: [SettingsService],
+      multi: true
+    },
     { 
       provide: RouteReuseStrategy, 
       useClass: IonicRouteStrategy 
