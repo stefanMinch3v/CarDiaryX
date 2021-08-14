@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, MenuController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { RegisterComponent } from './register/register.component';
@@ -25,7 +25,8 @@ export class AuthPage implements OnInit, OnDestroy {
     private router: Router,
     private modalCntrl: ModalController,
     private settingsService: SettingsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private menuCntrl: MenuController) { }
   
   ngOnInit(): void {
     this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
@@ -41,7 +42,13 @@ export class AuthPage implements OnInit, OnDestroy {
     }
   }
 
+  ionViewWillEnter(): void {
+    this.menuCntrl.enable(false);
+  }
+
   ionViewWillLeave(): void {
+    this.menuCntrl.enable(true);
+
     if (this.langSub$) {
       this.langSub$.unsubscribe();
     }

@@ -22,7 +22,8 @@ import { SettingsService } from './core/services/settings.service';
     FormsModule,
     HttpClientModule,
     IonicModule.forRoot({
-      backButtonText: ''
+      backButtonText: '',
+      swipeBackEnabled: false
     }), 
     AppRoutingModule,
     TranslateModule.forRoot({
