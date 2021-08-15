@@ -230,21 +230,26 @@
 
           <ng-container *ngIf="jsonData.last_inspection_date">
             <ion-item-divider color="secondary">
-              <ion-title class="ion-text-center">{{ "Inspections" | translate }}</ion-title>
+              <ion-title class="ion-text-center">{{ "Last inspection" | translate }}</ion-title>
             </ion-item-divider>
   
             <ion-item lines="full">
-              <ion-label>{{ "Last inspection" | translate }}</ion-label>
+              <ion-label>{{ "Date" | translate }}</ion-label>
               <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.last_inspection_date) }}</ion-note>
             </ion-item>
   
             <ion-item lines="full">
-              <ion-label>{{ "Inspection odometer" | translate }}</ion-label>
-              <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.last_inspection_odometer) }}</ion-note>
+              <ion-label>{{ "Odometer" | translate }}</ion-label>
+              <ion-note slot="end" color="dark">
+                {{ getPropertyOrNotAvailable(jsonData.last_inspection_odometer) !== DASH_SYMBOL ? 
+                      jsonData.last_inspection_odometer + '.000' : 
+                      DASH_SYMBOL 
+                }}
+              </ion-note>
             </ion-item>
   
             <ion-item lines="full">
-              <ion-label>{{ "Inspection result" | translate }}</ion-label>
+              <ion-label>{{ "Result" | translate }}</ion-label>
               <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.last_inspection_result) }}</ion-note>
             </ion-item>
           </ng-container>
