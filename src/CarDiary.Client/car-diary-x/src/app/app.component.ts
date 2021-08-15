@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Network, NetworkStatus, PluginListenerHandle } from '@capacitor/core';
-import { MenuController, ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { IdentityService } from './core/services/identity.service';
@@ -58,11 +58,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private identityService: IdentityService,
     private router: Router,
     private toastCntrl: ToastController,
-    private translateService: TranslateService,
-    private menuCntrl: MenuController) { }
+    private translateService: TranslateService) { }
 
   ngOnInit(): void {
-    this.menuCntrl.swipeGesture(false);
     this.themeSub$ = this.settingsService.currentTheme.subscribe(isDarkTheme => this.isDarkTheme = isDarkTheme);
   }
 
@@ -113,6 +111,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   onLogout(): void {
     this.identityService.logout();
     this.router.navigate(['/auth']);
+  }
+
+  onNavigateTo(url: string): void {
+    if (!url) {
+      return;
+    }
+
+    this.router.navigate([url]);
   }
 
   private async initializeToast(): Promise<void> {

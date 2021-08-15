@@ -7,14 +7,13 @@
           <ion-list-header>
             Vehicle
           </ion-list-header>
-          <ion-menu-toggle autoHide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item [routerLink]="p.url" routerLinkActive="selected" routerDirection="root" detail="false">
-              <ion-icon slot="start" [name]="p.icon + '-outline'"></ion-icon>
+          <ion-menu-toggle autoHide="false">
+            <ion-item (click)="onNavigateTo('/garage')" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="construct"></ion-icon>
               <ion-label>
-                {{p.title}}
+                My Garage
               </ion-label>
             </ion-item>
-
           </ion-menu-toggle>
         </ion-list>
 
@@ -60,7 +59,7 @@
           </ion-list-header>
 
           <ion-menu-toggle autoHide="false">
-            <ion-item routerLink="/profile" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-item (click)="onNavigateTo('/profile')" routerLinkActive="active" routerDirection="root" detail="false">
               <ion-icon slot="start" name="person-circle"></ion-icon>
               <ion-label>
                 {{ 'Profile' | translate }}

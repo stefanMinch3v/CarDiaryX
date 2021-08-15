@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController, AlertController, LoadingController } from '@ionic/angular';
@@ -24,7 +23,6 @@ export class GaragePage implements OnInit, OnDestroy {
   isLoading: boolean;;
 
   constructor(
-    private location: Location, 
     private settingsService: SettingsService,
     private router: Router,
     private vehicleService: VehicleService,
@@ -75,7 +73,7 @@ export class GaragePage implements OnInit, OnDestroy {
   }
 
   onNavigateBack(): void {
-    return this.location.back();
+    this.router.navigate(['']);
   }
 
   toggleFilter(): void {

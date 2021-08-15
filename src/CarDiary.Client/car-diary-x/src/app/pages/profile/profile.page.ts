@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
@@ -27,7 +26,6 @@ export class ProfilePage implements OnInit, OnDestroy {
   isIOS: boolean;
 
   constructor(
-    private location: Location, 
     private platform: Platform,
     private modalCntrl: ModalController,
     private alertCntrl: AlertController,
@@ -72,7 +70,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       this.userUpdateSub$.unsubscribe();
     }
   }
-  
+
   // if account is removed I use router navigate cuz ngOnDestroy does not trigger
   ionViewWillLeave(): void {
     if (this.userSub$) {
@@ -91,7 +89,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   get f() { return this.updateUserForm.controls; }
 
   onNavigateBack(): void {
-    return this.location.back();
+    this.router.navigate(['']);
   }
 
   async presentChangePasswordModal(): Promise<void> {

@@ -29,10 +29,13 @@ export class AuthPage implements OnInit, OnDestroy {
     private menuCntrl: MenuController) { }
   
   ngOnInit(): void {
+    this.menuCntrl.enable(false);
     this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
   }
 
   ngOnDestroy(): void {
+    this.menuCntrl.enable(true);
+
     if (this.langSub$) {
       this.langSub$.unsubscribe();
     }
