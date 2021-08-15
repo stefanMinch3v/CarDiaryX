@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Co2EmissionComponent } from '../../../components/co2-emission/co2-emission.component';
+import { Co2EmissionComponent } from './co2-emission/co2-emission.component';
 import { VehicleService } from '../../../core/services/vehicle.service';
 
 @Component({
