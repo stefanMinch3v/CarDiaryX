@@ -68,6 +68,15 @@
         <ion-col size-sm="6" offset-sm="3">
 
           <ion-button 
+            type="submit"
+            color="primary" 
+            expand="block"
+            [disabled]="!loginForm.valid"
+          >
+            {{ "Login" | translate }}
+          </ion-button>
+
+          <ion-button 
             type="button"
             color="primary"
             fill="clear"
@@ -75,15 +84,6 @@
             (click)="presentModal()"
           >
             {{ "Create New Account" | translate }}
-          </ion-button>
-
-          <ion-button 
-            type="submit"
-            color="primary" 
-            expand="block"
-            [disabled]="!loginForm.valid"
-          >
-            {{ "Login" | translate }}
           </ion-button>
 
           <br />
