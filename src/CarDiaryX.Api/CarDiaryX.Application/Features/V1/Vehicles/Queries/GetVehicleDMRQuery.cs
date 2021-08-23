@@ -80,7 +80,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
 
                     await this.backgroundTaskQueue.EnqueueWorkItem(saveDMRworkItem);
                 }
-                else if (!DateTimeHelper.AreDatesInTheSameWeek(DateTimeOffset.UtcNow, dmr.CreatedOn))
+                else if (!DateTimeHelper.AreDatesInTheSameMonth(DateTimeOffset.UtcNow, dmr.CreatedOn))
                 {
                     Task<IRequest<Result>> updateDMRworkItem(CancellationToken token)
                         => Task.FromResult<IRequest<Result>>(new CrupdateVehicleDMRCommand(request.RegistrationNumber, this.currentUser.UserId));

@@ -22,7 +22,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
         }
 
         public string RegistrationNumber { get; }
-        
+
         public string UserId { get; }
 
         public string InspectionsJsonData { get; }
@@ -31,7 +31,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
         {
             private readonly IServiceProvider serviceProvider;
 
-            public CrupdateVehicleInspectionCommandHandler(IServiceProvider serviceProvider) 
+            public CrupdateVehicleInspectionCommandHandler(IServiceProvider serviceProvider)
                 => this.serviceProvider = serviceProvider;
 
             public async Task<Result> Handle(CrupdateVehicleInspectionCommand request, CancellationToken cancellationToken)
@@ -77,6 +77,11 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
                         backgroundTaskQueue,
                         cancellationToken);
 
+                    if (rawData == "[]")
+                    {
+                        return Result.Success;
+                    }
+
                     await vehicleRepository.UpdateInspection(request.RegistrationNumber, rawData, request.UserId);
                 }
 
@@ -84,10 +89,10 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
             }
 
             private async Task<string> GetInspectionsJson(
-                string registrationNumber, 
+                string registrationNumber,
                 string userId,
-                IVehicleHttpService vehicleHttpService, 
-                IVehicleRepository vehicleRepository, 
+                IVehicleHttpService vehicleHttpService,
+                IVehicleRepository vehicleRepository,
                 IBackgroundTaskQueue backgroundTaskQueue,
                 CancellationToken cancellationToken)
             {
@@ -113,10 +118,10 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
 
                     dataId = rootInformation.Data.Id;
 
-                    Task<IRequest<Result>> informationWorkItem(CancellationToken token)
+                    Task<IRequest<Result>> updateInformationWorkItem(CancellationToken token)
                         => Task.FromResult<IRequest<Result>>(new CrupdateVehicleInformationCommand(registrationNumber, userId, rootInformation));
 
-                    await backgroundTaskQueue.EnqueueWorkItem(informationWorkItem);
+                    await backgroundTaskQueue.EnqueueWorkItem(updateInformationWorkItem);
                 }
 
                 // slow request 5-8 seconds

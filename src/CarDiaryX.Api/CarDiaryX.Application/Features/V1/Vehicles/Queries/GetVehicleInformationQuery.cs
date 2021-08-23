@@ -43,7 +43,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
                     return Result<VehicleSharedOutputModel>.Failure(new[] { ApplicationConstants.Vehicles.DELETED_VEHICLE_FROM_GARAGE });
                 }
 
-                if (!DateTimeHelper.AreDatesInTheSameWeek(DateTimeOffset.UtcNow, information.CreatedOn))
+                if (!DateTimeHelper.AreDatesInTheSameMonth(DateTimeOffset.UtcNow, information.CreatedOn))
                 {
                     Task<IRequest<Result>> informationWorkItem(CancellationToken token)
                         => Task.FromResult<IRequest<Result>>(new CrupdateVehicleInformationCommand(request.RegistrationNumber, this.currentUser.UserId));

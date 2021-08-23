@@ -109,15 +109,15 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands
 
             private async Task ExecuteBackgroundTasksForPaidUsers(string registrationNumber, string userId)
             {
-                Task<IRequest<Result>> taskDMR(CancellationToken token)
+                Task<IRequest<Result>> saveTaskDMR(CancellationToken token)
                     => Task.FromResult<IRequest<Result>>(new CrupdateVehicleDMRCommand(registrationNumber, userId));
 
-                await this.backgroundTaskQueue.EnqueueWorkItem(taskDMR);
+                await this.backgroundTaskQueue.EnqueueWorkItem(saveTaskDMR);
 
                 // Upcoming feature
-                //Task<IRequest<Result>> taskInspections(CancellationToken token)
-                //    => Task.FromResult<IRequest<Result>>(new UpdateVehicleInspectionCommand(registrationNumber, userId));
-                // await this.backgroundTaskQueue.QueueBackgroundWorkItemAsync(taskInspections);
+                //Task<IRequest<Result>> saveTaskInspections(CancellationToken token)
+                //    => Task.FromResult<IRequest<Result>>(new CrupdateVehicleInspectionCommand(registrationNumber, userId));
+                //await this.backgroundTaskQueue.EnqueueWorkItem(saveTaskInspections);
             }
         }
     }

@@ -74,7 +74,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
                         rootDMR.RawData,
                         request.UserId);
                 }
-                else if (!DateTimeHelper.AreDatesInTheSameWeek(DateTimeOffset.UtcNow, existingDMR.CreatedOn))
+                else if (!DateTimeHelper.AreDatesInTheSameMonth(DateTimeOffset.UtcNow, existingDMR.CreatedOn))
                 {
                     var rootDMR = await this.GetRootDMR(
                         request.RegistrationNumber,
@@ -110,7 +110,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
                     throw new InvalidOperationException(string.Format(ApplicationConstants.External.INVALID_TSID_DATAID_PROPERTIES, registrationNumber));
                 }
 
-                if (!DateTimeHelper.AreDatesInTheSameWeek(DateTimeOffset.UtcNow, createdOn))
+                if (!DateTimeHelper.AreDatesInTheSameMonth(DateTimeOffset.UtcNow, createdOn))
                 {
                     var rootInformation = await vehicleHttpService.GetInformation(registrationNumber, cancellationToken);
 

@@ -54,7 +54,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks
 
                     await vehicleRepository.SaveInformation(request.RegistrationNumber, rootInformation, request.UserId);
                 }
-                else if (!DateTimeHelper.AreDatesInTheSameWeek(DateTimeOffset.UtcNow, existingInformation.CreatedOn))
+                else if (!DateTimeHelper.AreDatesInTheSameMonth(DateTimeOffset.UtcNow, existingInformation.CreatedOn))
                 {
                     var rootInformation = await this.GetRootInformation(request.RegistrationNumber, vehicleHttpService, cancellationToken);
 

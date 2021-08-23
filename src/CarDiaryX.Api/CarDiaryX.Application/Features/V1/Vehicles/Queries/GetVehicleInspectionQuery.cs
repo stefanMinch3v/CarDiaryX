@@ -27,7 +27,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
             private readonly IBackgroundTaskQueue backgroundTaskQueue;
 
             public GetVehicleInspectionQueryHandler(
-                IVehicleRepository vehicleRepository, 
+                IVehicleRepository vehicleRepository,
                 IPermissionRepository permissionRepository,
                 IVehicleHttpService vehicleHttpService,
                 ICurrentUser currentUser,
@@ -44,7 +44,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
             {
                 var permission = await this.permissionRepository.GetByUser(cancellationToken);
 
-                if (permission?.PermissionType != PermissionType.Premium 
+                if (permission?.PermissionType != PermissionType.Premium
                     || permission?.PermissionType != PermissionType.Professional)
                 {
                     return Result<VehicleSharedOutputModel>.Failure(new[] { ApplicationConstants.Permissions.ACCOUNT_HAS_NO_PERMISSIONS });
@@ -104,10 +104,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
                         return Result<VehicleSharedOutputModel>.Failure(errors);
                     }
 
-                    return new VehicleSharedOutputModel
-                    {
-                        JsonData = jsonInspections
-                    };
+                    jsonData = jsonInspections;
                 }
 
                 return new VehicleSharedOutputModel
@@ -121,7 +118,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
                 var jsonData = string.Empty;
                 var errors = Array.Empty<string>();
 
-                var rootInformation = await vehicleHttpService.GetInformation(registrationNumber, cancellationToken);
+                var rootInformation = await this.vehicleHttpService.GetInformation(registrationNumber, cancellationToken);
 
                 if (rootInformation is null)
                 {
@@ -132,13 +129,18 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
                     errors = new[] { ApplicationConstants.External.NO_RESULTS_FOUND_ON_THE_SERVER };
                 }
 
+                if (errors.Length > 0)
+                {
+                    return (jsonData, errors);
+                }
+
+                // slow request 5-8 seconds
+                jsonData = await this.vehicleHttpService.GetInspections(rootInformation.Data.Id, cancellationToken);
+
                 Task<IRequest<Result>> updateInformationworkItem(CancellationToken token)
                     => Task.FromResult<IRequest<Result>>(new CrupdateVehicleInformationCommand(registrationNumber, this.currentUser.UserId, rootInformation));
 
                 await this.backgroundTaskQueue.EnqueueWorkItem(updateInformationworkItem);
-
-                // slow request 5-8 seconds
-                jsonData = await this.vehicleHttpService.GetInspections(rootInformation.Data.Id, cancellationToken);
 
                 Task<IRequest<Result>> saveInspectionworkItem(CancellationToken token)
                     => Task.FromResult<IRequest<Result>>(new CrupdateVehicleInspectionCommand(registrationNumber, this.currentUser.UserId, jsonData));
