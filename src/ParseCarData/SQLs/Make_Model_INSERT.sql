@@ -1,4 +1,4 @@
-CREATE TABLE VehicleTypeValidation
+CREATE TABLE VehicleTypeValidations
 (
 	Id int PRIMARY KEY IDENTITY(1, 1),
 	[Name] nvarchar(20)
@@ -6,30 +6,30 @@ CREATE TABLE VehicleTypeValidation
 
 GO
 
-CREATE TABLE VehicleMakeValidation
+CREATE TABLE VehicleMakeValidations
 (
 	Id int PRIMARY KEY IDENTITY(1, 1),
 	TypeId int NOT NULL,
 	[Name] nvarchar(50) NOT NULL,
-	CONSTRAINT FK_VehicleMake_VehicleType FOREIGN KEY(TypeId) REFERENCES VehicleTypeValidation(Id),
+	CONSTRAINT FK_VehicleMake_VehicleType FOREIGN KEY(TypeId) REFERENCES VehicleTypeValidations(Id),
 	CONSTRAINT UC_VehicleMake_TypeId_Name UNIQUE (TypeId, [Name])
 )
 
 GO
 
-CREATE TABLE VehicleModelValidation
+CREATE TABLE VehicleModelValidations
 (
 	Id int PRIMARY KEY IDENTITY(1, 1),
 	MakeId int NOT NULL,
 	[Name] nvarchar(50) NOT NULL,
-	CONSTRAINT FK_VehicleModel_VehicleMake FOREIGN KEY(MakeId) REFERENCES VehicleMakeValidation(Id),
+	CONSTRAINT FK_VehicleModel_VehicleMake FOREIGN KEY(MakeId) REFERENCES VehicleMakeValidations(Id),
 	CONSTRAINT UC_VehicleModel_MakeId_Name UNIQUE (MakeId, [Name])
 )
 
 GO
 
-SET IDENTITY_INSERT VehicleTypeValidation ON
-INSERT INTO VehicleTypeValidation
+SET IDENTITY_INSERT VehicleTypeValidations ON
+INSERT INTO VehicleTypeValidations
 (
 	Id,
 	[Name]
@@ -39,14 +39,14 @@ VALUES
 (2, 'Motorcycle'),
 (3, 'Bus'), -- autocomplete for model
 (4, 'Truck'),
-(5, 'Caravan'),
-(6, 'Other')
-SET IDENTITY_INSERT VehicleTypeValidation OFF
+(5, 'Caravan')
+--(6, 'Other')
+SET IDENTITY_INSERT VehicleTypeValidations OFF
 
 GO
 
-SET IDENTITY_INSERT VehicleMakeValidation ON
-INSERT INTO VehicleMakeValidation
+SET IDENTITY_INSERT VehicleMakeValidations ON
+INSERT INTO VehicleMakeValidations
 (
 	Id,
 	TypeId,
@@ -588,12 +588,12 @@ VALUES
 (533, 5, 'Winnebago'),
 (534, 5, 'Woelcke')
 
-SET IDENTITY_INSERT VehicleMakeValidation OFF
+SET IDENTITY_INSERT VehicleMakeValidations OFF
 
 GO
 
-SET IDENTITY_INSERT VehicleModelValidation ON
-INSERT INTO VehicleModelValidation
+SET IDENTITY_INSERT VehicleModelValidations ON
+INSERT INTO VehicleModelValidations
 (
 	Id, 
 	MakeId, 
@@ -2207,4 +2207,4 @@ VALUES
 (1605, 134, 'Tourmalin'),
 (1606, 135, '1.3'),
 (1607, 122, 'ГАЗЕЛА')
-SET IDENTITY_INSERT VehicleModelValidation OFF
+SET IDENTITY_INSERT VehicleModelValidations OFF
