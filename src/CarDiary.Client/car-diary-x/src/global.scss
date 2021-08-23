@@ -37,3 +37,10 @@
       --background: rgba(44, 39, 45, 0.2);
   }
 }
+
+.center-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

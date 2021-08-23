@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class FormValidator {
   static matchPasswords(abstractControl: AbstractControl): ValidationErrors | null {
@@ -37,5 +37,27 @@ export class FormValidator {
     } else {
       email.setErrors(null);
     }
+  }
+
+  static matchValidAddressInDenmark(addressType: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control || !addressType) {
+        return null;
+      }
+
+
+      const address = control.get(addressType);
+
+      if (address.errors && address.errors.required) {
+        // return if another validator has already found an error in this case required
+        return;
+      }
+
+      if (address.value && !address.value.id) {
+        address.setErrors({ missingId: true });
+      } else {
+        address.setErrors(null);
+      }
+    };
   }
 }

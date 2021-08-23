@@ -1,0 +1,19 @@
+.invalid-feedback {
+  color: var(--ion-color-danger);
+  font-size: 14px;
+}
+
+ion-item-group {
+  border: 1px solid #e6e6e6;
+  border-bottom: 2px;
+}
+
+ion-icon {
+  zoom: var(--ion-input-field-icon-zoom);
+  padding-right: var(--ion-field-icon-padding-right);
+}
+
+.input-content {
+  align-items: center;
+  display: flex;
+}

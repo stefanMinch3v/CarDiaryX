@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { SettingsService } from '../../core/services/settings.service';
+import { AddTripComponent } from './add-trip/add-trip.component';
 
 @Component({
   selector: 'app-tabs-page',
@@ -15,7 +16,8 @@ export class TabsPage implements OnInit, OnDestroy {
   constructor(
     private settingsService: SettingsService, 
     private translateService: TranslateService,
-    private actionsheetCntrl: ActionSheetController) {}
+    private actionsheetCntrl: ActionSheetController,
+    private modalCntrl: ModalController) {}
   
   ngOnInit(): void {
     this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
@@ -33,8 +35,8 @@ export class TabsPage implements OnInit, OnDestroy {
       buttons: [{
         text: this.translateService.instant('Route'),
         icon: 'map-outline',
-        handler: () => {
-          console.log('Trip clicked');
+        handler: async () => {
+          await this.presentAddTripModal();
         }
       }, {
         text: this.translateService.instant('Repair'),
@@ -49,12 +51,6 @@ export class TabsPage implements OnInit, OnDestroy {
           console.log('Refuel clicked');
         }
       }, {
-        text: this.translateService.instant('Fee'),
-        icon: 'receipt-outline',
-        handler: () => {
-          console.log('Fee clicked');
-        }
-      }, {
         text: this.translateService.instant('Cancel'),
         icon: 'close',
         handler: () => {
@@ -63,5 +59,13 @@ export class TabsPage implements OnInit, OnDestroy {
       }]
     });
     await actionSheet.present();
+  }
+
+  private async presentAddTripModal(): Promise<void> {
+    const modal = await this.modalCntrl.create({
+      component: AddTripComponent
+    });
+
+    return await modal.present();
   }
 }
