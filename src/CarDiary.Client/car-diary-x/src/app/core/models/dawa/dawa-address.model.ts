@@ -3,4 +3,5 @@ export interface DawaAddressModel {
   name: string;
   x: string;
   y: string;
+  notFullAddress: boolean;
 }

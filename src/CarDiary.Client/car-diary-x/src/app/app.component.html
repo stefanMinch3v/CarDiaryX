@@ -8,7 +8,7 @@
             Vehicle
           </ion-list-header>
           <ion-menu-toggle autoHide="false">
-            <ion-item (click)="onNavigateTo('/garage')" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-item tappable (click)="onNavigateTo('/garage')" routerLinkActive="active" routerDirection="root" detail="false">
               <ion-icon slot="start" name="construct"></ion-icon>
               <ion-label>
                 My Garage
@@ -59,7 +59,7 @@
           </ion-list-header>
 
           <ion-menu-toggle autoHide="false">
-            <ion-item (click)="onNavigateTo('/profile')" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-item tappable (click)="onNavigateTo('/profile')" routerLinkActive="active" routerDirection="root" detail="false">
               <ion-icon slot="start" name="person-circle"></ion-icon>
               <ion-label>
                 {{ 'Profile' | translate }}
@@ -86,7 +86,7 @@
           </ion-menu-toggle>
 
           <ion-menu-toggle autoHide="false">
-            <ion-item (click)="onLogout()" detail="false">
+            <ion-item tappable (click)="onLogout()" detail="false">
               <ion-icon slot="start" name="log-out"></ion-icon>
               <ion-label>
                 {{ "Logout" | translate }}

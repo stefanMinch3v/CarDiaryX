@@ -102,6 +102,7 @@
   "Doors": "Antal døre",
   "Seats": "Sæder",
   "Additional info": "Yderligere information",
+  "Additional info - optional": "Yderligere oplysninger - valgfrit",
   "Wheels": "Hjul",
   "Equipment": "Udstyr",
   "Extra equipment": "Ekstraudstyr",
@@ -139,5 +140,15 @@
   "Date is required!": "Dato er påkrævet!",
   "Maximum distance 10 000 000 km!": "Maksimal afstand 10 000 000 km!",
   "Cannot be more than 15 symbols!": "Kan ikke være mere end 15 symboler!",
-  "Text cannot be more than 200 symbols!": "Tekst må ikke være mere end 200 symboler!"
+  "Text cannot be more than 200 symbols!": "Tekst må ikke være mere end 200 symboler!",
+  "Maximum address length is 50 symbols!": "Maksimal adresselængde er 50 symboler!",
+  "Comment": "Kommentar",
+  "Select date": "Vælg dato",
+  "Select address": "Vælg adresse",
+  "Enter address": "Indtast adresse",
+  "Departure cannot end after arrival date!": "Afgang kan ikke slutte efter ankomstdato!",
+  "Arrival must end after departure date!": "Ankomst skal slutte efter afrejsedato!",
+  "Select": "Vælg",
+  "Vehicle not belonging to user garage": "Køretøj med registreringsnummer: '{{value}}' findes ikke i din garage.",
+  "Your garage is empty!": "Din garage er tom!"
 }

@@ -53,11 +53,36 @@ export class FormValidator {
         return;
       }
 
-      if (address.value && !address.value.id) {
+      if (address.value && address.value.notFullAddress) {
         address.setErrors({ missingId: true });
       } else {
         address.setErrors(null);
       }
     };
+  }
+
+  static matchDepartureArrivalDates(abstractControl: AbstractControl): ValidationErrors | null {
+    if (!abstractControl) {
+      return null;
+    }
+
+    const departureDate = abstractControl.get('departureDate');
+    const arrivalDate = abstractControl.get('arrivalDate');
+
+    if (departureDate.errors && departureDate.errors.required || arrivalDate.errors && arrivalDate.errors.required) {
+      // return if another validator has already found an error
+      return;
+    }
+
+    const parseDeparture = Date.parse(departureDate.value);
+    const parseArrival = Date.parse(arrivalDate.value);
+
+    if (parseDeparture > parseArrival) {
+      departureDate.setErrors({ invalidRange: true });
+      arrivalDate.setErrors({ invalidRange: true });
+    } else {
+      departureDate.setErrors(null);
+      arrivalDate.setErrors(null);
+    }
   }
 }

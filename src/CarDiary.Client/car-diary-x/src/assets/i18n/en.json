@@ -102,6 +102,7 @@
   "Doors": "Doors",
   "Seats": "Seats",
   "Additional info": "Additional info",
+  "Additional info - optional": "Additional info - optional",
   "Wheels": "Wheels",
   "Equipment": "Equipment",
   "Extra equipment": "Extra equipment",
@@ -139,5 +140,15 @@
   "Date is required!": "Date is required!",
   "Maximum distance 10 000 000 km!": "Maximum distance 10 000 000 km!",
   "Cannot be more than 15 symbols!": "Cannot be more than 15 symbols!",
-  "Text cannot be more than 200 symbols!": "Text cannot be more than 200 symbols!"
+  "Text cannot be more than 200 symbols!": "Text cannot be more than 200 symbols!",
+  "Maximum address length is 50 symbols!": "Maximum address length is 50 symbols!",
+  "Comment": "Comment",
+  "Select date": "Select date",
+  "Select address": "Select address",
+  "Enter address": "Enter address",
+  "Departure cannot end after arrival date!": "Departure cannot end after arrival date!",
+  "Arrival must end after departure date!": "Arrival must end after departure date!",
+  "Select": "Select",
+  "Vehicle not belonging to user garage": "Vehicle with registration number: '{{value}}' does not exist in your garage.",
+  "Your garage is empty!": "Your garage is empty!"
 }

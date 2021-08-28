@@ -11,21 +11,21 @@
 <ion-footer>
   <ion-row>
     <ion-col size="4" class="ion-text-center">
-      <ion-button (click)="zoom(false)" [fill]="isDarkMode ? 'solid' : 'outline'" color="light">
+      <ion-button tappable (click)="zoom(false)" [fill]="isDarkMode ? 'solid' : 'outline'" color="light">
         <ion-icon name="remove" slot="start"></ion-icon>
         {{ 'Out' | translate }}
       </ion-button>
     </ion-col>
 
     <ion-col size="4" class="ion-text-center">
-      <ion-button (click)="onDismissModal()" [fill]="isDarkMode ? 'solid' : 'outline'" color="light">
+      <ion-button tappable (click)="onDismissModal()" [fill]="isDarkMode ? 'solid' : 'outline'" color="light">
         <ion-icon name="close" slot="start"></ion-icon>
         {{ 'Close' | translate }}
       </ion-button>
     </ion-col>
     
     <ion-col size="4" class="ion-text-center">
-      <ion-button (click)="zoom(true)" [fill]="isDarkMode ? 'solid' : 'outline'" color="light">
+      <ion-button tappable (click)="zoom(true)" [fill]="isDarkMode ? 'solid' : 'outline'" color="light">
         <ion-icon name="add" slot="start"></ion-icon>
         {{ 'In' | translate }}
       </ion-button>

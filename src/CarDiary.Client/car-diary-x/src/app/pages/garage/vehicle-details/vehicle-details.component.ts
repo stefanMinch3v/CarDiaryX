@@ -50,12 +50,6 @@ export class VehicleDetailsComponent implements OnInit {
     }
   }
 
-  ionViewWillLeave(): void {
-    if (this.vehicleDetailsSub$) {
-      this.vehicleDetailsSub$.unsubscribe();
-    }
-  }
-
   onNavigateBack(): void {
     return this.location.back();
   }

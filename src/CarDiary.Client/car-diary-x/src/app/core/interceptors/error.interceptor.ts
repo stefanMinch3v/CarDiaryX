@@ -10,6 +10,7 @@ import { catchError, retry } from 'rxjs/operators';
 export class ErrorInterceptor  implements HttpInterceptor {
   private readonly UNKNOWN_ERROR = 'An unexpected server error has occurred. Our team has been notified.';
   private readonly DUPLICATE_USERNAME_MESSAGE = 'is already taken.';
+  private readonly VEHICLE_DOES_NOT_BELONG_TO_USER_GARAGE = "does not exist in your garage.";
   private readonly SESSION_EXPIRED = 'Your session has expired.';
   private readonly UNEXPECTED_SERVER_ERROR = 'An unexpected error has occurred. Please try again later.';
 
@@ -51,8 +52,10 @@ export class ErrorInterceptor  implements HttpInterceptor {
     for (const message of messages) {
       if ([...this.indexOfSubstrings(message, this.DUPLICATE_USERNAME_MESSAGE)].length > 0) {
         const email = message.match(/'([^']+)'/)[1]; // cut 'email' out of full sentence
-
         translated.push(this.translate.instant(['Error', 'Email is already taken', 'Ok'], { value: email }));
+      } else if ([...this.indexOfSubstrings(message, this.VEHICLE_DOES_NOT_BELONG_TO_USER_GARAGE)].length > 0) {
+        const regNumber = message.match(/'([^']+)'/)[1];
+        translated.push(this.translate.instant(['Error', 'Vehicle not belonging to user garage', 'Ok'], { value: regNumber }));
       } else {
         translated.push(this.translate.instant(['Error', message, 'Ok']));
       }

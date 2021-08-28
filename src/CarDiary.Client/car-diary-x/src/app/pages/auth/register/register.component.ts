@@ -62,16 +62,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
-  ionViewWillLeave(): void {
-    if (this.langSub$) {
-      this.langSub$.unsubscribe();
-    }
-
-    if (this.registerSub$) {
-      this.registerSub$.unsubscribe();
-    }
-  }
-
   get f() { return this.registerForm.controls; }
   
   onDismissModal(): void {

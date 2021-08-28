@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="" (click)="onDismissModal()"></ion-back-button>
+      <ion-back-button defaultHref="" tappable (click)="onDismissModal()"></ion-back-button>
     </ion-buttons>
 
     <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Add New Trip" | translate }}</ion-title>
@@ -14,29 +14,72 @@
         <ion-row>
           <ion-col size-sm="6" offset-sm="3">
             <ion-item-group>
-              <ion-item-divider>
+              <ion-item-divider [class.md-title-group]="!isIOS">
+                <ion-label>{{ "Garage*" | translate }}</ion-label>
+              </ion-item-divider>
+
+              <ion-item>
+                <ion-label>
+                  <div class="input-content">
+                    <ion-icon 
+                      [class.md-denmark-checkbox]="!isIOS"
+                      [class.ios-denmark-checkbox]="isIOS"
+                      name="caret-forward-circle-outline"
+                    ></ion-icon>
+                    <span class="input-text denmark-label">{{ "Registration number" | translate }}</span>
+                  </div>
+                </ion-label>
+                <ion-select 
+                  tappable 
+                  interface="popover" 
+                  formControlName="registrationNumber"
+                >
+                  <ion-select-option *ngFor="let regNumber of registrationNumbers" [value]="regNumber.number">{{ regNumber.number }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item *ngIf="isValidForAllRequeiredExceptRegNumber()" lines="none">
+                <ion-label class="invalid-feedback">{{ "Field is required!" | translate }}</ion-label>
+              </ion-item>
+
+              <ion-item *ngIf="!registrationNumbers || registrationNumbers.length === 0">
+                <ion-label class="invalid-feedback">{{ "Your garage is empty!" | translate }}</ion-label>
+              </ion-item>
+            </ion-item-group>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-item-group>
+              <ion-item-divider [class.md-title-group]="!isIOS">
                 <ion-label>{{ "Departure*" | translate }}</ion-label>
               </ion-item-divider>
 
               <ion-item>
                 <ion-label>
                   <div class="input-content">
-                    <ion-icon name="alert-circle-outline"></ion-icon>
-                    <span class="input-text">{{ "Within Denmark" | translate }}</span>
+                    <ion-icon 
+                      [class.md-denmark-checkbox]="!isIOS"
+                      [class.ios-denmark-checkbox]="isIOS"
+                      name="alert-circle-outline"
+                    ></ion-icon>
+                    <span class="input-text denmark-label">{{ "Within Denmark" | translate }}</span>
                   </div>
                 </ion-label>
-                <ion-checkbox color="primary" [checked]="withinDenmarkDeparture" (ionChange)="onDepartureChange($event)"></ion-checkbox>
+                <ion-checkbox color="primary" [checked]="withinDenmarkDeparture" (ionChange)="onDepartureChange()"></ion-checkbox>
               </ion-item>
   
               <ng-container *ngIf="withinDenmarkDeparture">
                 <ion-item>
-                  <ion-label position="floating">
+                  <ion-label position="stacked">
                     <div class="input-content">
                       <ion-icon src="assets/icon/map-pin.svg"></ion-icon>
                       <span class="input-text">{{ "Address" | translate }}</span>
                     </div>
                   </ion-label>
                   <ionic-selectable
+                    [placeholder]="'Select address' | translate" 
                     [canSearch]="true"
                     itemValueField="id"
                     itemTextField="name"
@@ -60,29 +103,30 @@
               
               <ng-container *ngIf="!withinDenmarkDeparture">
                 <ion-item>
-                  <ion-label position="floating">
+                  <ion-label position="stacked">
                     <div class="input-content">
                       <ion-icon src="assets/icon/map-pin.svg"></ion-icon>
                       <span class="input-text">{{ "Address" | translate }}</span>
                     </div>
                   </ion-label>
-                  <ion-input formControlName="departureAddress" type="text"></ion-input>
+                  <ion-input [placeholder]="'Enter address' | translate" formControlName="departureAddress" type="text"></ion-input>
                 </ion-item>
                 
                 <ion-item *ngIf="!f.departureAddress.valid && f.departureAddress.touched" lines="none">
-                  <ion-label *ngIf="f.departureAddress.errors.required" class="invalid-feedback">{{ "Address is required!" | translate }}</ion-label>
+                  <ion-label *ngIf="f.departureAddress.errors.maxlength" class="invalid-feedback">{{ "Maximum address length is 50 symbols!" | translate }}</ion-label>
                   <ion-label *ngIf="f.departureAddress.errors.minlength" class="invalid-feedback">{{ "Address should be at least 2 symbols long!" | translate }}</ion-label>
                 </ion-item>
               </ng-container>
   
               <ion-item>
-                <ion-label position="floating">
+                <ion-label position="stacked">
                   <div class="input-content">
                     <ion-icon name="calendar-outline"></ion-icon>
                     <span class="input-text">{{ "Date" | translate }}</span>
                   </div>
                 </ion-label>
                 <ion-datetime
+                  [placeholder]="'Select date' | translate"
                   [value]="currentDate"
                   formControlName="departureDate"
                   displayFormat="DD MMM YYYY HH:mm" 
@@ -96,6 +140,7 @@
 
               <ion-item *ngIf="!f.departureDate.valid && f.departureDate.touched" lines="none">
                 <ion-label *ngIf="f.departureDate.errors.required" class="invalid-feedback">{{ "Date is required!" | translate }}</ion-label>
+                <ion-label *ngIf="f.departureDate.errors.invalidRange" class="invalid-feedback">{{ "Departure cannot end after arrival date!" | translate }}</ion-label>
               </ion-item>
             </ion-item-group>  
           </ion-col>
@@ -104,15 +149,19 @@
         <ion-row>
           <ion-col size-sm="6" offset-sm="3">
             <ion-item-group>
-              <ion-item-divider>
+              <ion-item-divider [class.md-title-group]="!isIOS">
                 <ion-label>{{ "Arrival*" | translate }}</ion-label>
               </ion-item-divider>
   
               <ion-item>
                 <ion-label>
                   <div class="input-content">
-                    <ion-icon name="alert-circle-outline"></ion-icon>
-                    <span class="input-text">{{ "Within Denmark" | translate }}</span>
+                    <ion-icon 
+                      [class.md-denmark-checkbox]="!isIOS"
+                      [class.ios-denmark-checkbox]="isIOS"
+                      name="alert-circle-outline"
+                    ></ion-icon>
+                    <span class="input-text denmark-label">{{ "Within Denmark" | translate }}</span>
                   </div>
                 </ion-label>
                 <ion-checkbox color="primary" [checked]="withinDenmarkArrival" (ionChange)="onArrivalChange()"></ion-checkbox>
@@ -120,13 +169,14 @@
   
               <ng-container *ngIf="withinDenmarkArrival">
                 <ion-item>
-                  <ion-label position="floating">
+                  <ion-label position="stacked">
                     <div class="input-content">
                       <ion-icon src="assets/icon/map-pin.svg"></ion-icon>
                       <span class="input-text">{{ "Address" | translate }}</span>
                     </div>
                   </ion-label>
                   <ionic-selectable
+                    [placeholder]="'Select address' | translate"
                     [canSearch]="true"
                     itemValueField="id"
                     itemTextField="name"
@@ -150,29 +200,30 @@
               
               <ng-container *ngIf="!withinDenmarkArrival">
                 <ion-item>
-                  <ion-label position="floating">
+                  <ion-label position="stacked">
                     <div class="input-content">
                       <ion-icon src="assets/icon/map-pin.svg"></ion-icon>
                       <span class="input-text">{{ "Address" | translate }}</span>
                     </div>
                   </ion-label>
-                  <ion-input formControlName="arrivalAddress" type="text"></ion-input>
+                  <ion-input [placeholder]="'Enter address' | translate" formControlName="arrivalAddress" type="text"></ion-input>
                 </ion-item>
                 
                 <ion-item *ngIf="!f.arrivalAddress.valid && f.arrivalAddress.touched" lines="none">
-                  <ion-label *ngIf="f.arrivalAddress.errors.required" class="invalid-feedback">{{ "Address is required!" | translate }}</ion-label>
+                  <ion-label *ngIf="f.arrivalAddress.errors.maxlength" class="invalid-feedback">{{ "Maximum address length is 50 symbols!" | translate }}</ion-label>
                   <ion-label *ngIf="f.arrivalAddress.errors.minlength" class="invalid-feedback">{{ "Address should be at least 2 symbols long!" | translate }}</ion-label>
                 </ion-item>
               </ng-container>
   
               <ion-item>
-                <ion-label position="floating">
+                <ion-label position="stacked">
                   <div class="input-content">
                     <ion-icon name="calendar-outline"></ion-icon>
                     <span class="input-text">{{ "Date" | translate }}</span>
                   </div>
                 </ion-label>
                 <ion-datetime
+                  [placeholder]="'Select date' | translate"
                   formControlName="arrivalDate"
                   displayFormat="DD MMM YYYY HH:mm" 
                   min="1991" 
@@ -185,6 +236,7 @@
 
               <ion-item *ngIf="!f.arrivalDate.valid && f.arrivalDate.touched" lines="none">
                 <ion-label *ngIf="f.arrivalDate.errors.required" class="invalid-feedback">{{ "Date is required!" | translate }}</ion-label>
+                <ion-label *ngIf="f.arrivalDate.errors.invalidRange" class="invalid-feedback">{{ "Arrival must end after departure date!" | translate }}</ion-label>
               </ion-item>
             </ion-item-group>
           </ion-col>
@@ -192,19 +244,24 @@
   
         <ion-row>
           <ion-col size-sm="6" offset-sm="3">
-            <ion-item-group>
-              <ion-item-divider>
-                <ion-label>{{ "Additional info" | translate }}</ion-label>
-              </ion-item-divider>
-              
+            <ion-item-divider [class.md-title-group]="!isIOS" tappable (click)="toggleAdditionalInfoSection()">
+              <ion-label>{{ "Additional info - optional" | translate }}</ion-label>
+              <ion-icon 
+                [class.md-chevron-dark-theme-black]="isDarkTheme && !isIOS"
+                [name]="!showAdditionalInfo ? 'chevron-forward-outline' : 'chevron-down-outline'" 
+                slot="end"
+              ></ion-icon>
+            </ion-item-divider>
+
+            <ion-item-group *ngIf="showAdditionalInfo">
               <ion-item>
-                <ion-label position="floating">
+                <ion-label position="stacked">
                   <div class="input-content">
                     <ion-icon name="speedometer-outline"></ion-icon>
-                    <span class="input-text">{{ "Distance" | translate }} / km</span>
+                    <span class="input-text">{{ "Distance" | translate }}</span>
                   </div>
                 </ion-label>
-                <ion-input formControlName="distance" type="number"></ion-input>
+                <ion-input placeholder="Km" formControlName="distance" type="number"></ion-input>
               </ion-item>
   
               <ion-item *ngIf="!f.distance.valid && f.distance.touched" lines="none">
@@ -213,13 +270,13 @@
             
   
               <ion-item>
-                <ion-label position="floating">
+                <ion-label position="stacked">
                   <div class="input-content">
                     <ion-icon name="cash-outline"></ion-icon>
                     <span class="input-text">{{ "Cost" | translate }}</span>
                   </div>
                 </ion-label>
-                <ion-input formControlName="cost" type="text"></ion-input>
+                <ion-input placeholder="Dkk" formControlName="cost" type="text"></ion-input>
               </ion-item>
   
               <ion-item *ngIf="!f.cost.valid && f.cost.touched" lines="none">
@@ -227,13 +284,13 @@
               </ion-item>
 
               <ion-item>
-                <ion-label position="floating">
+                <ion-label position="stacked">
                   <div class="input-content">
                     <ion-icon name="chatbox-ellipses-outline"></ion-icon>
                     <span class="input-text">{{ "Note" | translate }}</span>
                   </div>
                 </ion-label>
-                <ion-textarea rows="2" formControlName="note"></ion-textarea>
+                <ion-textarea [placeholder]="'Comment' | translate" rows="2" formControlName="note"></ion-textarea>
               </ion-item>
   
               <ion-item *ngIf="!f.note.valid && f.note.touched" lines="none">
@@ -246,6 +303,7 @@
         <ion-row>
           <ion-col size-sm="6" offset-sm="3">
             <ion-button
+              tappable
               color="primary" 
               expand="block"
               [disabled]="!isFormValid()"

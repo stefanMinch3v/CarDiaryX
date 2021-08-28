@@ -46,12 +46,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     }
   }
 
-  ionViewWillLeave(): void {
-    if (this.changePasswordSub$) {
-      this.changePasswordSub$.unsubscribe();
-    }
-  }
-
   get f() { return this.changePasswordForm.controls; }
 
   onDismissModal(): void {

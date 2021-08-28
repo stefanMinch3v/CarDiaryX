@@ -34,42 +34,22 @@ export class GaragePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoading = true;
     this.vehicleFilterSub$ = this.settingsService.currentVehicleFilter.subscribe(value => this.showList = value);
+    this.vehicleService.fetchAllRegistrationNumbers()
+      .subscribe(numbers => {
+        this.isLoading = false;
+        this.registrationNumbers = numbers;
+      },
+      () => this.isLoading = false, 
+      () => this.isLoading = false);
   }
 
   ionViewWillEnter(): void {
-    this.userRegistrationNumbersSub$ = this.vehicleService.getAllRegistrationNumbers()
-      .subscribe(
-        numbers => this.registrationNumbers = numbers,
-        () => this.isLoading = false, 
-        () => this.isLoading = false);
+    this.userRegistrationNumbersSub$ = this.vehicleService.registrationNumbers
+      .subscribe(numbers => this.registrationNumbers = numbers);
   }
 
   ngOnDestroy(): void {
-    if (this.vehicleFilterSub$) {
-      this.vehicleFilterSub$.unsubscribe();
-    }
-
-    if (this.userRegistrationNumbersSub$) {
-      this.userRegistrationNumbersSub$.unsubscribe();
-    }
-
-    if (this.vehicleRemoveFromUserSub$) {
-      this.vehicleRemoveFromUserSub$.unsubscribe();
-    }
-  }
-
-  ionViewWillLeave(): void {
-    if (this.vehicleFilterSub$) {
-      this.vehicleFilterSub$.unsubscribe();
-    }
-
-    if (this.userRegistrationNumbersSub$) {
-      this.userRegistrationNumbersSub$.unsubscribe();
-    }
-
-    if (this.vehicleRemoveFromUserSub$) {
-      this.vehicleRemoveFromUserSub$.unsubscribe();
-    }
+    this.removeSubscriptions();
   }
 
   onNavigateBack(): void {
@@ -202,5 +182,17 @@ export class GaragePage implements OnInit, OnDestroy {
     await actionSheet.present();
   }
 
+  private removeSubscriptions(): void {
+    if (this.vehicleFilterSub$) {
+      this.vehicleFilterSub$.unsubscribe();
+    }
 
+    if (this.userRegistrationNumbersSub$) {
+      this.userRegistrationNumbersSub$.unsubscribe();
+    }
+
+    if (this.vehicleRemoveFromUserSub$) {
+      this.vehicleRemoveFromUserSub$.unsubscribe();
+    }
+  }
 }

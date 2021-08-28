@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="" (click)="onDismissModal()"></ion-back-button>
+      <ion-back-button defaultHref="" tappable (click)="onDismissModal()"></ion-back-button>
     </ion-buttons>
 
     <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Settings" | translate }}</ion-title>
@@ -25,6 +25,7 @@
               <ion-icon name="language-outline"></ion-icon>
               <ion-label>{{ "Language" | translate }}</ion-label>
               <ion-select
+                tappable
                 [value]="this.currentLanguage" 
                 [okText]="'Save' | translate" 
                 [cancelText]="'Cancel' | translate"
@@ -40,6 +41,7 @@
               <ion-icon name="cash-outline"></ion-icon>
               <ion-label>{{ "Currency" | translate }}</ion-label>
               <ion-select
+                tappable
                 [value]="this.currentCurrency" 
                 [okText]="'Save' | translate" 
                 [cancelText]="'Cancel' | translate"

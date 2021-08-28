@@ -45,12 +45,6 @@ export class AddVehicleComponent implements OnInit, OnDestroy {
     }
   }
 
-  ionViewWillLeave(): void {
-    if (this.vehicleAddToUserSub$) {
-      this.vehicleAddToUserSub$.unsubscribe();
-    }
-  }
-
   onNavigateBack(): void {
     return this.location.back();
   }

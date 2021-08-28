@@ -100,14 +100,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.networkListener.remove();
   }
 
-  ionViewWillLeave(): void {
-    if (this.themeSub$) {
-      this.themeSub$.unsubscribe();
-    }
-
-    this.networkListener.remove();
-  }
-
   onLogout(): void {
     this.identityService.logout();
     this.router.navigate(['/auth']);

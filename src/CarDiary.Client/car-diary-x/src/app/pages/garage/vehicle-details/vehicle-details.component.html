@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+      <ion-back-button defaultHref="" tappable (click)="onNavigateBack()"></ion-back-button>
     </ion-buttons>
 
     <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ registrationNumber }}</ion-title>
@@ -95,7 +95,7 @@
             <ion-note slot="end" color="dark">{{ getPropertyOrNotAvailable(jsonData.presented?.engine_displacement) }}</ion-note>
           </ion-item>
 
-          <ion-item lines="full" (click)="presentCO2EmissionModal(jsonData.emission_co2)">
+          <ion-item lines="full" tappable (click)="presentCO2EmissionModal(jsonData.emission_co2)">
             <ion-label>{{ "CO2 emissions" | translate }}</ion-label>
             <ion-note slot="end" color="dark">
               <ion-icon *ngIf="jsonData.emission_co2" name="help-circle-outline"></ion-icon> 

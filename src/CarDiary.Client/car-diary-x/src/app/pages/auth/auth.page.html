@@ -77,6 +77,7 @@
           </ion-button>
 
           <ion-button 
+            tappable
             type="button"
             color="primary"
             fill="clear"
@@ -112,7 +113,7 @@
         <ion-col size-sm="6" offset-sm="3">
           <ion-label class="terms-of-use-text">
             {{ "By clicking Sign Up for Smart Car Diary, Continue with Google, or Continue with Facebook, you agree to Smart Car Diary's" | translate }}
-            <span class="nav-link" (click)="openUrl()">{{ "Terms of Use." | translate }}</span>
+            <span class="nav-link" tappable (click)="openUrl()">{{ "Terms of Use." | translate }}</span>
           </ion-label>
         </ion-col>
       </ion-row>

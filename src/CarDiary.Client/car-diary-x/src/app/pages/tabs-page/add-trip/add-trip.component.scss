@@ -17,3 +17,32 @@ ion-icon {
   align-items: center;
   display: flex;
 }
+
+.center-title {
+  padding-left: var(--ion-android-title-with-back-button-padding-left);
+  padding-right: var(--ion-android-title-with-back-button-padding-right);
+}
+
+.md-denmark-checkbox {
+  font-size: 14px;
+  padding-right: 1px;
+}
+
+.ios-denmark-checkbox {
+  font-size: 14px;
+  padding-right: 2.5px;
+}
+
+.denmark-label {
+  font-size: 13px;
+}
+
+.md-title-group {
+  background-color: #e6e6e6;
+  color: black;
+  font-size: 17px;
+}
+
+.md-chevron-dark-theme-black {
+  color: black;
+}

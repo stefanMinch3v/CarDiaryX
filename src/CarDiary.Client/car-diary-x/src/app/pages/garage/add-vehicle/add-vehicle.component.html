@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="" (click)="onNavigateBack()"></ion-back-button>
+      <ion-back-button defaultHref="" tappable (click)="onNavigateBack()"></ion-back-button>
     </ion-buttons>
 
     <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Add New Vehicle" | translate }}</ion-title>
@@ -41,6 +41,7 @@
     <ion-row>
       <ion-col size-sm="6" offset-sm="3">
         <ion-button 
+          tappable
           type="submit"
           color="primary" 
           expand="block"

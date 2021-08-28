@@ -29,12 +29,6 @@ export class Co2EmissionComponent implements OnInit, OnDestroy {
     }
   }
 
-  ionViewWillLeave(): void {
-    if (this.themeSub$) {
-      this.themeSub$.unsubscribe();
-    }
-  }
-
   ionViewWillEnter(): void {
     this.slides.update();
   }
