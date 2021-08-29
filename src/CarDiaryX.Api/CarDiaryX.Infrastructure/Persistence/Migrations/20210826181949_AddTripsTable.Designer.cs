@@ -2,14 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
 namespace CarDiaryX.Infrastructure.Common.Persistence.Migrations
 {
     [DbContext(typeof(CarDiaryXDbContext))]
-    partial class CarDiaryXDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210826181949_AddTripsTable")]
+    partial class AddTripsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,17 +106,12 @@ namespace CarDiaryX.Infrastructure.Common.Persistence.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ArrivalAddress")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("ArrivalAddressWithinDenmark")
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
-
-                    b.Property<string>("ArrivalAddressX")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("ArrivalAddressY")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
 
                     b.Property<DateTimeOffset>("ArrivalDate")
                         .HasColumnType("datetimeoffset");
@@ -129,17 +126,12 @@ namespace CarDiaryX.Infrastructure.Common.Persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DepartureAddress")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("DepartureAddressWithinDenmark")
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
-
-                    b.Property<string>("DepartureAddressX")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("DepartureAddressY")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
 
                     b.Property<DateTimeOffset>("DepartureDate")
                         .HasColumnType("datetimeoffset");

@@ -19,9 +19,9 @@ namespace CarDiaryX.Infrastructure.Repositories
             this.currentUser = currentUser;
         }
 
-        public Task AddDefault()
+        public Task AddDefault(string userId)
         {
-            var permission = new Permission { UserId = this.currentUser.UserId };
+            var permission = new Permission { UserId = userId };
             this.dbContext.Permissions.Add(permission);
             return this.dbContext.SaveChangesAsync();
         }

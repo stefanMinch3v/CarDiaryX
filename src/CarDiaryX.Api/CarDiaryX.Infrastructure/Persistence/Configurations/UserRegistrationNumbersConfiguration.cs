@@ -14,7 +14,7 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
 
             builder
                 .Property(r => r.CreatedBy)
-                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.CREATED_MODIFIED_BY_MAX_LENGTH);
 
             //builder
             //    .HasOne(ur => ur.RegistrationNumber)

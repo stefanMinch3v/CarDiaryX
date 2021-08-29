@@ -6,7 +6,7 @@ namespace CarDiaryX.Application.Features.V1.Vehicles
 {
     public interface IPermissionRepository
     {
-        Task AddDefault();
+        Task AddDefault(string userId);
         Task<Permission> GetByUser(CancellationToken cancellationToken);
     }
 }

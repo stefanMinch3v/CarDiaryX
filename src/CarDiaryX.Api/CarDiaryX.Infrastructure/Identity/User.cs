@@ -18,6 +18,7 @@ namespace CarDiaryX.Infrastructure.Identity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public HashSet<UserRegistrationNumbers> RegistrationNumbers { get; set; } = new HashSet<UserRegistrationNumbers>();
+        public HashSet<Trip> Trips { get; set; } = new HashSet<Trip>();
         public Permission Permission { get; set; }
 
         public string ModifiedBy { get; set; }

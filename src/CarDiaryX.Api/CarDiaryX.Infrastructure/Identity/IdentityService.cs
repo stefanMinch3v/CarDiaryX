@@ -69,7 +69,15 @@ namespace CarDiaryX.Infrastructure.Identity
 
             if (identityResult.Succeeded)
             {
-                await this.permissionRepository.AddDefault();
+                try
+                {
+                    await this.permissionRepository.AddDefault(user.Id);
+                }
+                catch
+                {
+                    await this.userManager.DeleteAsync(user);
+                    throw;
+                }
             }
 
             return identityResult.Succeeded

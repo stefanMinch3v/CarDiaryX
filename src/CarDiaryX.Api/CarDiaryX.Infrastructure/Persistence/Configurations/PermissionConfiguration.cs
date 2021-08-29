@@ -14,12 +14,12 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
 
             builder
                 .Property(p => p.CreatedBy)
-                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.CREATED_MODIFIED_BY_MAX_LENGTH);
 
             builder
                 .Property(p => p.UserId)
                 .IsRequired()
-                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.CREATED_MODIFIED_BY_MAX_LENGTH);
 
             builder
                 .Property(p => p.PermissionType)
@@ -27,7 +27,7 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
 
             builder
                 .Property(p => p.ModifiedBy)
-                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.CREATED_MODIFIED_BY_MAX_LENGTH);
         }
     }
 }

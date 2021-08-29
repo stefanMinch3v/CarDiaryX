@@ -30,11 +30,11 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
 
             builder
                 .Property(v => v.CreatedBy)
-                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.CREATED_MODIFIED_BY_MAX_LENGTH);
 
             builder
                 .Property(v => v.ModifiedBy)
-                .HasMaxLength(InfrastructureConstants.CREATED_BY_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.CREATED_MODIFIED_BY_MAX_LENGTH);
 
             builder
                 .HasIndex(v => v.RegistrationNumber)

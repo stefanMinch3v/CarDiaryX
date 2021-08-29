@@ -29,6 +29,7 @@ namespace CarDiaryX.Infrastructure.Common.Persistence
         public DbSet<UserRegistrationNumbers> UserRegistrationNumbers { get; set; }
         public DbSet<RegistrationNumber> RegistrationNumbers { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<Trip> Trips { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

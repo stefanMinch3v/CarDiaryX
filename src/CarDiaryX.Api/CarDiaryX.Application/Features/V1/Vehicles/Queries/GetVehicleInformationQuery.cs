@@ -7,6 +7,8 @@ using CarDiaryX.Application.Features.V1.Vehicles.Commands.BackgroundTasks;
 using CarDiaryX.Application.Features.V1.Vehicles.OutputModels;
 using MediatR;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,19 +23,30 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
             private readonly IVehicleRepository vehicleRepository;
             private readonly IBackgroundTaskQueue backgroundTaskQueue;
             private readonly ICurrentUser currentUser;
+            private readonly IRegistrationNumberRepository registrationNumberRepository;
 
             public GetVehicleInformationQueryHandler(
                 IVehicleRepository vehicleRepository, 
                 IBackgroundTaskQueue backgroundTaskQueue,
-                ICurrentUser currentUser)
+                ICurrentUser currentUser,
+                IRegistrationNumberRepository registrationNumberRepository)
             {
                 this.vehicleRepository = vehicleRepository;
                 this.backgroundTaskQueue = backgroundTaskQueue;
                 this.currentUser = currentUser;
+                this.registrationNumberRepository = registrationNumberRepository;
             }
 
             public async Task<Result<VehicleSharedOutputModel>> Handle(GetVehicleInformationQuery request, CancellationToken cancellationToken)
             {
+                var hasUserNumber = await this.registrationNumberRepository.DoesBelongToUser(request.RegistrationNumber, cancellationToken);
+
+                if (!hasUserNumber)
+                {
+                    var errors = new[] { string.Format(ApplicationConstants.Vehicles.INVALID_VEHICLE_NOT_BELONGING_TO_USER_GARAGE, request.RegistrationNumber) };
+                    return Result<VehicleSharedOutputModel>.Failure(errors);
+                }
+
                 var information = await this.vehicleRepository.GetInformation(
                     request.RegistrationNumber,
                     cancellationToken);

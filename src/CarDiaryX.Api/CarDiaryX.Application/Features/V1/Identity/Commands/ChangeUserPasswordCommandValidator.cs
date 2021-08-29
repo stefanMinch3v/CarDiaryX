@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using static CarDiaryX.Application.Common.Constants.ApplicationConstants;
+using CarDiaryX.Application.Common.Constants;
 
 namespace CarDiaryX.Application.Features.V1.Identity.Commands
 {
@@ -8,9 +8,13 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
         public ChangeUserPasswordCommandValidator()
         {
             this.RuleFor(u => u.NewPassword)
-                .MinimumLength(Users.PASSWORD_MIN_LENGTH)
-                .MaximumLength(Users.PASSWORD_MAX_LENGTH)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage(ApplicationConstants.Users.INVALID_PASSWORD_EMPTY);
+
+            this.RuleFor(u => u.NewPassword)
+                .MinimumLength(ApplicationConstants.Users.PASSWORD_MIN_LENGTH)
+                .MaximumLength(ApplicationConstants.Users.PASSWORD_MAX_LENGTH)
+                .WithMessage(ApplicationConstants.Users.INVALID_PASSWORD_LENGTH);
         }
     }
 }

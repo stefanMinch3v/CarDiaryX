@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using static CarDiaryX.Application.Common.Constants.ApplicationConstants;
+using CarDiaryX.Application.Common.Constants;
 
 namespace CarDiaryX.Application.Features.V1.Identity.Commands
 {
@@ -8,25 +8,44 @@ namespace CarDiaryX.Application.Features.V1.Identity.Commands
         public RegisterUserCommandValidator()
         {
             this.RuleFor(u => u.Email)
-                .MinimumLength(Users.EMAIL_MIN_LENGTH)
-                .MaximumLength(Users.EMAIL_MAX_LENGTH)
+                .NotEmpty()
+                .WithMessage(ApplicationConstants.Users.INVALID_EMAIL_EMPTY);
+
+            this.RuleFor(u => u.Email)
+                .MinimumLength(ApplicationConstants.Users.EMAIL_MIN_LENGTH)
+                .MaximumLength(ApplicationConstants.Users.EMAIL_MAX_LENGTH)
+                .WithMessage(ApplicationConstants.Users.INVALID_EMAIL_LENGTH);
+
+            this.RuleFor(u => u.Email)
                 .EmailAddress()
-                .NotEmpty();
+                .WithMessage(ApplicationConstants.Users.INVALID_EMAIL_FORMAT);
 
             this.RuleFor(u => u.Password)
-                .MinimumLength(Users.PASSWORD_MIN_LENGTH)
-                .MaximumLength(Users.PASSWORD_MAX_LENGTH)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage(ApplicationConstants.Users.INVALID_PASSWORD_EMPTY);
+
+            this.RuleFor(u => u.Password)
+                .MinimumLength(ApplicationConstants.Users.PASSWORD_MIN_LENGTH)
+                .MaximumLength(ApplicationConstants.Users.PASSWORD_MAX_LENGTH)
+                .WithMessage(ApplicationConstants.Users.INVALID_PASSWORD_LENGTH);
 
             this.RuleFor(u => u.FirstName)
-                .MinimumLength(Users.NAME_MIN_LENGTH)
-                .MaximumLength(Users.NAME_MAX_LENGTH)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage(ApplicationConstants.Users.INVALID_FIRST_NAME_EMPTY);
+
+            this.RuleFor(u => u.FirstName)
+                .MinimumLength(ApplicationConstants.Users.NAME_MIN_LENGTH)
+                .MaximumLength(ApplicationConstants.Users.NAME_MAX_LENGTH)
+                .WithMessage(ApplicationConstants.Users.INVALID_FIRST_NAME_LENGTH);
 
             this.RuleFor(u => u.LastName)
-                .MinimumLength(Users.NAME_MIN_LENGTH)
-                .MaximumLength(Users.NAME_MAX_LENGTH)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage(ApplicationConstants.Users.INVALID_LAST_NAME_EMPTY);
+
+            this.RuleFor(u => u.LastName)
+                .MinimumLength(ApplicationConstants.Users.NAME_MIN_LENGTH)
+                .MaximumLength(ApplicationConstants.Users.NAME_MAX_LENGTH)
+                .WithMessage(ApplicationConstants.Users.INVALID_LAST_NAME_LENGTH);
         }
     }
 }

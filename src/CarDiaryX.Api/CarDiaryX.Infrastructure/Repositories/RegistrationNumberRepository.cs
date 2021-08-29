@@ -112,5 +112,13 @@ namespace CarDiaryX.Infrastructure.Repositories
                     e);
             }
         }
+
+        public async Task<bool> DoesBelongToUser(string registrationNumber, CancellationToken cancellationToken)
+            => (await this.dbContext.UserRegistrationNumbers
+                .AsNoTracking()
+                .Select(ur => new { ur.RegistrationNumber.Number, ur.UserId })
+                .FirstOrDefaultAsync(ur => 
+                    ur.Number == registrationNumber && ur.UserId == this.currentUser.UserId,
+                cancellationToken)) != null;
     }
 }

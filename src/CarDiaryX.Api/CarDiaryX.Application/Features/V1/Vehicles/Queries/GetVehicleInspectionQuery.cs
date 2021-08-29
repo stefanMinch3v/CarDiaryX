@@ -25,19 +25,22 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
             private readonly IVehicleHttpService vehicleHttpService;
             private readonly ICurrentUser currentUser;
             private readonly IBackgroundTaskQueue backgroundTaskQueue;
+            private readonly IRegistrationNumberRepository registrationNumberRepository;
 
             public GetVehicleInspectionQueryHandler(
                 IVehicleRepository vehicleRepository,
                 IPermissionRepository permissionRepository,
                 IVehicleHttpService vehicleHttpService,
                 ICurrentUser currentUser,
-                IBackgroundTaskQueue backgroundTaskQueue)
+                IBackgroundTaskQueue backgroundTaskQueue,
+                IRegistrationNumberRepository registrationNumberRepository)
             {
                 this.vehicleRepository = vehicleRepository;
                 this.permissionRepository = permissionRepository;
                 this.vehicleHttpService = vehicleHttpService;
                 this.currentUser = currentUser;
                 this.backgroundTaskQueue = backgroundTaskQueue;
+                this.registrationNumberRepository = registrationNumberRepository;
             }
 
             public async Task<Result<VehicleSharedOutputModel>> Handle(GetVehicleInspectionQuery request, CancellationToken cancellationToken)
@@ -48,6 +51,14 @@ namespace CarDiaryX.Application.Features.V1.Vehicles.Queries
                     || permission?.PermissionType != PermissionType.Professional)
                 {
                     return Result<VehicleSharedOutputModel>.Failure(new[] { ApplicationConstants.Permissions.ACCOUNT_HAS_NO_PERMISSIONS });
+                }
+
+                var hasUserNumber = await this.registrationNumberRepository.DoesBelongToUser(request.RegistrationNumber, cancellationToken);
+
+                if (!hasUserNumber)
+                {
+                    var errors = new[] { string.Format(ApplicationConstants.Vehicles.INVALID_VEHICLE_NOT_BELONGING_TO_USER_GARAGE, request.RegistrationNumber) };
+                    return Result<VehicleSharedOutputModel>.Failure(errors);
                 }
 
                 var jsonData = string.Empty;
