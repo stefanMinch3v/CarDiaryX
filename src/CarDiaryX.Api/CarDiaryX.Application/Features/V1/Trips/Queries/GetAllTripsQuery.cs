@@ -1,18 +1,22 @@
 ﻿using CarDiaryX.Application.Common;
 using CarDiaryX.Application.Contracts;
+using CarDiaryX.Application.Features.V1.Trips.InputModels;
 using CarDiaryX.Application.Features.V1.Trips.OutputModels;
 using CarDiaryX.Domain.Vehicles;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CarDiaryX.Application.Features.V1.Trips.Queries
 {
-    public class GetAllTripsQuery : IRequest<Result<IReadOnlyCollection<TripListOutputModel>>>
+    public class GetAllTripsQuery : IRequest<Result<TripWrapperOutputModel>>
     {
-        internal class GetAllTripsQueryHandler : IRequestHandler<GetAllTripsQuery, Result<IReadOnlyCollection<TripListOutputModel>>>
+        public int Page { get; set; }
+
+        public string RegistrationNumber { get; set; }
+
+        internal class GetAllTripsQueryHandler : IRequestHandler<GetAllTripsQuery, Result<TripWrapperOutputModel>>
         {
             private readonly ITripRepository tripRepository;
             private readonly ICurrentUser currentUser;
@@ -23,22 +27,27 @@ namespace CarDiaryX.Application.Features.V1.Trips.Queries
                 this.currentUser = currentUser;
             }
 
-            public async Task<Result<IReadOnlyCollection<TripListOutputModel>>> Handle(GetAllTripsQuery request, CancellationToken cancellationToken)
+            public async Task<Result<TripWrapperOutputModel>> Handle(GetAllTripsQuery request, CancellationToken cancellationToken)
             {
-                var trips = await this.tripRepository.GetAll(this.currentUser.UserId, cancellationToken);
-                return trips
-                    .Select(this.MapTo)
-                    .ToArray();
+                var (trips, totalCount) = await this.tripRepository.GetAll(this.currentUser.UserId, cancellationToken, request.RegistrationNumber, request.Page);
+
+                return new TripWrapperOutputModel
+                {
+                    TotalCount = totalCount,
+                    Trips = trips
+                        .Select(this.MapTo)
+                        .ToArray()
+                };
             }
 
-            private TripListOutputModel MapTo(Trip trip)
+            private TripOutputModel MapTo(Trip trip)
             {
                 if (trip is null)
                 {
                     return null;
                 }
 
-                return new TripListOutputModel
+                return new TripOutputModel
                 {
                     Id = trip.Id,
                     RegistrationNumber = trip.RegistrationNumber,
@@ -46,8 +55,19 @@ namespace CarDiaryX.Application.Features.V1.Trips.Queries
                     ArrivalDate = trip.ArrivalDate,
                     Distance = trip.Distance,
                     Cost = trip.Cost,
-                    DepartureAddress = trip.DepartureAddress,
-                    ArrivalAddress = trip.ArrivalAddress
+                    DepartureAddress = new AddressInputModel
+                    {
+                        Name = trip.DepartureAddress,
+                        X = trip.DepartureAddressX,
+                        Y = trip.DepartureAddressY
+                    },
+                    ArrivalAddress = new AddressInputModel
+                    {
+                        Name = trip.ArrivalAddress,
+                        Y = trip.ArrivalAddressY,
+                        X = trip.ArrivalAddressX
+                    },
+                    Note = trip.Note,
                 };
             }
         }

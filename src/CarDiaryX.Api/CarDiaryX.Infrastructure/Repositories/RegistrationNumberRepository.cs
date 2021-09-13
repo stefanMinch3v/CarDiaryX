@@ -63,7 +63,7 @@ namespace CarDiaryX.Infrastructure.Repositories
             => await this.dbContext.RegistrationNumbers
                 .AsNoTracking()
                 .Where(rn => rn.Users.Any(u => u.UserId == this.currentUser.UserId))
-                .OrderBy(rn => rn.CreatedOn)
+                .OrderByDescending(rn => rn.CreatedOn)
                 .ToArrayAsync(cancellationToken);
 
         public async Task<Guid> Save(string registrationNumber, string shortDescription, string vehicleType)

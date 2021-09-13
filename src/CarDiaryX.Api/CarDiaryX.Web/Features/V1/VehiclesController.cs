@@ -14,29 +14,29 @@ namespace CarDiaryX.Web.Features.V1
     [Authorize]
     public class VehiclesController : ApiControllerBase
     {
-
-        //[HttpGet("{typeId:int}")]
-        //public async Task<ActionResult<IReadOnlyCollection<VehicleSharedOutputModel>>> Brands(int typeId)
-        //    => await base.Send(new GetVehicleBrandsQuery(typeId));
+        private const string REGISTRATION_NUMBER_ROUTE = "{registrationNumber}";
 
         [HttpPost]
-        public async Task<ActionResult> AddToUser(AddNewVehicleCommand command)
+        public async Task<ActionResult> AddToUser([FromBody] AddNewVehicleCommand command)
             => await base.Send(command);
 
         [HttpDelete]
-        public async Task<ActionResult> RemoveFromUser([FromQuery] RemoveVehicleFromUserCommand command)
-            => await base.Send(command);
+        [Route(REGISTRATION_NUMBER_ROUTE)]
+        public async Task<ActionResult> RemoveFromUser(string registrationNumber)
+            => await base.Send(new RemoveVehicleFromUserCommand { RegistrationNumber = registrationNumber });
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyCollection<RegistrationNumberOutputModel>>> GetAllRegistrationNumbers()
             => await base.Send(new GetAllRegistrationNumbersQuery());
 
         [HttpGet]
+        [Route(REGISTRATION_NUMBER_ROUTE)]
         public async Task<ActionResult<VehicleSharedOutputModel>> GetInformation(string registrationNumber)
             => await base.Send(new GetVehicleInformationQuery { RegistrationNumber = registrationNumber });
 
         [HttpGet]
-        public async Task<ActionResult<VehicleSharedOutputModel>> GetDMR(string registrationNumber)
-            => await base.Send(new GetVehicleDMRQuery { RegistrationNumber = registrationNumber });
+        [Route(REGISTRATION_NUMBER_ROUTE)]
+        public async Task<ActionResult<VehicleSharedOutputModel>> GetDMR([FromQuery] GetVehicleDMRQuery query)
+            => await base.Send(query);
     }
 }

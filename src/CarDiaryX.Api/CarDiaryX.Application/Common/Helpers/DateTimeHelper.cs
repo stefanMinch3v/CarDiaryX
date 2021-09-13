@@ -8,6 +8,9 @@ namespace CarDiaryX.Application.Common.Helpers
         public static bool AreDatesInTheSameMonth(DateTimeOffset date, DateTimeOffset date2)
             => date.Year == date2.Year && date.Month == date2.Month;
 
+        public static bool Have30DaysPassed(DateTimeOffset date)
+            => (DateTimeOffset.UtcNow - date).Days >= 30;
+
         public static bool AreDatesInTheSameWeek(DateTimeOffset date, DateTimeOffset date2)
             => GetWeekNumberOfCurrentYear(date) == GetWeekNumberOfCurrentYear(date2);
 

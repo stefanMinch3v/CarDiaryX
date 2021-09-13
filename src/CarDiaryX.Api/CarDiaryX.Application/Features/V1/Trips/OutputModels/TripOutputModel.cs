@@ -3,7 +3,7 @@ using System;
 
 namespace CarDiaryX.Application.Features.V1.Trips.OutputModels
 {
-    public class TripDetailsOutputModel
+    public class TripOutputModel
     {
         public int Id { get; set; }
         public string RegistrationNumber { get; set; }
@@ -14,8 +14,5 @@ namespace CarDiaryX.Application.Features.V1.Trips.OutputModels
         public string Note { get; set; }
         public AddressInputModel DepartureAddress { get; set; }
         public AddressInputModel ArrivalAddress { get; set; }
-
-        public DateTimeOffset CreatedOn { get; set; }
-        public DateTimeOffset? ModifiedOn { get; set; }
     }
 }

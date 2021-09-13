@@ -67,16 +67,35 @@ namespace CarDiaryX.Infrastructure.Repositories
             await this.dbContext.SaveChangesAsync();
         }
 
-        public Task<Trip> Get(int id, string userId, CancellationToken cancellationToken)
-            => this.dbContext.Trips
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId, cancellationToken);
+        public async Task<(IReadOnlyCollection<Trip> Trips, int TotalCount)> GetAll(
+            string userId,
+            CancellationToken cancellationToken,
+            string registrationNumber = null,
+            int page = 1,
+            int pageSize = 7)
+        {
+            var tripsQuery = this.dbContext.Trips
+                .Where(t => t.UserId == userId);
 
-        public async Task<IReadOnlyCollection<Trip>> GetAll(string userId, CancellationToken cancellationToken)
-            => await this.dbContext.Trips
-                    .AsNoTracking()
-                    .Where(t => t.UserId == userId)
-                    .ToArrayAsync(cancellationToken);
+            if (!string.IsNullOrWhiteSpace(registrationNumber))
+            {
+                tripsQuery = tripsQuery
+                    .Where(t => t.RegistrationNumber == registrationNumber);
+            }
+
+            var totalCount = await tripsQuery
+                .AsNoTracking()
+                .CountAsync(cancellationToken);
+
+            var trips = await tripsQuery
+                .AsNoTracking()
+                .OrderByDescending(t => t.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToArrayAsync(cancellationToken);
+
+            return (trips, totalCount);
+        }
 
         public async Task Update(
             int id,
