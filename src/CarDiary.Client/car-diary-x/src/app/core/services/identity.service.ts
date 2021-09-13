@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ChangePasswordModel } from '../models/identity/change-password.model';
 import { LoginResponseModel } from '../models/identity/login-response.model';
@@ -20,12 +21,14 @@ export class IdentityService {
 
   login(login: LoginModel): Observable<LoginResponseModel> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/login`;
-    return this.http.post<LoginResponseModel>(url, login);
+    return this.http.post<LoginResponseModel>(url, login)
+      .pipe(take(1));
   }
 
   register(register: RegisterModel): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/register`;
-    return this.http.post(url, register);
+    return this.http.post(url, register)
+      .pipe(take(1));
   }
 
   logout(): void {
@@ -34,12 +37,14 @@ export class IdentityService {
 
   changePassword(changePassword: ChangePasswordModel): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/password`;
-    return this.http.put(url, changePassword);
+    return this.http.put(url, changePassword)
+      .pipe(take(1));
   }
 
   deleteAccount(confirmPassword: string): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/delete`;
-    return this.http.request('delete', url, { body: { confirmPassword: confirmPassword } });
+    return this.http.request('delete', url, { body: { confirmPassword: confirmPassword } })
+      .pipe(take(1));
   }
 
   get(): Observable<UserDetailsModel> {
@@ -49,6 +54,7 @@ export class IdentityService {
 
   update(updateUser: UpdateUserModel): Observable<any> {
     const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/update`;
-    return this.http.put(url, updateUser);
+    return this.http.put(url, updateUser)
+      .pipe(take(1));
   }
 }

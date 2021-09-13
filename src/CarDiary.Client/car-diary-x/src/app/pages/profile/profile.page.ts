@@ -18,8 +18,6 @@ import { validations } from '../../core/constants/validations';
 })
 export class ProfilePage implements OnInit, OnDestroy {
   private userSub$: Subscription;
-  private userDeleteSub$: Subscription;
-  private userUpdateSub$: Subscription;
   updateUserForm: FormGroup;
   userDetails: UserDetailsModel;
   isLoading: boolean;
@@ -61,28 +59,12 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (this.userSub$) {
       this.userSub$.unsubscribe();
     }
-
-    if (this.userDeleteSub$) {
-      this.userDeleteSub$.unsubscribe();
-    }
-
-    if (this.userUpdateSub$) {
-      this.userUpdateSub$.unsubscribe();
-    }
   }
 
   // if account is removed I use router navigate cuz ngOnDestroy does not trigger
   ionViewWillLeave(): void {
     if (this.userSub$) {
       this.userSub$.unsubscribe();
-    }
-
-    if (this.userDeleteSub$) {
-      this.userDeleteSub$.unsubscribe();
-    }
-
-    if (this.userUpdateSub$) {
-      this.userUpdateSub$.unsubscribe();
     }
   }
 
@@ -123,7 +105,7 @@ export class ProfilePage implements OnInit, OnDestroy {
             const loading = await this.loadingCntrl.create({ keyboardClose: true });
             await loading.present();
 
-            this.userDeleteSub$ = this.identityService.deleteAccount(alertData?.password)
+            this.identityService.deleteAccount(alertData?.password)
               .subscribe(_ => {
                 this.toastService.presentSuccessToast();
                 this.authService.deauthenticateUser();
@@ -148,7 +130,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.userUpdateSub$ = this.identityService.update({ firstName, lastName })
+    this.identityService.update({ firstName, lastName })
       .subscribe(_ => {
         this.toastService.presentSuccessToast();
       }, () => loading.dismiss(), () => loading.dismiss());

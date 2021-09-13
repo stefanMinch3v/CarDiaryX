@@ -16,11 +16,10 @@ import { VehicleType } from '../../core/models/vehicles/vehicle-type';
 export class GaragePage implements OnInit, OnDestroy {
   private vehicleFilterSub$: Subscription;
   private userRegistrationNumbersSub$: Subscription;
-  private vehicleRemoveFromUserSub$: Subscription;
   protected readonly iconsUrlPath = 'assets/icon/';
   registrationNumbers: Array<RegistrationNumberModel>;
   showList: boolean;
-  isLoading: boolean;;
+  isLoading: boolean;
 
   constructor(
     private settingsService: SettingsService,
@@ -34,22 +33,21 @@ export class GaragePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoading = true;
     this.vehicleFilterSub$ = this.settingsService.currentVehicleFilter.subscribe(value => this.showList = value);
-    this.vehicleService.fetchAllRegistrationNumbers()
+    this.userRegistrationNumbersSub$ = this.vehicleService.registrationNumbers
       .subscribe(numbers => {
         this.isLoading = false;
-        this.registrationNumbers = numbers;
-      },
-      () => this.isLoading = false, 
-      () => this.isLoading = false);
-  }
-
-  ionViewWillEnter(): void {
-    this.userRegistrationNumbersSub$ = this.vehicleService.registrationNumbers
-      .subscribe(numbers => this.registrationNumbers = numbers);
+        this.registrationNumbers = numbers
+      });
   }
 
   ngOnDestroy(): void {
-    this.removeSubscriptions();
+    if (this.vehicleFilterSub$) {
+      this.vehicleFilterSub$.unsubscribe();
+    }
+
+    if (this.userRegistrationNumbersSub$) {
+      this.userRegistrationNumbersSub$.unsubscribe();
+    }
   }
 
   onNavigateBack(): void {
@@ -91,7 +89,7 @@ export class GaragePage implements OnInit, OnDestroy {
             const loading = await this.loadingCntrl.create({ keyboardClose: true });
             await loading.present();
 
-            this.vehicleRemoveFromUserSub$ = this.vehicleService.removeFromUser(registrationNumber)
+            this.vehicleService.removeFromUser(registrationNumber)
               .subscribe(_ => 
                 this.registrationNumbers = this.registrationNumbers.filter(rn => rn.number !== registrationNumber),
                 () => loading.dismiss(), 
@@ -129,7 +127,7 @@ export class GaragePage implements OnInit, OnDestroy {
     return 'car-outline';
   }
 
-  getTruckOrMotortCycleUrlPath(vehicleType: string): string {
+  getTruckOrMotortCycleOrCaravanUrlPath(vehicleType: string): string {
     if (!vehicleType) {
       return 'truck.svg';
     }
@@ -140,6 +138,8 @@ export class GaragePage implements OnInit, OnDestroy {
       return this.iconsUrlPath + 'scooter.svg';
     } else if (type === VehicleType.TRUCK) {
       return this.iconsUrlPath + 'truck.svg';
+    } else if (type === VehicleType.CARAVAN) {
+      return this.iconsUrlPath + 'caravan.svg';
     }
   }
 
@@ -180,19 +180,5 @@ export class GaragePage implements OnInit, OnDestroy {
       }]
     });
     await actionSheet.present();
-  }
-
-  private removeSubscriptions(): void {
-    if (this.vehicleFilterSub$) {
-      this.vehicleFilterSub$.unsubscribe();
-    }
-
-    if (this.userRegistrationNumbersSub$) {
-      this.userRegistrationNumbersSub$.unsubscribe();
-    }
-
-    if (this.vehicleRemoveFromUserSub$) {
-      this.vehicleRemoveFromUserSub$.unsubscribe();
-    }
   }
 }

@@ -1,6 +1,6 @@
 import { AddressModel } from './address.model';
 
-export interface TripModel {
+export interface TripInputModel {
   departureDate: string;
   arrivalDate: string;
   departureAddress: AddressModel;

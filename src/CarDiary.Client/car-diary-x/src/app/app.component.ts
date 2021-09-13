@@ -17,39 +17,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private networkListener: PluginListenerHandle;
   private networkStatus: NetworkStatus;
   private toast: HTMLIonToastElement;
-
-  appPages = [
-    {
-      title: 'My Garage',
-      url: '/garage',
-      icon: 'calendar'
-    },
-    {
-      title: 'Taxes/Fees',
-      url: '/app/tabs/speakers',
-      icon: 'people'
-    },
-    {
-      title: 'Trips',
-      url: '/app/tabs/map',
-      icon: 'map'
-    },
-    {
-      title: 'Refuels',
-      url: '/app/tabs/about',
-      icon: 'information-circle'
-    },
-    {
-      title: 'Repairs',
-      url: '/app/tabs/about',
-      icon: 'information-circle'
-    },
-    {
-      title: 'Download PDF',
-      url: '/app/tabs/about',
-      icon: 'information-circle'
-    }
-  ];
   
   isDarkTheme: boolean;
 
@@ -102,7 +69,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onLogout(): void {
     this.identityService.logout();
-    this.router.navigate(['/auth']);
+    this.router.navigate(['/auth'], { replaceUrl: true });
   }
 
   onNavigateTo(url: string): void {

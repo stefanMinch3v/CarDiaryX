@@ -8,6 +8,7 @@ import { RegisterComponent } from './register/register.component';
 import { SettingsService } from '../../core/services/settings.service';
 import { AuthService } from '../../core/services/auth.service';
 import { IdentityService } from '../../core/services/identity.service';
+import { DataService } from '../../core/services/service-resolvers/data.service';
 
 @Component({
   selector: 'app-auth',
@@ -26,7 +27,8 @@ export class AuthPage implements OnInit, OnDestroy {
     private modalCntrl: ModalController,
     private settingsService: SettingsService,
     private translateService: TranslateService,
-    private menuCntrl: MenuController) { }
+    private menuCntrl: MenuController,
+    private authDataService: DataService) { }
   
   ngOnInit(): void {
     this.menuCntrl.enable(false);
@@ -47,6 +49,10 @@ export class AuthPage implements OnInit, OnDestroy {
 
   ionViewWillEnter(): void {
     this.menuCntrl.enable(false);
+  }
+
+  ionViewWillLeave(): void {
+    this.menuCntrl.enable(true);
   }
 
   async presentModal(): Promise<void> {
@@ -75,7 +81,8 @@ export class AuthPage implements OnInit, OnDestroy {
         const expiration = response?.expiration;
 
         this.authService.authenticateUser(token, expiration);
-        this.router.navigate(['tabs']);
+        this.authDataService.setData = { isComingFromAuthPage: true };
+        this.router.navigate(['tabs'], { replaceUrl: true });
       }, () => loading.dismiss(), () => loading.dismiss());
   }
 

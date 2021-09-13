@@ -47,7 +47,7 @@
                 <ion-icon
                   tappable
                   *ngIf="isKnownType(registrationNumber.vehicleType)"
-                  [src]="getTruckOrMotortCycleUrlPath(registrationNumber.vehicleType)" 
+                  [src]="getTruckOrMotortCycleOrCaravanUrlPath(registrationNumber.vehicleType)" 
                   slot="start" 
                   (click)="onNavigateToDetails(registrationNumber.number)"
                 ></ion-icon>
@@ -96,7 +96,7 @@
                   <ion-icon
                     tappable
                     *ngIf="isKnownType(registrationNumber.vehicleType)"
-                    [src]="getTruckOrMotortCycleUrlPath(registrationNumber.vehicleType)" 
+                    [src]="getTruckOrMotortCycleOrCaravanUrlPath(registrationNumber.vehicleType)" 
                     slot="start" 
                     (click)="onNavigateToDetails(registrationNumber.number)"
                   ></ion-icon>

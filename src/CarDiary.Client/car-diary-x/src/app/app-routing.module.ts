@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AnonymousGuard } from './core/guards/anonymous.guard';
 import { AuthGuard } from './core/guards/auth.guard';
+import { DataResolverService } from './core/services/service-resolvers/data-resolver.service';
 
 const routes: Routes = [
   {
@@ -17,7 +18,10 @@ const routes: Routes = [
   {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs-page/tabs-page.module').then( m => m.TabsPageModule),
-    canLoad: [AuthGuard]
+    canLoad: [AuthGuard],
+    resolve: {
+      extraData: DataResolverService
+    }
   },
   {
     path: 'profile',
@@ -28,6 +32,10 @@ const routes: Routes = [
     path: 'garage',
     loadChildren: () => import('./pages/garage/garage.module').then( m => m.GaragePageModule),
     canLoad: [AuthGuard]
+  },
+  {
+    path: 'trips',
+    loadChildren: () => import('./pages/trips/trips.module').then( m => m.TripsPageModule)
   }
 ];
 

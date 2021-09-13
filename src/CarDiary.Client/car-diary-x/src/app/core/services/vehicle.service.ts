@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { RegistrationNumberModel } from '../models/vehicles/registration-number.model';
 import { VehicleSharedModel } from '../models/vehicles/vehicle-shared.model';
@@ -18,18 +18,18 @@ export class VehicleService {
   addToUser(registrationNumber: string): Observable<any> {
     const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/add-to-user`;
     return this.http.post(url, { registrationNumber })
-      .pipe(switchMap(_ => this.fetchAllRegistrationNumbers()));
+      .pipe(take(1), switchMap(_ => this.fetchAllRegistrationNumbers()));
   }
 
   getInformation(registrationNumber: string): Observable<VehicleSharedModel> {
-    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/get-information`;
-    return this.http.get<VehicleSharedModel>(url, { params: { registrationNumber } });
+    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/get-information/${registrationNumber}`;
+    return this.http.get<VehicleSharedModel>(url);
   }
 
   removeFromUser(registrationNumber: string): Observable<any> {
-    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/remove-from-user`;
-    return this.http.delete(url, { params: { registrationNumber } })
-      .pipe(switchMap(_ => this.fetchAllRegistrationNumbers()));
+    const url = `${environment.host.baseUrl}${this.VEHICLES_V1}/remove-from-user/${registrationNumber}`;
+    return this.http.delete(url)
+      .pipe(take(1), switchMap(_ => this.fetchAllRegistrationNumbers()));
   }
 
   get registrationNumbers(): Observable<Array<RegistrationNumberModel>> {

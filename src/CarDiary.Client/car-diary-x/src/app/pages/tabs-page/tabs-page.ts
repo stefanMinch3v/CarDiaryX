@@ -1,55 +1,70 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetController, ModalController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { ActionSheetController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { VehicleService } from '../../core/services/vehicle.service';
 import { SettingsService } from '../../core/services/settings.service';
-import { AddTripComponent } from './add-trip/add-trip.component';
 import { RegistrationNumberModel } from '../../core/models/vehicles/registration-number.model';
-import { Router } from '@angular/router';
+import { DataService } from '../../core/services/service-resolvers/data.service';
 
 @Component({
   selector: 'app-tabs-page',
   templateUrl: './tabs-page.html',
   styleUrls: ['./tabs-page.scss']
 })
-export class TabsPage implements OnInit, OnDestroy {
+export class TabsPage implements OnInit {
+  private regNumbersSub$: Subscription;
   private langSub$: Subscription;
-  private userRegistrationNumbersSub$: Subscription;
+  private regNumbersStreamSub$: Subscription;
   private registrationNumbers: Array<RegistrationNumberModel>;
 
   constructor(
     private settingsService: SettingsService, 
     private translateService: TranslateService,
     private actionsheetCntrl: ActionSheetController,
-    private modalCntrl: ModalController,
     private vehicleService: VehicleService,
-    private router: Router) {}
+    private router: Router,
+    private tripsDataService: DataService,
+    private activatedRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
     this.langSub$ = this.settingsService.currentLanguage.subscribe(lang => this.translateService.use(lang));
-    this.vehicleService.fetchAllRegistrationNumbers().subscribe(numbers => {
-      if (numbers && numbers.length === 0) {
-        this.router.navigate(['garage', 'add-vehicle']);
-      }
 
-      this.registrationNumbers = numbers;
-    });
+    // temp, TODO: remove all code below, its here for testing purposes! (on refresh page to force get instead of login/logout)
+    if (!this.regNumbersSub$) {
+      this.regNumbersSub$ = this.vehicleService.fetchAllRegistrationNumbers().subscribe();
+    }
   }
 
   ionViewWillEnter(): void {
-    this.userRegistrationNumbersSub$ = this.vehicleService.registrationNumbers
-      .subscribe(numbers => {
-        if (numbers && numbers.length === 0) {
-          this.router.navigate(['garage', 'add-vehicle']);
-        }
+    const isComingFromAuthPage = this.activatedRoute.snapshot.data?.extraData?.isComingFromAuthPage;
 
-        this.registrationNumbers = numbers;
-      });
+    if (isComingFromAuthPage) {
+      this.regNumbersSub$ = this.vehicleService.fetchAllRegistrationNumbers()
+        .subscribe(numbers => {
+          this.activatedRoute.snapshot.data.extraData.isComingFromAuthPage = false;
+          this.navigateToAddVehicleIfEmptyRegNumbers(numbers);
+        });
+      return;
+    }
+
+    this.regNumbersStreamSub$ = this.vehicleService.registrationNumbers
+      .subscribe(numbers => this.navigateToAddVehicleIfEmptyRegNumbers(numbers));
   }
 
-  ngOnDestroy(): void {
-    this.removeSubscriptions();
+  ionViewWillLeave(): void {
+    if (this.langSub$) {
+      this.langSub$.unsubscribe();
+    }
+
+    if (this.regNumbersStreamSub$) {
+      this.regNumbersStreamSub$.unsubscribe();
+    }
+
+    if (this.regNumbersSub$) {
+      this.regNumbersSub$.unsubscribe();
+    }
   }
 
   async presentActionSheet(): Promise<void> {
@@ -58,8 +73,9 @@ export class TabsPage implements OnInit, OnDestroy {
       buttons: [{
         text: this.translateService.instant('Route'),
         icon: 'map-outline',
-        handler: async () => {
-          await this.presentAddTripModal();
+        handler: () => {
+          this.tripsDataService.setData = { registrationNumbers: this.registrationNumbers };
+          this.router.navigate(['trips', 'trip-add']);
         }
       }, {
         text: this.translateService.instant('Repair'),
@@ -84,22 +100,11 @@ export class TabsPage implements OnInit, OnDestroy {
     await actionSheet.present();
   }
 
-  private async presentAddTripModal(): Promise<void> {
-    const modal = await this.modalCntrl.create({
-      component: AddTripComponent,
-      componentProps: { registrationNumbers: this.registrationNumbers }
-    });
-
-    return await modal.present();
-  }
-
-  private removeSubscriptions(): void {
-    if (this.langSub$) {
-      this.langSub$.unsubscribe();
+  private navigateToAddVehicleIfEmptyRegNumbers(numbers: Array<RegistrationNumberModel>): void {
+    if (numbers && numbers.length === 0) {
+      this.router.navigate(['garage', 'add-vehicle']);
     }
 
-    if (this.userRegistrationNumbersSub$) {
-      this.userRegistrationNumbersSub$.unsubscribe();
-    }
+    this.registrationNumbers = numbers;
   }
 }

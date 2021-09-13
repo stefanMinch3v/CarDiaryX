@@ -1,7 +1,5 @@
-import { Location } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,74 +7,123 @@ import { DawaAddressModel } from '../../../core/models/dawa/dawa-address.model';
 import { FormValidator } from '../../../core/helpers/form-validator';
 import { DawaAddressService } from '../../../core/services/dawa-address.service';
 import { validations } from '../../../core/constants/validations';
-import { SettingsService } from '../../../core/services/settings.service';
-import { TripsService } from '../../../core/services/trips.service';
-import { ToastService } from '../../../core/services/toast.service';
-import { VehicleService } from '../../../core/services/vehicle.service';
 import { RegistrationNumberModel } from '../../../core/models/vehicles/registration-number.model';
+import { TripInputModel } from '../../../core/models/trips/trip-input.model';
 
 @Component({
-  selector: 'app-add-trip',
-  templateUrl: './add-trip.component.html',
-  styleUrls: ['./add-trip.component.scss']
+  selector: 'app-trip-form',
+  templateUrl: './trip-form.component.html',
+  styleUrls: ['./trip-form.component.scss']
 })
-export class AddTripComponent implements OnInit, OnDestroy {
-  private userRegistrationNumbersSub$: Subscription;
+export class TripFormComponent implements OnInit, OnDestroy, AfterViewInit {
   private addressSub$: Subscription;
-  private addTripSub$: Subscription;
-  private themeSub$: Subscription;
   private searchTextDeparture: string;
   private searchDeparturesResult: Array<DawaAddressModel>;
   private searchTextArrival: string;
   private searchArrivalsResult: Array<DawaAddressModel>;
 
+  @Input() isDarkTheme: boolean;
+  @Input() isIOS: boolean;
   @Input() registrationNumbers: Array<RegistrationNumberModel>;
+  @Input() tripModel: TripInputModel;
+  @Input() shouldOpenExtraInfo: boolean;
+  @Output() validatedModel: EventEmitter<TripInputModel> = new EventEmitter();
+  @ViewChildren('departureAddressSelectable') departureAddressComponent: QueryList<IonicSelectableComponent>;
+  @ViewChildren('arrivalAddressSelectable') arrivalAddressComponent: QueryList<IonicSelectableComponent>;
 
   withinDenmarkDeparture: boolean;
   withinDenmarkArrival: boolean;
 
   currentYear: number;
-  currentDate: string;
+  currentDepartureDate: string;
+  currentArrivalDate: string;
 
   vehicleForm: FormGroup;
-
-  isDarkTheme: boolean;
-  isIOS: boolean;
-  isLoading: boolean;
   showAdditionalInfo: boolean;
   
-  constructor(
-    private platform: Platform,
-    private modalCntrl: ModalController,
-    private addressService: DawaAddressService,
-    private location: Location, 
-    private loadingCntrl: LoadingController,
-    private settingsService: SettingsService,
-    private tripsService: TripsService,
-    private toastService: ToastService,
-    private vehicleService: VehicleService) { }
+  constructor(private addressService: DawaAddressService) { }
+
+  ngAfterViewInit(): void {
+    if (this.tripModel) {
+      if (this.tripModel.departureAddress.x && this.tripModel.departureAddress.y && this.departureAddressComponent.last) {
+        this.departureAddressComponent.last.placeholder = this.tripModel.departureAddress.name;
+        this.departureAddressComponent.last.searchText = this.tripModel.departureAddress.name;
+        this.f.departureAddressWithinDenmark.setValue({ 
+          name: this.tripModel.departureAddress.name, 
+          id: this.tripModel.departureAddress.name, 
+          x: this.tripModel.departureAddress.x, 
+          y: this.tripModel.departureAddress.y, 
+          notFullAddress: false});
+      }
+
+      if (this.tripModel.arrivalAddress.x && this.tripModel.arrivalAddress.y && this.arrivalAddressComponent.last) {
+        this.arrivalAddressComponent.last.placeholder = this.tripModel.arrivalAddress.name;
+        this.arrivalAddressComponent.last.searchText = this.tripModel.arrivalAddress.name;
+        this.f.arrivalAddressWithinDenmark.setValue({ 
+          name: this.tripModel.arrivalAddress.name, 
+          id: this.tripModel.arrivalAddress.name, 
+          x: this.tripModel.arrivalAddress.x, 
+          y: this.tripModel.arrivalAddress.y, 
+          notFullAddress: false});
+      }
+    }
+  }
 
   ngOnInit(): void {
-    this.isIOS = this.platform.is('ios');
+    this.setUpForm();
+    this.setUpEditForm();
+  }
+
+  setUpEditForm(): void {
+    if (this.tripModel) {
+      this.f.registrationNumber.setValue(this.tripModel.registrationNumber);
+      this.f.departureDate.setValue(this.tripModel.departureDate);
+      this.f.arrivalDate.setValue(this.tripModel.arrivalDate);
+      this.f.distance.setValue(this.tripModel.distance);
+      this.f.cost.setValue(this.tripModel.cost);
+      this.f.note.setValue(this.tripModel.note);
+
+      if (!this.tripModel.departureAddress.x || !this.tripModel.departureAddress.y) {
+        this.withinDenmarkDeparture = false;
+        this.f.departureAddress.setValue(this.tripModel.departureAddress.name);
+      } else {
+        this.withinDenmarkDeparture = true;
+        // ngAfterViewInit
+      }
+
+      if (!this.tripModel.arrivalAddress.x || !this.tripModel.arrivalAddress.y) {
+        this.withinDenmarkArrival = false;
+        this.f.arrivalAddress.setValue(this.tripModel.arrivalAddress.name);
+      } else {
+        this.withinDenmarkArrival = true;
+        // ngAfterViewInit
+      }
+    }
+  }
+
+  setUpForm(): void {
     this.withinDenmarkDeparture = true;
     this.withinDenmarkArrival = true;
-    this.currentYear = new Date().getFullYear();
-    this.currentDate = new Date().toISOString();
-    this.themeSub$ = this.settingsService.currentTheme.subscribe(t => this.isDarkTheme = t);
-    
-    if (!this.registrationNumbers) {
-      this.userRegistrationNumbersSub$ = this.vehicleService.fetchAllRegistrationNumbers()
-        .subscribe(numbers => this.registrationNumbers = numbers);
-    }
+
+    const dateNow = new Date();
+    this.currentYear = dateNow.getFullYear();
+
+    this.currentDepartureDate = dateNow.toISOString();
+
+    const arrivalDate = dateNow;
+    arrivalDate.setMinutes(arrivalDate.getMinutes() + 1);
+    this.currentArrivalDate = arrivalDate.toISOString();
+
+    this.showAdditionalInfo = this.shouldOpenExtraInfo;
 
     this.vehicleForm = new FormGroup({
       registrationNumber: new FormControl(null, {
         validators: [Validators.required]
       }),
-      departureDate: new FormControl(this.currentDate, {
+      departureDate: new FormControl(this.currentDepartureDate, {
         validators: [Validators.required]
       }),
-      arrivalDate: new FormControl(this.currentDate, {
+      arrivalDate: new FormControl(this.currentArrivalDate, {
         validators: [Validators.required]
       }),
       departureAddressWithinDenmark: new FormControl(null),
@@ -91,7 +138,7 @@ export class AddTripComponent implements OnInit, OnDestroy {
         validators: [Validators.max(validations.trip.DISTANCE_MAX_LENGTH)]
       }),
       cost: new FormControl(null, {
-        validators: [Validators.maxLength(validations.trip.COST_MAX_LENGTH)]
+        validators: [Validators.max(validations.trip.COST_MAX_LENGTH)]
       }),
       note: new FormControl(null, {
         validators: [Validators.maxLength(validations.trip.NOTE_MAX_LENGTH)]
@@ -108,7 +155,9 @@ export class AddTripComponent implements OnInit, OnDestroy {
   get f() { return this.vehicleForm.controls; }
 
   ngOnDestroy(): void {
-    this.removeSubscriptions();
+    if (this.addressSub$) {
+      this.addressSub$.unsubscribe();
+    }
   }
 
   isFormValid(): boolean {
@@ -197,15 +246,7 @@ export class AddTripComponent implements OnInit, OnDestroy {
       departureOutsideDenmark && arrivalOutsideDenmark;
   }
 
-  onNavigateBack(): void {
-    return this.location.back();
-  }
-
-  onDismissModal(): void {
-    this.modalCntrl.dismiss();
-  }
-
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     if (!this.vehicleForm.value || !this.vehicleForm.valid) {
       return;
     }
@@ -225,32 +266,22 @@ export class AddTripComponent implements OnInit, OnDestroy {
       arrivalAddress = { id: null, name: this.vehicleForm.value.arrivalAddress, x: null, y: null, notFullAddress: true };
     }
 
-    const departureDate = this.vehicleForm.value.departureDate;
-    const arrivalDate = this.vehicleForm.value.arrivalDate;
+    const departureDate = new Date(this.vehicleForm.value.departureDate).toISOString();
+    const arrivalDate = new Date(this.vehicleForm.value.arrivalDate).toISOString();
     const distance = this.vehicleForm.value.distance;
     const cost = this.vehicleForm.value.cost;
     const note = this.vehicleForm.value.note;
     const registrationNumber = this.vehicleForm.value.registrationNumber;
 
-    const loading = await this.loadingCntrl.create({ keyboardClose: true });
-    await loading.present();
-
-    this.addTripSub$ = this.tripsService.add({
+    this.validatedModel.emit({
       registrationNumber,
-      departureDate: new Date(departureDate).toISOString(),
-      arrivalDate: new Date(arrivalDate).toISOString(),
+      departureDate,
+      arrivalDate,
       departureAddress: { name: departureAddress.name, x: departureAddress.x, y: departureAddress.y },
       arrivalAddress: { name: arrivalAddress.name, x: arrivalAddress.x, y: arrivalAddress.y },
       cost,
       distance,
-      note})
-      .subscribe(_ => {
-          this.onDismissModal();
-          this.toastService.presentSuccessToast();
-        },
-        () => loading.dismiss(),
-        () => loading.dismiss()
-      );
+      note});
   }
 
   onAddressSearch(event: { component: IonicSelectableComponent, text: string }, isDeparture: boolean = true): void {
@@ -359,21 +390,4 @@ export class AddTripComponent implements OnInit, OnDestroy {
     }
   }
 
-  private removeSubscriptions(): void {
-    if (this.themeSub$) {
-      this.themeSub$.unsubscribe();
-    }
-
-    if (this.addressSub$) {
-      this.addressSub$.unsubscribe();
-    }
-
-    if (this.addTripSub$) {
-      this.addTripSub$.unsubscribe();
-    }
-
-    if (this.userRegistrationNumbersSub$) {
-      this.userRegistrationNumbersSub$.unsubscribe();
-    }
-  }
 }

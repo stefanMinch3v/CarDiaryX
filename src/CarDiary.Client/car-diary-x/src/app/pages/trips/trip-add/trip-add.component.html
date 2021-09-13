@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" tappable (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Add New Trip" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <app-trip-form 
+      [isDarkTheme]="isDarkTheme"
+      [isIOS]="isIOS"
+      [registrationNumbers]="registrationNumbers"
+      (validatedModel)="onSubmit($event)"
+    ></app-trip-form>
+</ion-content>

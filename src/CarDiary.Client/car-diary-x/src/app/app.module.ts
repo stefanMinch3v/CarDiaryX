@@ -8,7 +8,7 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { SettingsComponent } from './components/settings/settings.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { initSynchronousFactory } from './core/helpers/init-synchronous.factory';
@@ -20,6 +20,7 @@ import { SettingsService } from './core/services/settings.service';
   imports: [
     BrowserModule, 
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     IonicModule.forRoot({
       backButtonText: '',

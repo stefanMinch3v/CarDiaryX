@@ -5,13 +5,23 @@
       <ion-content>
         <ion-list lines="none">
           <ion-list-header>
-            Vehicle
+            {{ 'Vehicles' | translate }}
           </ion-list-header>
+
           <ion-menu-toggle autoHide="false">
             <ion-item tappable (click)="onNavigateTo('/garage')" routerLinkActive="active" routerDirection="root" detail="false">
               <ion-icon slot="start" name="construct"></ion-icon>
               <ion-label>
-                My Garage
+                {{ 'Garage' | translate }}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item tappable (click)="onNavigateTo('/trips')" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="construct"></ion-icon>
+              <ion-label>
+                {{ 'Trips' | translate }}
               </ion-label>
             </ion-item>
           </ion-menu-toggle>

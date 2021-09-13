@@ -77,7 +77,7 @@ export class FormValidator {
     const parseDeparture = Date.parse(departureDate.value);
     const parseArrival = Date.parse(arrivalDate.value);
 
-    if (parseDeparture > parseArrival) {
+    if (parseDeparture >= parseArrival) {
       departureDate.setErrors({ invalidRange: true });
       arrivalDate.setErrors({ invalidRange: true });
     } else {

@@ -1,8 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, Platform } from '@ionic/angular';
-import { Subscription } from 'rxjs'; 
 import { ToastService } from '../../../core/services/toast.service';
 import { validations } from '../../../core/constants/validations';
 import { VehicleService } from '../../../core/services/vehicle.service';
@@ -12,8 +11,7 @@ import { VehicleService } from '../../../core/services/vehicle.service';
   templateUrl: './add-vehicle.component.html',
   styleUrls: ['./add-vehicle.component.scss'],
 })
-export class AddVehicleComponent implements OnInit, OnDestroy {
-  private vehicleAddToUserSub$: Subscription;
+export class AddVehicleComponent implements OnInit {
   isIOS: boolean;
   isLoading: boolean;
   searchRegistrationNumberForm: FormGroup;
@@ -39,12 +37,6 @@ export class AddVehicleComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.vehicleAddToUserSub$) {
-      this.vehicleAddToUserSub$.unsubscribe();
-    }
-  }
-
   onNavigateBack(): void {
     return this.location.back();
   }
@@ -59,9 +51,8 @@ export class AddVehicleComponent implements OnInit, OnDestroy {
     const loading = await this.loadingCntrl.create({ keyboardClose: true });
     await loading.present();
 
-    this.vehicleAddToUserSub$ = this.vehicleService.addToUser(String(registrationNumber).toUpperCase())
+    this.vehicleService.addToUser(String(registrationNumber).toUpperCase())
       .subscribe(_ => {
-        // load get all vehicles so the subscription works when navigates back to base page
         this.toastService.presentSuccessToast();
         this.onNavigateBack();
       }, () => loading.dismiss(), () => loading.dismiss());

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" tappable (click)="onNavigateBack()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "Edit Trip" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <div *ngIf="!tripModel" class="ion-text-center">
+      <p>{{ "No results found!" | translate }}</p>
+    </div>
+
+    <ng-container *ngIf="tripModel">
+      <app-trip-form
+        [isDarkTheme]="isDarkTheme"
+        [isIOS]="isIOS"
+        [tripModel]="tripModel"
+        [registrationNumbers]="registrationNumbers"
+        [shouldOpenExtraInfo]="tripModel.cost || tripModel.distance || tripModel.note"
+        (validatedModel)="onSubmit($event)"
+      ></app-trip-form>
+    </ng-container>
+</ion-content>
