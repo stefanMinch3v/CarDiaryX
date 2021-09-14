@@ -23,9 +23,6 @@ export class TripsPage implements OnInit, OnDestroy {
   private registrationNumbers: Array<RegistrationNumberModel>;
   private page: number;
   
-  readonly starSymbol = '*';
-  showRegNumbersDropdown: boolean;
-  registrationNumbersDropdown: Array<RegistrationNumberModel>;
   isLoading: boolean;
   isIOS: boolean;
   tripWrapper: TripWrapperModel;
@@ -52,16 +49,7 @@ export class TripsPage implements OnInit, OnDestroy {
       () => this.isLoading = false);
 
     this.userRegistrationNumbersSub$ = this.vehicleService.registrationNumbers
-      .subscribe(numbers => {
-        this.registrationNumbers = numbers;
-        this.registrationNumbersDropdown = [];
-        this.registrationNumbersDropdown.push(...this.registrationNumbers);
-        this.registrationNumbersDropdown.unshift({
-           number: this.starSymbol,
-           shortDescription: '',
-           vehicleType: ''
-        });
-      });
+      .subscribe(numbers => this.registrationNumbers = numbers);
 
     this.tripsListSub$ = this.tripsService.tripWrapper
       .subscribe(tuple => {
@@ -190,26 +178,6 @@ export class TripsPage implements OnInit, OnDestroy {
     });
 
     await alert.present();
-  }
-
-  togggleRegNumbersDropdown(): void {
-    this.showRegNumbersDropdown = !this.showRegNumbersDropdown;
-  }
-
-  filterTripList($event): void {
-    const selectedRegNumber = $event?.detail?.value;
-
-    if (!selectedRegNumber || !this.tripWrapper || !this.tripWrapper.trips) {
-      return;
-    }
-
-    // TODO FIX
-    throw new Error('fix me pls');
-    if (selectedRegNumber === this.starSymbol) {
-      this.tripWrapper.trips = this.tripWrapper.trips.filter(t => t.registrationNumber !== selectedRegNumber);
-    } else {
-      this.tripWrapper.trips = this.tripWrapper.trips.filter(t => t.registrationNumber === selectedRegNumber);
-    }
   }
 
   private getAllTrips($event: any): Observable<TripWrapperModel> {

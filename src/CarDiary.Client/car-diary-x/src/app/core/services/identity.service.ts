@@ -42,8 +42,8 @@ export class IdentityService {
   }
 
   deleteAccount(confirmPassword: string): Observable<any> {
-    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/delete`;
-    return this.http.request('delete', url, { body: { confirmPassword: confirmPassword } })
+    const url = `${environment.host.baseUrl}${this.IDENTITY_V1}/delete/${confirmPassword}`;
+    return this.http.delete(url)
       .pipe(take(1));
   }
 

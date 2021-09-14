@@ -4,13 +4,9 @@
       <ion-back-button defaultHref="" tappable (click)="onNavigateBack()"></ion-back-button>
     </ion-buttons>
 
-    <ion-title class="ion-text-center" [class.center-title]="!isIOS">{{ "My Trips" | translate }}</ion-title>
+    <ion-title class="ion-text-center">{{ "My Trips" | translate }}</ion-title>
 
-    <ion-buttons slot="primary">
-      <ion-button tappable (click)="togggleRegNumbersDropdown()">
-        <ion-icon [name]="showRegNumbersDropdown ? 'filter-circle-outline' : 'filter-outline'" slot="icon-only"></ion-icon>
-      </ion-button>
-      
+    <ion-buttons slot="end">
       <ion-button tappable (click)="onNavigateToForm()" routerDirection="forward">
         <ion-icon name="add-outline" slot="icon-only"></ion-icon>
       </ion-button>
@@ -30,26 +26,12 @@
   <ion-grid>
     <ion-row>
       <ion-col size-sm="6" offset-sm="3">
-        <ion-item *ngIf="showRegNumbersDropdown" class="custom-item-container">
-          <ion-label>
-            <div class="input-content">
-              <span class="input-text">{{ "Registration number" | translate }}</span>
-            </div>
-          </ion-label>
-          <ion-select tappable interface="popover" [value]="starSymbol" (ionChange)="filterTripList($event)">
-            <ion-select-option 
-              *ngFor="let regNumber of registrationNumbersDropdown" 
-              [value]="regNumber.number"
-            >{{ regNumber.number }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-
         <ng-container *ngIf="tripWrapper && !isLoading">
           <ion-card *ngFor="let trip of tripWrapper.trips" class="ion-activatable">
             <ion-item>
               <ion-icon
                 tappable
-                name="earth-outline"
+                name="location-outline"
                 slot="start"
               ></ion-icon>
               
