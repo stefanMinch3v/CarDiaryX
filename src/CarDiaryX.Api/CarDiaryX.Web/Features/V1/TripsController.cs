@@ -17,8 +17,8 @@ namespace CarDiaryX.Web.Features.V1
             => await base.Send(command);
 
         [HttpGet]
-        public async Task<ActionResult<TripWrapperOutputModel>> GetAll(int page = 1, string registrationNumber = null)
-            => await base.Send(new GetAllTripsQuery { Page = page < 1 ? 1 : page, RegistrationNumber = registrationNumber });
+        public async Task<ActionResult<TripWrapperOutputModel>> GetAll(int page = 1)
+            => await base.Send(new GetAllTripsQuery { Page = page < 1 ? 1 : page });
 
         [HttpDelete]
         [Route("{id}")]

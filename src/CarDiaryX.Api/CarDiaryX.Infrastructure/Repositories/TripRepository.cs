@@ -70,18 +70,11 @@ namespace CarDiaryX.Infrastructure.Repositories
         public async Task<(IReadOnlyCollection<Trip> Trips, int TotalCount)> GetAll(
             string userId,
             CancellationToken cancellationToken,
-            string registrationNumber = null,
             int page = 1,
             int pageSize = 7)
         {
             var tripsQuery = this.dbContext.Trips
                 .Where(t => t.UserId == userId);
-
-            if (!string.IsNullOrWhiteSpace(registrationNumber))
-            {
-                tripsQuery = tripsQuery
-                    .Where(t => t.RegistrationNumber == registrationNumber);
-            }
 
             var totalCount = await tripsQuery
                 .AsNoTracking()

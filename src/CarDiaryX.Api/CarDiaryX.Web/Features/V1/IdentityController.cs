@@ -28,8 +28,9 @@ namespace CarDiaryX.Web.Features.V1
             => await base.Send(command);
 
         [HttpDelete]
-        public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
-            => await base.Send(command);
+        [Route("{confirmPassword}")]
+        public async Task<ActionResult> Delete(string confirmPassword)
+            => await base.Send(new DeleteUserCommand { ConfirmPassword = confirmPassword });
 
         [HttpGet]
         public async Task<ActionResult<UserDetailsOutputModel>> Details()

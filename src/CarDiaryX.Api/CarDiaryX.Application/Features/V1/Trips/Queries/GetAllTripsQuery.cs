@@ -14,8 +14,6 @@ namespace CarDiaryX.Application.Features.V1.Trips.Queries
     {
         public int Page { get; set; }
 
-        public string RegistrationNumber { get; set; }
-
         internal class GetAllTripsQueryHandler : IRequestHandler<GetAllTripsQuery, Result<TripWrapperOutputModel>>
         {
             private readonly ITripRepository tripRepository;
@@ -29,7 +27,7 @@ namespace CarDiaryX.Application.Features.V1.Trips.Queries
 
             public async Task<Result<TripWrapperOutputModel>> Handle(GetAllTripsQuery request, CancellationToken cancellationToken)
             {
-                var (trips, totalCount) = await this.tripRepository.GetAll(this.currentUser.UserId, cancellationToken, request.RegistrationNumber, request.Page);
+                var (trips, totalCount) = await this.tripRepository.GetAll(this.currentUser.UserId, cancellationToken, request.Page);
 
                 return new TripWrapperOutputModel
                 {

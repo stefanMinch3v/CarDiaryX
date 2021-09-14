@@ -23,7 +23,6 @@ namespace CarDiaryX.Application.Features.V1.Trips
         Task<(IReadOnlyCollection<Trip> Trips, int TotalCount)> GetAll(
             string userId,
             CancellationToken cancellationToken,
-            string registrationNumber = null,
             int page = 1,
             int pageSize = 7);
 
