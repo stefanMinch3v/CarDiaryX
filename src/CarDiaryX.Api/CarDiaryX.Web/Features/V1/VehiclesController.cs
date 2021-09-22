@@ -36,7 +36,7 @@ namespace CarDiaryX.Web.Features.V1
 
         [HttpGet]
         [Route(REGISTRATION_NUMBER_ROUTE)]
-        public async Task<ActionResult<VehicleSharedOutputModel>> GetDMR([FromQuery] GetVehicleDMRQuery query)
-            => await base.Send(query);
+        public async Task<ActionResult<VehicleSharedOutputModel>> GetDMR(string registrationNumber)
+            => await base.Send(new GetVehicleDMRQuery { RegistrationNumber = registrationNumber });
     }
 }

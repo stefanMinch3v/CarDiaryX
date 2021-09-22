@@ -16,6 +16,8 @@ namespace CarDiaryX.Web
     {
         private IMediator mediator;
 
+        protected const string ID_IDENTIFIER = "{id}";
+
         protected IMediator Mediator
             => this.mediator ??= this.HttpContext
                 .RequestServices

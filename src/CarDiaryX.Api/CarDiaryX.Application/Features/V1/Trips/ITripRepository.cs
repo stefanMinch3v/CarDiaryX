@@ -1,7 +1,8 @@
-﻿using CarDiaryX.Application.Features.V1.Trips.InputModels;
+﻿using CarDiaryX.Application.Common.Constants;
+using CarDiaryX.Application.Features.V1.Trips.InputModels;
+using CarDiaryX.Domain.Common;
 using CarDiaryX.Domain.Vehicles;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,11 +21,11 @@ namespace CarDiaryX.Application.Features.V1.Trips
             decimal? cost = null,
             string note = null);
 
-        Task<(IReadOnlyCollection<Trip> Trips, int TotalCount)> GetAll(
+        Task<PagingModel<Trip>> GetAll(
             string userId,
             CancellationToken cancellationToken,
-            int page = 1,
-            int pageSize = 7);
+            int page = ApplicationConstants.PAGE,
+            int pageSize = ApplicationConstants.PAGE_SIZE);
 
         Task Update(
             int id,

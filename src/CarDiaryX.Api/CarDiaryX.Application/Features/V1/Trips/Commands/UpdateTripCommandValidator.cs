@@ -1,4 +1,5 @@
 ﻿using CarDiaryX.Application.Common.Constants;
+using CarDiaryX.Application.Common.Helpers;
 using CarDiaryX.Application.Features.V1.Trips.InputModels;
 using FluentValidation;
 using System;
@@ -74,47 +75,9 @@ namespace CarDiaryX.Application.Features.V1.Trips.Commands
         }
 
         private Task<bool> ValidateAddressName(AddressInputModel address)
-        {
-            if (address is null)
-            {
-                return Task.FromResult(false);
-            }
-
-            if (string.IsNullOrEmpty(address.Name)
-                || address.Name.Length > ApplicationConstants.Trips.ADDRESS_MAX_LENGTH
-                || address.Name.Length < ApplicationConstants.Trips.ADDRESS_MIN_LENGTH)
-            {
-                return Task.FromResult(false);
-            }
-
-            return Task.FromResult(true);
-        }
+            => Task.FromResult(AddressHelper.HasValidName(address));
 
         private Task<bool> ValidateAddressCoordinates(AddressInputModel address)
-        {
-            if (address is null)
-            {
-                return Task.FromResult(false);
-            }
-
-            if (!string.IsNullOrEmpty(address.X) && string.IsNullOrEmpty(address.Y))
-            {
-                return Task.FromResult(false);
-            }
-            else if (string.IsNullOrEmpty(address.X) && !string.IsNullOrEmpty(address.Y))
-            {
-                return Task.FromResult(false);
-            }
-            else if (!string.IsNullOrEmpty(address.X) && !string.IsNullOrEmpty(address.Y))
-            {
-                if (address.X.Length > ApplicationConstants.Trips.COORDINATES_MAX_LENGTH
-                    || address.Y.Length > ApplicationConstants.Trips.COORDINATES_MAX_LENGTH)
-                {
-                    return Task.FromResult(false);
-                }
-            }
-
-            return Task.FromResult(true);
-        }
+            => Task.FromResult(AddressHelper.HasValidCoordinates(address));
     }
 }

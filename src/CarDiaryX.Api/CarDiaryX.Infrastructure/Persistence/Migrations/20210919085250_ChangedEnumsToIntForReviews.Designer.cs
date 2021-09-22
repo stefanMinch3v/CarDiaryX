@@ -2,14 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
 namespace CarDiaryX.Infrastructure.Common.Persistence.Migrations
 {
     [DbContext(typeof(CarDiaryXDbContext))]
-    partial class CarDiaryXDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210919085250_ChangedEnumsToIntForReviews")]
+    partial class ChangedEnumsToIntForReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,11 +87,6 @@ namespace CarDiaryX.Infrastructure.Common.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
-
-                    b.Property<bool>("IsApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()

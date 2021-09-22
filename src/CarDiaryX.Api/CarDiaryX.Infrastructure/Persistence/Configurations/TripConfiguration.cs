@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CarDiaryX.Infrastructure.Persistence.Configurations
 {
-    public class TripConfiguration : IEntityTypeConfiguration<Trip>
+    internal class TripConfiguration : IEntityTypeConfiguration<Trip>
     {
         public void Configure(EntityTypeBuilder<Trip> builder)
         {
@@ -20,6 +20,7 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
 
             builder
                 .Property(t => t.Cost)
+                .HasColumnType("decimal(18,2)")
                 .IsRequired(false);
 
             builder
@@ -34,32 +35,32 @@ namespace CarDiaryX.Infrastructure.Persistence.Configurations
             builder
                 .Property(t => t.ArrivalAddress)
                 .IsRequired(true)
-                .HasMaxLength(InfrastructureConstants.Trips.ADDRESS_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.ADDRESS_MAX_LENGTH);
 
             builder
                 .Property(t => t.DepartureAddress)
                 .IsRequired(true)
-                .HasMaxLength(InfrastructureConstants.Trips.ADDRESS_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.ADDRESS_MAX_LENGTH);
 
             builder
                 .Property(t => t.DepartureAddressX)
                 .IsRequired(false)
-                .HasMaxLength(InfrastructureConstants.Trips.COORDINATES_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.COORDINATES_MAX_LENGTH);
 
             builder
                 .Property(t => t.DepartureAddressY)
                 .IsRequired(false)
-                .HasMaxLength(InfrastructureConstants.Trips.COORDINATES_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.COORDINATES_MAX_LENGTH);
 
             builder
                 .Property(t => t.ArrivalAddressX)
                 .IsRequired(false)
-                .HasMaxLength(InfrastructureConstants.Trips.COORDINATES_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.COORDINATES_MAX_LENGTH);
 
             builder
                 .Property(t => t.ArrivalAddressY)
                 .IsRequired(false)
-                .HasMaxLength(InfrastructureConstants.Trips.COORDINATES_MAX_LENGTH);
+                .HasMaxLength(InfrastructureConstants.COORDINATES_MAX_LENGTH);
 
             builder
                 .Property(t => t.ArrivalDate)

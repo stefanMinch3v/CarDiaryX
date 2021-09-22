@@ -1,6 +1,6 @@
 ﻿using CarDiaryX.Application.Common.Models;
 
-namespace CarDiaryX.Application.Features.V1.Trips.InputModels
+namespace CarDiaryX.Application.Features.V1.VehicleServices.InputModels
 {
     public class AddressInputModel : IAddress
     {

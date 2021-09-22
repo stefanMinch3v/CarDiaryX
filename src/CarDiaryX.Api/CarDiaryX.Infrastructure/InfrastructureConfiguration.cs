@@ -2,6 +2,7 @@
 using CarDiaryX.Application.Features.V1.Identity;
 using CarDiaryX.Application.Features.V1.Trips;
 using CarDiaryX.Application.Features.V1.Vehicles;
+using CarDiaryX.Application.Features.V1.VehicleServices;
 using CarDiaryX.Infrastructure.Common;
 using CarDiaryX.Infrastructure.Common.Extensions;
 using CarDiaryX.Infrastructure.Common.Persistence;
@@ -100,6 +101,7 @@ namespace CarDiaryX.Infrastructure
             services.AddScoped<IRegistrationNumberRepository, RegistrationNumberRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<ITripRepository, TripRepository>();
+            services.AddScoped<IVehicleServicesRepository, VehicleServicesRepository>();
 
             return services;
         }

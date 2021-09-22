@@ -1,6 +1,7 @@
 ﻿using CarDiaryX.Application.Features.V1.Trips.Commands;
 using CarDiaryX.Application.Features.V1.Trips.OutputModels;
 using CarDiaryX.Application.Features.V1.Trips.Queries;
+using CarDiaryX.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,11 +18,11 @@ namespace CarDiaryX.Web.Features.V1
             => await base.Send(command);
 
         [HttpGet]
-        public async Task<ActionResult<TripWrapperOutputModel>> GetAll(int page = 1)
+        public async Task<ActionResult<PagingModel<TripOutputModel>>> GetAll(int page = 1)
             => await base.Send(new GetAllTripsQuery { Page = page < 1 ? 1 : page });
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route(ID_IDENTIFIER)]
         public async Task<ActionResult> Delete(int id)
             => await base.Send(new DeleteTripCommand { Id = id });
 

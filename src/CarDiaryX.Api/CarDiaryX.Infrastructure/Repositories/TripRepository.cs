@@ -1,10 +1,12 @@
 ﻿using CarDiaryX.Application.Features.V1.Trips;
 using CarDiaryX.Application.Features.V1.Trips.InputModels;
+using CarDiaryX.Domain.Common;
 using CarDiaryX.Domain.Vehicles;
+using CarDiaryX.Infrastructure.Common;
 using CarDiaryX.Infrastructure.Common.Persistence;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +15,14 @@ namespace CarDiaryX.Infrastructure.Repositories
 {
     internal class TripRepository : ITripRepository
     {
+        private const string TABLE_NAME = "[dbo].[Trips]";
         private readonly CarDiaryXDbContext dbContext;
+        private readonly IDbConnectionFactory dbFactory;
 
-        public TripRepository(CarDiaryXDbContext dbContext)
+        public TripRepository(CarDiaryXDbContext dbContext, IDbConnectionFactory dbFactory)
         {
             this.dbContext = dbContext;
+            this.dbFactory = dbFactory;
         }
 
         public Task Add(
@@ -67,27 +72,37 @@ namespace CarDiaryX.Infrastructure.Repositories
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<(IReadOnlyCollection<Trip> Trips, int TotalCount)> GetAll(
+        public async Task<PagingModel<Trip>> GetAll(
             string userId,
             CancellationToken cancellationToken,
             int page = 1,
             int pageSize = 7)
         {
-            var tripsQuery = this.dbContext.Trips
-                .Where(t => t.UserId == userId);
+            var sql = $@"
+                SELECT * FROM {TABLE_NAME}
+                WHERE UserId = @userId
+                ORDER BY Id DESC
+                OFFSET @page ROWS FETCH NEXT @pageSize ROWS ONLY;
 
-            var totalCount = await tripsQuery
-                .AsNoTracking()
-                .CountAsync(cancellationToken);
+                SELECT COUNT(*) FROM {TABLE_NAME}
+                WHERE UserId = @userId";
 
-            var trips = await tripsQuery
-                .AsNoTracking()
-                .OrderByDescending(t => t.Id)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToArrayAsync(cancellationToken);
+            var parameters = new
+            {
+                userId = userId,
+                page = (page - 1) * pageSize,
+                pageSize = pageSize
+            };
 
-            return (trips, totalCount);
+            using (var conn = this.dbFactory.GetConnection)
+            {
+                using (var multi = await conn.QueryMultipleAsync(new CommandDefinition(sql, parameters, cancellationToken: cancellationToken)))
+                {
+                    var trips = multi.Read<Trip>();
+                    var totalCount = multi.ReadFirstOrDefault<int>();
+                    return new PagingModel<Trip>(trips.ToArray(), totalCount);
+                }
+            }
         }
 
         public async Task Update(

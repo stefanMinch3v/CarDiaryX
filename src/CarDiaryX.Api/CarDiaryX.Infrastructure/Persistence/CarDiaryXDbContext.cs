@@ -1,6 +1,7 @@
 ﻿using CarDiaryX.Application.Contracts;
 using CarDiaryX.Domain.Common;
 using CarDiaryX.Domain.Vehicles;
+using CarDiaryX.Domain.VehicleServices;
 using CarDiaryX.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,8 @@ namespace CarDiaryX.Infrastructure.Common.Persistence
         public DbSet<RegistrationNumber> RegistrationNumbers { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Trip> Trips { get; set; }
+        public DbSet<VehicleService> VehicleServices { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

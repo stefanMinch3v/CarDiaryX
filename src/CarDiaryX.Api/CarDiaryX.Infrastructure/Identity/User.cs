@@ -7,6 +7,11 @@ namespace CarDiaryX.Infrastructure.Identity
 {
     public class User : IdentityUser, IUser
     {
+        // dapper
+        private User()
+        {
+        }
+
         internal User(string email, string firstName, string lastName)
             : base(email)
         {
